@@ -21,3 +21,4 @@ ba4ccf7e,Awissawella Pro State,5000000,Rathnapura,Apartment,For Sale,De Silva,as
 0a22dc7a,Hegalla beach Villa,95000,Galle,Villa,For Sale,Dinesh,assets/images/property-types/villa.jpg
 f62059d5,Nugegoda Real State,9000000,Colombo,Apartment,For Sale,Kavindi,assets/images/property-types/apartment.jpg
 3ea4a9d6,Kengalla Mount view,1000000,Kandy,House,For Sale,Kavindi,assets/images/property-types/house.jpg
+1bae3ff8,Talawakele Mount Rise,5500000,Nuwara Eliya,Villa,For Sale,De Silva,assets/images/property-types/villa.jpg

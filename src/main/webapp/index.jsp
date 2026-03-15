@@ -999,10 +999,17 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
       <div class="hero-img-overlay"></div>
 
       <div class="hero-card-float hcf-1">
-              <div class="hcf-label">Latest Listing</div>
-              <div class="hcf-value">Luxury Lakeview Villa</div>
-              <div class="hcf-sub">Kurunegala, NWP</div>
-              <span class="hcf-badge badge-green">✓ Just Listed</span>
+                <div class="hcf-label">Latest Listing</div>
+                <div class="hcf-value" id="latest-title" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px;">Loading...</div>
+                <div class="hcf-sub" id="latest-loc">Loading...</div>
+
+                <div style="display: flex; align-items: center; gap: 8px; margin-top: 6px;">
+                    <span class="hcf-badge badge-green" style="margin-top: 0;">✓ Just Listed</span>
+
+                    <div id="latest-btn" style="background: var(--accent); color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.8rem; box-shadow: 0 2px 5px rgba(26,86,219,.3); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" title="View Property">
+                        ➔
+                    </div>
+                </div>
       </div>
 
       <div class="hero-card-float hcf-2">
@@ -1277,8 +1284,8 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
   <div class="detail-hero" id="detail-hero">
     <img id="detail-main-img" src="" alt=""/>
     <div class="detail-hero-overlay"></div>
-    <button class="detail-back-btn" onclick="history.back(); showPage(lastPage)">
-      ← Back to listings
+    <button class="detail-back-btn" onclick="showPage('listings')">
+          ← Back to listings
     </button>
     <div class="detail-img-count" id="detail-img-count">📷 4 Photos</div>
   </div>
@@ -1397,17 +1404,11 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
     <div class="auth-right">
       <div class="auth-box">
         <h2 class="auth-title">Welcome back</h2>
-        <p class="auth-sub">Sign in to your Nestiq account</p>
+        <p class="auth-sub" style="margin-bottom: 30px;">Sign in to your Nestiq account</p>
 
         <p style="color: var(--green); font-size: 0.9rem; margin-bottom: 10px; font-weight: 600; text-align: center;">
             ${successMessage}
         </p>
-
-        <div class="auth-social">
-          <button class="auth-social-btn">🔵 Google</button>
-          <button class="auth-social-btn">🍎 Apple</button>
-        </div>
-        <div class="auth-divider"><span>or continue with email</span></div>
 
         <form action="login" method="post">
            <p style="color: var(--red); font-size: 0.8rem; margin-bottom: 10px; font-weight: 500;">
@@ -1448,7 +1449,7 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
     <div class="auth-right">
       <div class="auth-box">
         <h2 class="auth-title">Create account</h2>
-        <p class="auth-sub">Join 50,000+ users on Nestiq</p>
+        <p class="auth-sub" style="margin-bottom: 30px;">Join 50,000+ users on Nestiq</p>
 
         <form action="register" method="post">
             <div class="filter-section-title" style="margin-bottom:10px">I am a...</div>
@@ -1592,6 +1593,32 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
 
             updateCount();
         });
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // Wait just a millisecond to ensure the properties array is fully loaded from Java
+        setTimeout(() => {
+            if (window.properties && window.properties.length > 0) {
+                // Grab the very last property added to the array (the newest one!)
+                const latestProperty = window.properties[window.properties.length - 1];
+
+                // Inject the real data into the UI
+                document.getElementById('latest-title').innerText = latestProperty.title;
+                document.getElementById('latest-loc').innerText = latestProperty.location;
+
+                // Make the blue arrow open the property detail page
+                document.getElementById('latest-btn').onclick = function() {
+                    openDetail(latestProperty.id);
+                };
+            } else {
+                // Safe fallback if the database is completely empty
+                document.getElementById('latest-title').innerText = "No listings yet";
+                document.getElementById('latest-loc').innerText = "Check back soon!";
+                document.getElementById('latest-btn').style.display = "none";
+            }
+        }, 150);
     });
 </script>
 
