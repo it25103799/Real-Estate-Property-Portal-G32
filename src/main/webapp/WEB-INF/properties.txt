@@ -11,7 +11,7 @@ PROP_1772952224327,Kurunegala New Building,400000,Kurunegala,Apartment,For Rent,
 PROP_1772952563995,Kurunrgala New Building,400000,Kurunegala,Apartment,For Rent,De Silva
 1f48f435,Kurunegala New Building,500000.0,Kurunegala,Apartment,For Rent,De Silva
 d4ef95b0,Galle New Building,600000.0,Galle,Apartment,For Rent,De Silva,assets/images/property-types/apartment.jpg
-dff34ab2,Kiribathgoda Faltue,50000,Kiribathgoda,Apartment,For Rent,De Silva,assets/images/property-types/apartment.jpg
+dff34ab2,Kiribathgoda Faltue,50000,Kiribathgoda,Apartment,For Rent,De Silva,https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80
 
 ``
 699613a8,Galle New Villa,85000.0,Galle,Villa,For Rent,De Silva,assets/images/property-types/villa.jpg

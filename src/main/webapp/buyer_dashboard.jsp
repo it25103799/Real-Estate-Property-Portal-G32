@@ -215,6 +215,14 @@
 
             <button type="submit" id="saveProfileBtn" class="save-btn" style="display: none;">Save Changes</button>
         </form>
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--line); text-align: center;">
+                    <form action="DeleteAccountServlet" method="POST" style="margin: 0;" onsubmit="return confirm('⚠️ WARNING: Are you absolutely sure you want to permanently delete your account? This action cannot be undone and you will lose all saved properties.');">
+                        <input type="hidden" name="userEmail" value="<%= session.getAttribute("loggedEmail") %>">
+                        <button type="submit" style="background: transparent; color: var(--red); border: none; font-size: 0.85rem; font-weight: 600; cursor: pointer; text-decoration: underline;">
+                            Delete My Account
+                        </button>
+                    </form>
+        </div>
     </div>
 
     <div class="card">
