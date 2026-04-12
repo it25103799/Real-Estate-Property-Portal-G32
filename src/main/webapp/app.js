@@ -255,7 +255,46 @@ function openDetail(id) {
 
     showPage('detail');
     window.scrollTo({ top: 0, behavior: 'smooth' });
-}
+
+    // Filter and show reviews for THIS specific property
+        // 1. Link the form to the current property
+            document.getElementById('review-prop-id').value = id;
+
+            // 2. Filter for reviews that match THIS property ID
+            const filtered = window.allReviews.filter(r => r.propId == id);
+            const container = document.getElementById('reviews-container');
+
+            // 3. Inject the HTML into the page
+            container.innerHTML = filtered.length === 0 ?
+                    "<p style='color: var(--ink4); padding: 10px;'>No reviews yet.</p>" :
+                    filtered.map(r => {
+                        // Check if the current logged-in user is the author
+                        const isOwner = (String(window.currentUser).trim() === String(r.name).trim());
+
+                        return `
+                        <div style="border-bottom: 1px solid var(--line); padding: 20px 0;">
+                            <div class="rev-header">
+                                <div>
+                                    <strong style="color: var(--ink);">${r.name} ${r.isVerified ? '✅' : ''}</strong>
+                                    <div style="color: var(--amber); font-size: 0.75rem; margin-top: 2px;">${'★'.repeat(r.rating)}</div>
+                                </div>
+                                ${isOwner ? `
+                                <div class="rev-menu-wrap">
+                                    <button class="rev-dots-btn" onclick="toggleRevMenu(event, '${r.id}')">⋮</button>
+                                    <div id="drop-${r.id}" class="rev-dropdown">
+                                        <button class="rev-drop-item" onclick="editReview('${r.id}', '${id}')">✏️ Update</button>
+                                        <button class="rev-drop-item del" onclick="deleteReview('${r.id}', '${id}')">🗑️ Delete</button>
+                                    </div>
+                                </div>` : ''}
+                            </div>
+                            <div id="comment-box-${r.id}">
+                                <p style="color: var(--ink3); margin-top: 10px; font-size: 0.95rem; line-height: 1.5;">${r.comment}</p>
+                            </div>
+                        </div>`;
+                    }).join('');
+
+     showPage('detail'); // 🔥 Add this back if it was missing!
+ } // <--- End of openDetail function
 
 // ── AUTH ROLE SELECTOR ENGINE ─────────────────────────
 function selectRole(btn, role) {
@@ -291,3 +330,102 @@ document.addEventListener("DOMContentLoaded", () => {
         themeBtn.onclick = toggleTheme;
     }
 });
+
+function editReview(revId, propId) {
+    // 1. Find the current container and existing text
+    const container = document.getElementById('comment-container-' + revId);
+    const oldText = container.querySelector('p').innerText;
+
+    // 2. Transform the UI into an inline editing box
+    container.innerHTML = `
+        <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 8px;">
+            <textarea id="edit-box-${revId}" class="contact-form-input"
+                style="width: 100%; min-height: 80px; background: var(--bg2); border: 1.5px solid var(--accent); color: var(--ink); padding: 10px; border-radius: 8px;"
+            >${oldText}</textarea>
+
+            <div style="display: flex; gap: 8px;">
+                <button onclick="submitInlineEdit('${revId}', '${propId}')"
+                    style="background: var(--accent); color: white; padding: 6px 14px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer;">
+                    Save Changes
+                </button>
+                <button onclick="location.reload()"
+                    style="background: none; border: 1px solid var(--line); color: var(--ink3); padding: 6px 14px; border-radius: 6px; font-size: 0.8rem; cursor: pointer;">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    `;
+
+    // Auto-focus the box so you can start typing immediately!
+    document.getElementById('edit-box-' + revId).focus();
+}
+
+// 3. Helper function to fly the data to Java
+function submitInlineEdit(revId, propId) {
+    const newMsg = document.getElementById('edit-box-' + revId).value;
+
+    if (newMsg.trim() === "") {
+        alert("Feedback cannot be empty!");
+        return;
+    }
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = 'reviews';
+    form.innerHTML = `
+        <input type="hidden" name="action" value="update">
+        <input type="hidden" name="reviewId" value="${revId}">
+        <input type="hidden" name="propertyId" value="${propId}">
+        <input type="hidden" name="comment" value="${newMsg}">
+    `;
+    document.body.appendChild(form);
+    form.submit();
+}
+function toggleRevMenu(event, revId) {
+    event.stopPropagation();
+    document.querySelectorAll('.rev-dropdown').forEach(d => d.classList.remove('show'));
+    document.getElementById('drop-' + revId).classList.toggle('show');
+}
+
+// 1. DELETE FUNCTION (The one you were missing!)
+function deleteReview(revId, propId) {
+    if (confirm("Delete this review forever?")) {
+        const form = document.createElement('form');
+        form.method = 'POST'; form.action = 'reviews';
+        form.innerHTML = `
+            <input type="hidden" name="action" value="delete">
+            <input type="hidden" name="reviewId" value="${revId}">
+            <input type="hidden" name="propertyId" value="${propId}">
+        `;
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+// 2. INLINE EDIT FUNCTION (No more pop-ups!)
+function editReview(revId, propId) {
+    const container = document.getElementById('comment-box-' + revId);
+    const oldText = container.querySelector('p').innerText;
+
+    container.innerHTML = `
+        <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 8px;">
+            <textarea id="inline-edit-${revId}" class="contact-form-input" style="min-height: 80px; border: 1.5px solid var(--accent); color: var(--ink);">${oldText}</textarea>
+            <div style="display: flex; gap: 8px;">
+                <button onclick="saveInlineEdit('${revId}', '${propId}')" style="background: var(--accent); color:white; padding:6px 12px; border-radius:6px; font-size:0.75rem; font-weight:600; cursor:pointer;">Save Changes</button>
+                <button onclick="location.reload()" style="background:none; border:1px solid var(--line); color:var(--ink3); padding:6px 12px; border-radius:6px; font-size:0.75rem; cursor:pointer;">Cancel</button>
+            </div>
+        </div>
+    `;
+    document.getElementById('inline-edit-' + revId).focus();
+}
+
+function saveInlineEdit(revId, propId) {
+    const newMsg = document.getElementById('inline-edit-' + revId).value;
+    const form = document.createElement('form');
+    form.method = 'POST'; form.action = 'reviews';
+    form.innerHTML = `<input type="hidden" name="action" value="update"><input type="hidden" name="reviewId" value="${revId}"><input type="hidden" name="propertyId" value="${propId}"><input type="hidden" name="comment" value="${newMsg}">`;
+    document.body.appendChild(form);
+    form.submit();
+}
+
+window.onclick = () => document.querySelectorAll('.rev-dropdown').forEach(d => d.classList.remove('show'));

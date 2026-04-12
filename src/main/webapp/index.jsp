@@ -882,6 +882,29 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
   .why-grid { grid-template-columns: 1fr; }
   .footer-top { grid-template-columns: 1fr; }
 }
+
+/* ── MODERN KEBAB MENU ── */
+.rev-header { display: flex; justify-content: space-between; align-items: flex-start; }
+.rev-menu-wrap { position: relative; }
+.rev-dots-btn {
+  background: none; color: var(--ink4); font-size: 1.5rem;
+  cursor: pointer; padding: 0 8px; transition: 0.2s;
+}
+.rev-dots-btn:hover { color: var(--accent); }
+.rev-dropdown {
+  position: absolute; right: 0; top: 30px; z-index: 100;
+  background: var(--bg); border: 1px solid var(--line);
+  border-radius: var(--r); box-shadow: var(--shadow-lg);
+  min-width: 130px; display: none; overflow: hidden;
+}
+.rev-dropdown.show { display: block; animation: cardIn 0.2s ease; }
+.rev-drop-item {
+  width: 100%; text-align: left; padding: 12px 16px;
+  font-size: 0.85rem; font-weight: 500; color: var(--ink2);
+  background: none; cursor: pointer; transition: 0.2s;
+}
+.rev-drop-item:hover { background: var(--bg2); }
+.rev-drop-item.del { color: var(--red); }
 </style>
 </head>
 <body>
@@ -1320,6 +1343,23 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
       <div class="detail-specs" id="detail-specs" style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 40px;"></div>
 
       <div style="background: var(--bg2); padding: 30px; border-radius: var(--r); border: 1px solid var(--line); margin-bottom: 40px;">
+      <div class="detail-section-title">💬 Community Feedback</div>
+      <div id="reviews-container" style="margin-bottom: 30px;"></div>
+
+      <div style="background: var(--bg2); padding: 25px; border-radius: var(--r); border: 1px solid var(--line);">
+          <div style="font-weight: 600; margin-bottom: 15px; font-size: 1.1rem;">Post a New Review</div>
+          <form action="reviews" method="post" style="display: flex; flex-direction: column; gap: 12px;">
+              <input type="hidden" name="propertyId" id="review-prop-id">
+              <input type="text" name="buyerName" class="contact-form-input" placeholder="Your Name" required>
+              <select name="rating" class="contact-form-input">
+                  <option value="5">⭐⭐⭐⭐⭐ (Excellent)</option>
+                  <option value="4">⭐⭐⭐⭐ (Good)</option>
+                  <option value="3">⭐⭐⭐ (Average)</option>
+              </select>
+              <textarea name="comment" class="contact-form-input" placeholder="Write your feedback..." required></textarea>
+              <button type="submit" class="btn-primary" style="width: 100%;">Submit Feedback</button>
+          </form>
+      </div>
           <div class="detail-section-title" style="font-size: 1.4rem; margin-top: 0; margin-bottom: 15px;">📝 About This Property</div>
           <p class="detail-desc" id="detail-desc" style="line-height: 1.8; color: var(--ink); opacity: 0.8; font-size: 1.05rem;">
               Welcome to your luxurious new Sri Lankan retreat. This premium property boasts an expansive open-concept layout, state-of-the-art modern finishes, and breathtaking views. Perfectly situated in a highly sought-after neighborhood, it offers unparalleled convenience to top-tier schools, exclusive shopping, and fine dining.
@@ -1488,45 +1528,32 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
 </div>
 
 <script>
+    // 1. Identity Bridge
+    window.currentUser = "${sessionScope.loggedUser}";
 
-    window.properties = []; // Force it to attach to the global browser memory!
-
+    // 2. Properties Bridge
+    window.properties = [];
     <c:forEach items="${propertyList}" var="p">
         window.properties.push({
-            id: "${p.id}",
-            title: "${p.title}",
-            price: "${p.price}",
-            location: "${p.location}",
-            type: "${p.type}",
-            status: "${p.status}",
-            image: "${p.imageUrl}"
+            id: "${p.id}", title: "${p.title}", price: Number("${p.price}"),
+            location: "${p.location}", type: "${p.type}", status: "${p.status}",
+            image: "${p.imageUrl}", seller: "${p.sellerName}"
         });
     </c:forEach>
 
-    // Diagnostic tool to prove it works!
-    console.log("✅ DATA BRIDGE CONNECTED! Properties loaded:", window.properties.length);
+    // 3. Reviews Bridge (Kalhari's Data)
+    window.allReviews = [];
+    <c:if test="${not empty allReviews}">
+        <c:forEach items="${allReviews}" var="r">
+            window.allReviews.push({
+                id: "${r.reviewID}", propId: "${r.propertyID}", name: "${r.buyerName}",
+                rating: "${r.rating}", comment: `<c:out value="${r.comment}" escapeXml="true"/>`,
+                isVerified: ${r.verified}
+            });
+        </c:forEach>
+    </c:if>
+    console.log("✅ ENGINE ONLINE. User:", window.currentUser, "| Reviews:", window.allReviews.length);
 </script>
-
-<script>
-
-    var properties = [];
-
-    <c:forEach items="${propertyList}" var="p">
-        properties.push({
-            id: String(`${p.id}`),
-            title: `${p.title}`,
-            price: Number(`${p.price}`), // Safely converts it to a number for sorting!
-            location: `${p.location}`,
-            type: `${p.type}`,
-            status: `${p.status}`,
-            seller: `${p.sellerName}`,   // EXACT MATCH to getSellerName()
-            image: `${p.imageUrl}`       // EXACT MATCH to getImageUrl()
-        });
-    </c:forEach>
-
-    console.log("✅ DATA BRIDGE CONNECTED! Properties loaded:", properties.length);
-</script>
-
 <script src="app.js"></script>
 
 <script>

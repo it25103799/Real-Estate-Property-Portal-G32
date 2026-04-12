@@ -6,3 +6,4 @@ Bhashitha Navod,Mohammed Rizwan,Galle New Building,2026-03-11,Pending
 Bhashitha Navod,Dinesh,Hegalla beach Villa,2026-03-11,Pending
 Bhashitha Navod,Kavindi,Nugegoda Real State,2026-03-11,Pending
 Bhashi Navod,De Silva,Kurunegala Lake view,2026-03-14,Pending
+Bhashi Navod,De Silva,Talawakele Mount Rise,2026-04-12,Pending

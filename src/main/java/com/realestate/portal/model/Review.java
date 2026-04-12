@@ -36,4 +36,8 @@ public class Review {
     public void displayReview() {
         System.out.println("Review by " + buyerName + ": [" + rating + "/5] " + comment);
     }
+
+    public boolean isVerified() {
+        return false; // By default, most reviews are not verified
+    }
 }

@@ -1,56 +1,57 @@
 package com.realestate.portal.controller;
 
-import com.realestate.portal.model.Property;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import com.realestate.portal.model.*;
+import java.io.*;
+import java.util.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 
 @WebServlet("/properties")
 public class PropertyServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        // Tell the response we are sending UTF-8 back to the browser
         response.setContentType("text/html; charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
 
+        // 1. LOAD PROPERTIES
         List<Property> propertyList = new ArrayList<>();
-        String filePath = getServletContext().getRealPath("/WEB-INF/properties.txt");
-        File file = new File(filePath);
-
-        if (file.exists()) {
-            // 🔥 FIX: Force Java to READ the file using UTF-8!
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"))) {
+        String propPath = getServletContext().getRealPath("/WEB-INF/properties.txt");
+        File propFile = new File(propPath);
+        if (propFile.exists()) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(propFile), "UTF-8"))) {
                 String line;
                 while ((line = br.readLine()) != null) {
                     String[] data = line.split(",");
-
                     if (data.length == 8) {
-                        try {
-                            double price = Double.parseDouble(data[2]);
-                            String imageUrl = (data[7] == null || data[7].trim().isEmpty()) ? "https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=900&q=80" : data[7];
+                        propertyList.add(new Property(data[0], data[1], Double.parseDouble(data[2]), data[3], data[4], data[5], data[6], data[7]));
+                    }
+                }
+            } catch (Exception e) { e.printStackTrace(); }
+        }
 
-                            Property p = new Property(data[0], data[1], price, data[3], data[4], data[5], data[6], imageUrl);
-                            propertyList.add(p);
-                        } catch (NumberFormatException e) {
-                            System.out.println("Skipping invalid price: " + data[2]);
+        // 2. LOAD REVIEWS (Kalhari's Module)
+        List<Review> reviewList = new ArrayList<>();
+        String revPath = getServletContext().getRealPath("/WEB-INF/reviews.txt");
+        File revFile = new File(revPath);
+        if (revFile.exists()) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(revFile), "UTF-8"))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] data = line.split(",");
+                    if (data.length == 6) {
+                        if (data[5].equalsIgnoreCase("VERIFIED")) {
+                            reviewList.add(new VerifiedReview(data[0], data[1], data[2], Integer.parseInt(data[3]), data[4]));
+                        } else {
+                            reviewList.add(new PublicReview(data[0], data[1], data[2], Integer.parseInt(data[3]), data[4]));
                         }
                     }
                 }
-            } catch (Exception e) {
-                System.out.println("Error reading properties: " + e.getMessage());
-            }
+            } catch (Exception e) { e.printStackTrace(); }
         }
+
         request.setAttribute("propertyList", propertyList);
+        request.setAttribute("allReviews", reviewList);
         request.getRequestDispatcher("/index.jsp").forward(request, response);
     }
 }

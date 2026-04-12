@@ -11,4 +11,9 @@ public class VerifiedReview extends Review {
         System.out.println("--- Verified Purchase Review ✅ ---");
         super.displayReview();
     }
+
+    @Override
+    public boolean isVerified() {
+        return true; // This specific class is always verified!
+    }
 }
