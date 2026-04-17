@@ -905,6 +905,81 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
 }
 .rev-drop-item:hover { background: var(--bg2); }
 .rev-drop-item.del { color: var(--red); }
+
+/* ── NOTIFICATION BELL UI ── */
+.nav-notif {
+  position: relative;
+  cursor: pointer;
+  margin-right: 18px;
+  display: flex;
+  align-items: center;
+}
+.notif-icon { font-size: 1.5rem; transition: transform 0.2s; }
+.nav-notif:hover .notif-icon { transform: scale(1.1); }
+
+/* The Red Number Badge */
+.notif-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: var(--red);
+  color: white;
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-weight: bold;
+  border: 2px solid var(--bg);
+  display: none; /* Hidden by default until we have data */
+}
+
+/* ── NOTIFICATION PANEL DESIGN ── */
+.notif-panel {
+  position: absolute;
+  top: 120%; /* Sits exactly below the icon */
+  right: 0;
+  width: 320px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--r2);
+  box-shadow: var(--shadow-xl);
+  display: none; /* Hidden until clicked */
+  z-index: 2000;
+  overflow: hidden;
+  animation: slideIn .2s ease-out;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.notif-header {
+  padding: 16px;
+  border-bottom: 1px solid var(--line);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--ink);
+  background: var(--bg2);
+}
+
+#notif-list {
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+/* Scrollbar Styling */
+#notif-list::-webkit-scrollbar { width: 4px; }
+#notif-list::-webkit-scrollbar-thumb { background: var(--line); border-radius: 10px; }
+
+.notif-footer {
+  padding: 12px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--accent);
+  background: var(--bg2);
+  border-top: 1px solid var(--line);
+  cursor: default;
+}
 </style>
 </head>
 <body>
@@ -925,6 +1000,25 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
             <div class="theme-switch" onclick="toggleTheme()" title="Toggle Dark Mode">
                 <div class="theme-switch-thumb" id="theme-toggle">🌙</div>
             </div>
+
+            <c:if test="${sessionScope.loggedRole == 'BUYER' || sessionScope.loggedRole == 'SELLER'}">
+                <div class="nav-notif" id="bell-container" onclick="toggleNotif(event)">
+                    <span class="notif-icon">🔔</span>
+                    <div id="notif-count" class="notif-badge">0</div>
+
+                    <div class="notif-panel" id="notif-panel">
+                        <div class="notif-header">Notifications</div>
+
+                        <div id="notif-list">
+                            <p style="padding: 20px; text-align: center; color: var(--ink4); font-size: 0.85rem;">
+                                No new messages
+                            </p>
+                        </div>
+
+                        <div class="notif-footer">Nestiq Secure Messaging</div>
+                    </div>
+                </div>
+            </c:if>
 
             <c:choose>
                 <c:when test="${not empty sessionScope.loggedUser}">
@@ -1531,6 +1625,20 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
     // 1. Identity Bridge
     window.currentUser = "${sessionScope.loggedUser}";
 
+    // Convert Java List to JS Array
+    window.allNotifications = [];
+    <c:forEach items="${allNotifications}" var="n">
+        window.allNotifications.push({
+            sender: "${n.sender}",
+            receiver: "${n.receiver}",
+            message: "${n.content}",
+            property: "${n.propTitle}",
+            type: "${n.type}"
+        });
+    </c:forEach>
+
+    console.log("📬 Notifications Loaded:", window.allNotifications.length);
+
     // 2. Properties Bridge
     window.properties = [];
     <c:forEach items="${propertyList}" var="p">
@@ -1593,6 +1701,24 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
 
         return true; // Let the form fly!
     }
+
+    // ── NOTIFICATION TOGGLE ENGINE ──
+    function toggleNotif(event) {
+        // Prevent the click from "bubbling" up
+        event.stopPropagation();
+
+        const panel = document.getElementById('notif-panel');
+        const isVisible = panel.style.display === 'block';
+
+        // Toggle logic
+        panel.style.display = isVisible ? 'none' : 'block';
+    }
+
+    // Close the panel if the user clicks anywhere else on the screen
+    window.addEventListener('click', () => {
+        const panel = document.getElementById('notif-panel');
+        if (panel) panel.style.display = 'none';
+    });
 </script>
 
 <script>

@@ -2,7 +2,8 @@ package com.realestate.portal.controller;
 
 import com.realestate.portal.model.*;
 import java.io.*;
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
