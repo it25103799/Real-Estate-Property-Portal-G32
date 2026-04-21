@@ -454,7 +454,7 @@ function renderNotifications() {
             listContainer.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--ink4); font-size: 0.85rem;">No new messages</p>';
         } else {
             listContainer.innerHTML = myMail.map(n => `
-                <div class="notif-item" style="padding: 12px; border-bottom: 1px solid var(--line2); display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                <div class="notif-item" onclick="openNotifThread('${n.threadId || ''}')" style="padding: 12px; border-bottom: 1px solid var(--line2); display: flex; align-items: center; gap: 12px; cursor: pointer;">
                     <div style="background: var(--accent-l); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
                         ${n.type === 'INQUIRY' ? '📩' : '💬'}
                     </div>
@@ -470,6 +470,46 @@ function renderNotifications() {
                 </div>
             `).join('');
         }
+    }
+}
+
+// ── NOTIFICATION PANEL TOGGLE (shared pages) ──
+function toggleNotif(event) {
+    if (event && event.stopPropagation) event.stopPropagation();
+    const panel = document.getElementById('notif-panel');
+    if (!panel) return;
+    const isVisible = panel.style.display === 'block';
+    panel.style.display = isVisible ? 'none' : 'block';
+}
+
+window.addEventListener('click', () => {
+    const panel = document.getElementById('notif-panel');
+    if (panel) panel.style.display = 'none';
+});
+
+function openNotifThread(threadId) {
+    if (!threadId) return;
+
+    // If we are already on a dashboard that can open the modal, open directly.
+    if (window.currentRole && String(window.currentRole).toUpperCase() === 'SELLER' && typeof openChat === 'function') {
+        openChat(threadId);
+        const panel = document.getElementById('notif-panel');
+        if (panel) panel.style.display = 'none';
+        return;
+    }
+    if (window.currentRole && String(window.currentRole).toUpperCase() === 'BUYER' && typeof openBuyerChat === 'function') {
+        openBuyerChat(threadId);
+        const panel = document.getElementById('notif-panel');
+        if (panel) panel.style.display = 'none';
+        return;
+    }
+
+    // Otherwise route to the right dashboard and auto-open.
+    const role = window.currentRole ? String(window.currentRole).toUpperCase() : '';
+    if (role === 'SELLER') {
+        window.location.href = 'sellerDashboard?threadId=' + encodeURIComponent(threadId);
+    } else {
+        window.location.href = 'buyerDashboard?threadId=' + encodeURIComponent(threadId);
     }
 }
 

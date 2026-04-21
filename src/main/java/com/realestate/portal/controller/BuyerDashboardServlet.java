@@ -1,6 +1,8 @@
 package com.realestate.portal.controller;
 
 import com.realestate.portal.model.Property;
+import com.realestate.portal.model.InquiryMessage;
+import com.realestate.portal.model.InquiryThread;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -9,7 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet("/buyerDashboard")
 public class BuyerDashboardServlet extends HttpServlet {
@@ -56,33 +61,92 @@ public class BuyerDashboardServlet extends HttpServlet {
             } catch (Exception e) {
             }
         }
-        // --- INQUIRY READER ENGINE (BULLETPROOF HASHMAP) ---
-        List<java.util.Map<String, String>> myInquiries = new ArrayList<>();
-        File inqFile = new File(getServletContext().getRealPath("/WEB-INF/inquiries.txt"));
+        // --- INQUIRY THREAD READER ENGINE (new threaded system) ---
+        List<Map<String, String>> myInquiries = new ArrayList<>();
+        List<InquiryThread> buyerThreads = new ArrayList<>();
+        Map<String, InquiryThread> byId = new HashMap<>();
 
-        if (inqFile.exists()) {
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inqFile), "UTF-8"))) {
+        File threadsFile = new File(getServletContext().getRealPath("/WEB-INF/inquiry_threads.tsv"));
+        if (threadsFile.exists()) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(threadsFile), "UTF-8"))) {
                 String line;
                 while ((line = br.readLine()) != null) {
-                    String[] data = line.split(",");
-                    // If it belongs to this buyer, map it!
-                    if (data.length >= 5 && data[0].equals(loggedUser)) {
-                        java.util.Map<String, String> inq = new java.util.HashMap<>();
-                        inq.put("agentName", data[1]);
+                    String[] data = line.split("\t", -1);
+                    // threadId, propertyId, propertyTitle, sellerName, buyerAccount, buyerName, buyerEmail, buyerPhone, createdDate, status
+                    if (data.length >= 10 && loggedUser.equals(data[4])) {
+                        Map<String, String> inq = new HashMap<>();
+                        inq.put("threadId", data[0]);
+                        inq.put("propertyId", data[1]);
                         inq.put("propertyTitle", data[2]);
-                        inq.put("date", data[3]);
-                        inq.put("status", data[4]);
+                        inq.put("agentName", data[3]);
+                        inq.put("buyerName", data[5]);
+                        inq.put("buyerEmail", data[6]);
+                        inq.put("buyerPhone", data[7]);
+                        inq.put("date", data[8]);
+                        inq.put("status", data[9]);
                         myInquiries.add(inq);
+
+                        InquiryThread t = new InquiryThread(
+                                data[0], data[1], data[2], data[3],
+                                data[4], data[5], data[6], data[7],
+                                data[8], data[9]
+                        );
+                        buyerThreads.add(t);
+                        byId.put(t.getId(), t);
                     }
                 }
             } catch (Exception e) {
-                System.out.println("Error reading inquiries: " + e.getMessage());
+                System.out.println("Error reading inquiry threads: " + e.getMessage());
+            }
+
+            File messagesFile = new File(getServletContext().getRealPath("/WEB-INF/inquiry_messages.tsv"));
+            if (messagesFile.exists() && !byId.isEmpty()) {
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(messagesFile), "UTF-8"))) {
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        String[] data = line.split("\t", -1);
+                        if (data.length >= 5) {
+                            InquiryThread t = byId.get(data[0]);
+                            if (t == null) continue;
+
+                            String content = "";
+                            try {
+                                byte[] decoded = Base64.getDecoder().decode(data[4]);
+                                content = new String(decoded, "UTF-8");
+                            } catch (Exception ignored) {}
+
+                            t.getMessages().add(new InquiryMessage(data[0], data[1], data[2], data[3], content));
+                        }
+                    }
+                } catch (Exception e) {
+                    System.out.println("Error reading inquiry messages: " + e.getMessage());
+                }
+            }
+        } else {
+            // Backward compat: read old inquiries.txt if new threads file doesn't exist
+            File inqFile = new File(getServletContext().getRealPath("/WEB-INF/inquiries.txt"));
+            if (inqFile.exists()) {
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inqFile), "UTF-8"))) {
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        String[] data = line.split(",");
+                        if (data.length >= 5 && data[0].equals(loggedUser)) {
+                            Map<String, String> inq = new HashMap<>();
+                            inq.put("agentName", data[1]);
+                            inq.put("propertyTitle", data[2]);
+                            inq.put("date", data[3]);
+                            inq.put("status", data[4]);
+                            myInquiries.add(inq);
+                        }
+                    }
+                } catch (Exception e) {
+                    System.out.println("Error reading inquiries: " + e.getMessage());
+                }
             }
         }
-        // ... (your inquiry reader code above) ...
 
         request.setAttribute("myInquiries", myInquiries);
-        // ---------------------------------------------------
+        request.setAttribute("buyerThreads", buyerThreads);
 
         request.setAttribute("savedProperties", savedProperties);
         request.getRequestDispatcher("/buyer_dashboard.jsp").forward(request, response);

@@ -157,6 +157,33 @@
             background-color: #059669;
         }
 
+        /* ── INQUIRY CHAT MODAL (WhatsApp-like) ── */
+        .chat-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 1200; padding: 18px; }
+        .chat-overlay.open { display: flex; }
+        .chat-box { background: var(--bg); border: 1px solid var(--line); border-radius: var(--r); width: 100%; max-width: 920px; height: min(78vh, 620px); box-shadow: 0 20px 70px rgba(0,0,0,.25); overflow: hidden; display: grid; grid-template-columns: 320px 1fr; }
+        .chat-left { border-right: 1px solid var(--line); background: var(--bg2); padding: 18px; overflow-y: auto; }
+        .chat-right { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+        .chat-top { padding: 16px 18px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        .chat-peer { display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--line); display: flex; align-items: center; justify-content: center; color: var(--ink); font-weight: 700; }
+        .peer-name { font-weight: 700; }
+        .peer-sub { font-size: 0.8rem; opacity: 0.75; }
+        .chat-msgs { flex: 1; padding: 18px; overflow-y: auto; background: var(--bg); min-height: 0; }
+        .bubble { max-width: 72%; padding: 10px 12px; border-radius: 12px; margin: 8px 0; border: 1px solid var(--line); }
+        .bubble-left { background: var(--bg2); margin-right: auto; border-top-left-radius: 6px; }
+        .bubble-right { background: rgba(26,86,219,0.10); margin-left: auto; border-top-right-radius: 6px; }
+        .bubble-meta { font-size: 0.72rem; opacity: 0.75; margin-bottom: 4px; }
+        .chat-compose { border-top: 1px solid var(--line); padding: 12px; display: flex; gap: 10px; background: var(--bg2); }
+        .chat-input { flex: 1; resize: none; min-height: 42px; max-height: 110px; padding: 10px 12px; border-radius: 8px; border: 1.5px solid var(--line); background: var(--bg); color: var(--ink); }
+        .chat-send { background: var(--accent); color: white; padding: 10px 16px; border-radius: 8px; font-weight: 700; }
+
+        /* Small right-side scroll bar (chat messages) */
+        .chat-msgs { scrollbar-width: thin; scrollbar-color: rgba(145,152,168,.8) transparent; }
+        .chat-msgs::-webkit-scrollbar { width: 6px; }
+        .chat-msgs::-webkit-scrollbar-track { background: transparent; }
+        .chat-msgs::-webkit-scrollbar-thumb { background: rgba(145,152,168,.75); border-radius: 10px; }
+        .chat-msgs::-webkit-scrollbar-thumb:hover { background: rgba(145,152,168,.95); }
+
     </style>
 </head>
 <body>
@@ -300,6 +327,7 @@
                     <th>Property Title</th>
                     <th>Date Sent</th>
                     <th>Status</th>
+                    <th>Chat</th>
                 </tr>
             </thead>
             <tbody>
@@ -316,11 +344,21 @@
                                         <c:otherwise><span class="status-badge badge-viewed">Agent Responded</span></c:otherwise>
                                     </c:choose>
                                 </td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${not empty inq.threadId}">
+                                            <button type="button" class="btn" style="padding: 8px 12px; font-size: 0.85rem;" onclick="openBuyerChat('${inq.threadId}')">Open</button>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span style="opacity: 0.6;">—</span>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
                             </tr>
                         </c:forEach>
                     </c:when>
                     <c:otherwise>
-                        <tr><td colspan="4" style="text-align:center; padding: 30px; color: var(--ink); opacity: 0.6;">No pending inquiries.</td></tr>
+                        <tr><td colspan="5" style="text-align:center; padding: 30px; color: var(--ink); opacity: 0.6;">No pending inquiries.</td></tr>
                     </c:otherwise>
                 </c:choose>
             </tbody>
@@ -385,6 +423,153 @@
 </script>
 
 <script src="app.js"></script>
+
+<script>
+    window.currentUser = "${sessionScope.loggedUser}";
+    window.currentRole = "${sessionScope.loggedRole}";
+</script>
+
+<!-- Buyer Inquiry Chat Modal -->
+<div class="chat-overlay" id="buyerChatOverlay" onclick="closeBuyerChatIfOutside(event)">
+    <div class="chat-box" onclick="event.stopPropagation()">
+        <div class="chat-left">
+            <div style="font-weight: 800; margin-bottom: 12px;">Inquiry Details</div>
+            <div style="display:flex; flex-direction:column; gap: 10px;">
+                <div>
+                    <div style="font-size:0.75rem; opacity:0.7; text-transform: uppercase; letter-spacing: .6px;">Seller</div>
+                    <div id="bchatSellerName" style="font-weight:700;"></div>
+                </div>
+                <div style="padding-top: 10px; border-top: 1px solid var(--line);">
+                    <div style="font-size:0.75rem; opacity:0.7; text-transform: uppercase; letter-spacing: .6px;">Property</div>
+                    <div id="bchatPropTitle" style="font-weight:700;"></div>
+                    <div id="bchatPropId" style="font-size:0.85rem; opacity:0.8;"></div>
+                </div>
+                <div style="padding-top: 10px; border-top: 1px solid var(--line);">
+                    <div style="font-size:0.75rem; opacity:0.7; text-transform: uppercase; letter-spacing: .6px;">Thread</div>
+                    <div id="bchatThreadId" style="font-size:0.85rem; opacity:0.85; word-break: break-all;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-right">
+            <div class="chat-top">
+                <div class="chat-peer">
+                    <div class="avatar">👤</div>
+                    <div>
+                        <div class="peer-name" id="bchatHeaderName">Seller</div>
+                        <div class="peer-sub" id="bchatHeaderSub">Inquiry chat</div>
+                    </div>
+                </div>
+                <button class="btn" type="button" style="background: var(--line); color: var(--ink);" onclick="closeBuyerChat()">Close</button>
+            </div>
+
+            <div class="chat-msgs" id="bchatMsgs"></div>
+
+            <form class="chat-compose" action="replyInquiry" method="post" onsubmit="return validateBuyerChatSend();">
+                <input type="hidden" name="threadId" id="bchatThreadIdInput">
+                <textarea class="chat-input" name="message" id="bchatInput" placeholder="Type a message..." required></textarea>
+                <button class="chat-send" type="submit">Send</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.buyerThreads = {};
+    <c:forEach var="t" items="${buyerThreads}">
+        window.buyerThreads["${t.id}"] = {
+            id: "${t.id}",
+            propertyId: "${t.propertyId}",
+            propertyTitle: "${t.propertyTitle}",
+            sellerName: "${t.sellerName}",
+            createdDate: "${t.createdDate}",
+            status: "${t.status}"
+        };
+    </c:forEach>
+
+    function openBuyerChat(threadId) {
+        const t = window.buyerThreads ? window.buyerThreads[threadId] : null;
+        if (!t) return;
+
+        document.getElementById('bchatSellerName').innerText = t.sellerName || '(No seller)';
+        document.getElementById('bchatPropTitle').innerText = t.propertyTitle || '(No title)';
+        document.getElementById('bchatPropId').innerText = t.propertyId ? ('Property ID: ' + t.propertyId) : '';
+        document.getElementById('bchatThreadId').innerText = t.id;
+        document.getElementById('bchatHeaderName').innerText = t.sellerName || 'Seller';
+        document.getElementById('bchatHeaderSub').innerText = (t.createdDate ? ('Created: ' + t.createdDate) : 'Inquiry chat');
+        document.getElementById('bchatThreadIdInput').value = t.id;
+
+        const msgs = document.getElementById('bchatMsgs');
+        const container = document.getElementById('bthread-msgs-' + threadId);
+        msgs.innerHTML = container ? container.innerHTML : '';
+
+        document.getElementById('buyerChatOverlay').classList.add('open');
+        setTimeout(() => { msgs.scrollTop = msgs.scrollHeight; }, 50);
+        setTimeout(() => { document.getElementById('bchatInput').focus(); }, 80);
+
+        // Mark as read so the bell bubble decreases
+        try {
+            fetch('markInquiryRead', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'threadId=' + encodeURIComponent(threadId)
+            }).catch(() => {});
+        } catch (e) {}
+    }
+
+    function closeBuyerChat() {
+        document.getElementById('buyerChatOverlay').classList.remove('open');
+        document.getElementById('bchatInput').value = '';
+    }
+
+    function closeBuyerChatIfOutside(event) {
+        if (event.target && event.target.id === 'buyerChatOverlay') closeBuyerChat();
+    }
+
+    function validateBuyerChatSend() {
+        const text = document.getElementById('bchatInput').value;
+        return text && text.trim().length > 0;
+    }
+
+    // Auto-open from notification bell (buyerDashboard?threadId=...)
+    document.addEventListener("DOMContentLoaded", () => {
+        const params = new URLSearchParams(window.location.search);
+        const threadId = params.get('threadId');
+        if (threadId) {
+            setTimeout(() => openBuyerChat(threadId), 150);
+        }
+    });
+</script>
+
+<!-- Hidden rendered messages per thread -->
+<div style="display:none;">
+    <c:forEach var="t" items="${buyerThreads}">
+        <div id="bthread-msgs-${t.id}">
+            <c:forEach var="m" items="${t.messages}">
+                <c:choose>
+                    <c:when test="${m.senderRole == 'BUYER'}">
+                        <div class="bubble bubble-right">
+                            <div class="bubble-meta">
+                                <strong><c:out value="${m.senderName}"/></strong>
+                                · <c:out value="${m.timestamp}"/>
+                            </div>
+                            <div style="white-space: pre-wrap;"><c:out value="${m.content}"/></div>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="bubble bubble-left">
+                            <div class="bubble-meta">
+                                <strong><c:out value="${m.senderName}"/></strong>
+                                · <c:out value="${m.timestamp}"/>
+                            </div>
+                            <div style="white-space: pre-wrap;"><c:out value="${m.content}"/></div>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </c:forEach>
+        </div>
+    </c:forEach>
+</div>
 
 </body>
 </html>

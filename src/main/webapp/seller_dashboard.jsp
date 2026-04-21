@@ -45,6 +45,33 @@
         .modal-box { background: var(--bg); padding: 30px; border-radius: var(--r); width: 100%; max-width: 500px; }
         .close-btn { float: right; cursor: pointer; font-weight: bold; font-size: 1.2rem; color: var(--ink); }
 
+        /* ── INQUIRY CHAT MODAL (WhatsApp-like) ── */
+        .chat-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 1200; padding: 18px; }
+        .chat-overlay.open { display: flex; }
+        .chat-box { background: var(--bg); border: 1px solid var(--line); border-radius: var(--r); width: 100%; max-width: 920px; height: min(78vh, 620px); box-shadow: 0 20px 70px rgba(0,0,0,.25); overflow: hidden; display: grid; grid-template-columns: 320px 1fr; }
+        .chat-left { border-right: 1px solid var(--line); background: var(--bg2); padding: 18px; overflow-y: auto; }
+        .chat-right { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+        .chat-top { padding: 16px 18px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        .chat-peer { display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--line); display: flex; align-items: center; justify-content: center; color: var(--ink); font-weight: 700; }
+        .peer-name { font-weight: 700; }
+        .peer-sub { font-size: 0.8rem; opacity: 0.75; }
+        .chat-msgs { flex: 1; padding: 18px; overflow-y: auto; background: var(--bg); min-height: 0; }
+        .bubble { max-width: 72%; padding: 10px 12px; border-radius: 12px; margin: 8px 0; border: 1px solid var(--line); }
+        .bubble-left { background: var(--bg2); margin-right: auto; border-top-left-radius: 6px; }
+        .bubble-right { background: rgba(26,86,219,0.10); margin-left: auto; border-top-right-radius: 6px; }
+        .bubble-meta { font-size: 0.72rem; opacity: 0.75; margin-bottom: 4px; }
+        .chat-compose { border-top: 1px solid var(--line); padding: 12px; display: flex; gap: 10px; background: var(--bg2); }
+        .chat-input { flex: 1; resize: none; min-height: 42px; max-height: 110px; padding: 10px 12px; border-radius: 8px; border: 1.5px solid var(--line); background: var(--bg); color: var(--ink); }
+        .chat-send { background: var(--accent); color: white; padding: 10px 16px; border-radius: 8px; font-weight: 700; }
+
+        /* Small right-side scroll bar (chat messages) */
+        .chat-msgs { scrollbar-width: thin; scrollbar-color: rgba(145,152,168,.8) transparent; }
+        .chat-msgs::-webkit-scrollbar { width: 6px; }
+        .chat-msgs::-webkit-scrollbar-track { background: transparent; }
+        .chat-msgs::-webkit-scrollbar-thumb { background: rgba(145,152,168,.75); border-radius: 10px; }
+        .chat-msgs::-webkit-scrollbar-thumb:hover { background: rgba(145,152,168,.95); }
+
        /* ── TELEGRAM STYLE THEME TOGGLE ── */
                .theme-switch {
                    position: relative; width: 54px; height: 30px; background-color: var(--line);
@@ -72,7 +99,20 @@
                     <div class="theme-switch-thumb" id="theme-toggle">🌙</div>
                 </div>
 
-                <button class="btn" onclick="window.location.href='index.jsp'" style="background: var(--line); color: var(--ink);">🏠 Go to Homepage</button>
+                <!-- Bell Notifications (same as homepage) -->
+                <div class="nav-notif" id="bell-container" onclick="toggleNotif(event)" style="position: relative; cursor: pointer; margin-right: 2px; display:flex; align-items:center;">
+                    <span class="notif-icon" style="font-size: 1.5rem;">🔔</span>
+                    <div id="notif-count" class="notif-badge" style="position:absolute; top:-5px; right:-5px; background:#e02828; color:white; font-size:0.65rem; padding:2px 6px; border-radius:10px; font-weight:bold; border:2px solid var(--bg); display:none;">0</div>
+                    <div class="notif-panel" id="notif-panel" style="position:absolute; top:120%; right:0; width:320px; background:var(--bg); border:1px solid var(--line); border-radius:16px; box-shadow:0 32px 80px rgba(0,0,0,.16); display:none; z-index:2000; overflow:hidden;">
+                        <div class="notif-header" style="padding:16px; border-bottom:1px solid var(--line); font-weight:700; font-size:0.95rem; background:var(--bg2);">Notifications</div>
+                        <div id="notif-list" style="max-height:350px; overflow-y:auto;">
+                            <p style="padding: 20px; text-align: center; color: rgba(0,0,0,.45); font-size: 0.85rem;">No new messages</p>
+                        </div>
+                        <div class="notif-footer" style="padding:12px; text-align:center; font-size:0.8rem; color:var(--accent); background:var(--bg2); border-top:1px solid var(--line);">Nestiq Secure Messaging</div>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="window.location.href='properties'" style="background: var(--line); color: var(--ink);">🏠 Go to Homepage</button>
                 <form action="logout" method="post" style="display:inline;">
                     <button type="submit" class="btn" style="background: #e02828;">Logout</button>
                 </form>
@@ -132,6 +172,28 @@
             </tbody>
         </table>
     </div>
+
+    <div class="card">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap: 12px; flex-wrap: wrap;">
+            <h3 class="card-title" style="margin-bottom: 0;">📩 Buyer Inquiries</h3>
+            <div style="display:flex; gap: 10px; align-items:center;">
+                <select id="inqSelect" style="min-width: 320px; max-width: 520px;">
+                    <option value="">Select an inquiry...</option>
+                    <c:forEach var="t" items="${sellerThreads}">
+                        <option value="${t.id}">${t.buyerName} — ${t.propertyTitle}</option>
+                    </c:forEach>
+                </select>
+                <button class="btn" type="button" onclick="openInquiryFromSelect()">Open</button>
+            </div>
+        </div>
+
+        <div style="margin-top: 14px; color: var(--ink); opacity: 0.75; font-size: 0.9rem;">
+            <c:choose>
+                <c:when test="${empty sellerThreads}">No inquiries yet.</c:when>
+                <c:otherwise>Tip: pick an inquiry to view the chat thread and reply.</c:otherwise>
+            </c:choose>
+        </div>
+    </div>
 </div>
 
 <div class="modal-overlay" id="editModal">
@@ -159,6 +221,22 @@
 
 <script src="app.js"></script>
 <script>
+    // Identity bridge for notifications on this page too
+    window.currentUser = "${sessionScope.loggedUser}";
+    window.currentRole = "${sessionScope.loggedRole}";
+    window.allNotifications = [];
+    <c:forEach items="${allNotifications}" var="n">
+        window.allNotifications.push({
+            sender: "${n.sender}",
+            receiver: "${n.receiver}",
+            message: "${n.content}",
+            property: "${n.propTitle}",
+            type: "${n.type}",
+            threadId: "${n.threadId}"
+        });
+    </c:forEach>
+</script>
+<script>
     function openEditModal(id, title, price, location, type, status) {
         document.getElementById('edit-id').value = id;
         document.getElementById('edit-title').value = title;
@@ -173,6 +251,169 @@
         document.getElementById('editModal').classList.remove('open');
     }
 </script>
+
+<!-- Inquiry Chat Modal -->
+<div class="chat-overlay" id="chatOverlay" onclick="closeChatIfOutside(event)">
+    <div class="chat-box" onclick="event.stopPropagation()">
+        <div class="chat-left">
+            <div style="font-weight: 800; margin-bottom: 12px;">Inquiry Details</div>
+            <div style="display:flex; flex-direction:column; gap: 10px;">
+                <div>
+                    <div style="font-size:0.75rem; opacity:0.7; text-transform: uppercase; letter-spacing: .6px;">Buyer</div>
+                    <div id="chatBuyerName" style="font-weight:700;"></div>
+                </div>
+                <div>
+                    <div style="font-size:0.75rem; opacity:0.7; text-transform: uppercase; letter-spacing: .6px;">Email</div>
+                    <div id="chatBuyerEmail"></div>
+                </div>
+                <div>
+                    <div style="font-size:0.75rem; opacity:0.7; text-transform: uppercase; letter-spacing: .6px;">Phone</div>
+                    <div id="chatBuyerPhone"></div>
+                </div>
+                <div style="padding-top: 10px; border-top: 1px solid var(--line);">
+                    <div style="font-size:0.75rem; opacity:0.7; text-transform: uppercase; letter-spacing: .6px;">Property</div>
+                    <div id="chatPropTitle" style="font-weight:700;"></div>
+                    <div id="chatPropId" style="font-size:0.85rem; opacity:0.8;"></div>
+                </div>
+                <div style="padding-top: 10px; border-top: 1px solid var(--line);">
+                    <div style="font-size:0.75rem; opacity:0.7; text-transform: uppercase; letter-spacing: .6px;">Thread</div>
+                    <div id="chatThreadId" style="font-size:0.85rem; opacity:0.85; word-break: break-all;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-right">
+            <div class="chat-top">
+                <div class="chat-peer">
+                    <div class="avatar">👤</div>
+                    <div>
+                        <div class="peer-name" id="chatHeaderName">Buyer</div>
+                        <div class="peer-sub" id="chatHeaderSub">Inquiry chat</div>
+                    </div>
+                </div>
+                <button class="btn" type="button" style="background: var(--line); color: var(--ink);" onclick="closeChat()">Close</button>
+            </div>
+
+            <div class="chat-msgs" id="chatMsgs"></div>
+
+            <form class="chat-compose" action="replyInquiry" method="post" onsubmit="return validateChatSend();">
+                <input type="hidden" name="threadId" id="chatThreadIdInput">
+                <textarea class="chat-input" name="message" id="chatInput" placeholder="Type a reply..." required></textarea>
+                <button class="chat-send" type="submit">Send</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Build a JS map of seller threads from server-side data
+    window.sellerThreads = {};
+    <c:forEach var="t" items="${sellerThreads}">
+        window.sellerThreads["${t.id}"] = {
+            id: "${t.id}",
+            propertyId: "${t.propertyId}",
+            propertyTitle: "${t.propertyTitle}",
+            buyerName: "${t.buyerName}",
+            buyerEmail: "${t.buyerEmail}",
+            buyerPhone: "${t.buyerPhone}",
+            createdDate: "${t.createdDate}",
+            status: "${t.status}"
+        };
+    </c:forEach>
+
+    function openInquiryFromSelect() {
+        const sel = document.getElementById('inqSelect');
+        if (!sel || !sel.value) return;
+        openChat(sel.value);
+    }
+
+    function openChat(threadId) {
+        const t = window.sellerThreads ? window.sellerThreads[threadId] : null;
+        if (!t) return;
+
+        document.getElementById('chatBuyerName').innerText = t.buyerName || '(No name)';
+        document.getElementById('chatBuyerEmail').innerText = t.buyerEmail || '(No email)';
+        document.getElementById('chatBuyerPhone').innerText = t.buyerPhone || '(No phone)';
+        document.getElementById('chatPropTitle').innerText = t.propertyTitle || '(No title)';
+        document.getElementById('chatPropId').innerText = t.propertyId ? ('Property ID: ' + t.propertyId) : '';
+        document.getElementById('chatThreadId').innerText = t.id;
+
+        document.getElementById('chatHeaderName').innerText = t.buyerName || 'Buyer';
+        document.getElementById('chatHeaderSub').innerText = (t.createdDate ? ('Created: ' + t.createdDate) : 'Inquiry chat');
+
+        document.getElementById('chatThreadIdInput').value = t.id;
+
+        const msgs = document.getElementById('chatMsgs');
+        const container = document.getElementById('thread-msgs-' + threadId);
+        msgs.innerHTML = container ? container.innerHTML : '';
+
+        document.getElementById('chatOverlay').classList.add('open');
+        setTimeout(() => { msgs.scrollTop = msgs.scrollHeight; }, 50);
+        setTimeout(() => { document.getElementById('chatInput').focus(); }, 80);
+
+        // Mark as read so the bell bubble decreases
+        try {
+            fetch('markInquiryRead', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'threadId=' + encodeURIComponent(threadId)
+            }).catch(() => {});
+        } catch (e) {}
+    }
+
+    function closeChat() {
+        document.getElementById('chatOverlay').classList.remove('open');
+        document.getElementById('chatInput').value = '';
+    }
+
+    function closeChatIfOutside(event) {
+        if (event.target && event.target.id === 'chatOverlay') closeChat();
+    }
+
+    function validateChatSend() {
+        const text = document.getElementById('chatInput').value;
+        return text && text.trim().length > 0;
+    }
+
+    // Auto-open from notification bell routing (sellerDashboard?threadId=...)
+    document.addEventListener("DOMContentLoaded", () => {
+        const params = new URLSearchParams(window.location.search);
+        const threadId = params.get('threadId');
+        if (threadId) {
+            setTimeout(() => openChat(threadId), 150);
+        }
+    });
+</script>
+
+<!-- Hidden rendered messages per thread (safe HTML escaping) -->
+<div style="display:none;">
+    <c:forEach var="t" items="${sellerThreads}">
+        <div id="thread-msgs-${t.id}">
+            <c:forEach var="m" items="${t.messages}">
+                <c:choose>
+                    <c:when test="${m.senderRole == 'SELLER'}">
+                        <div class="bubble bubble-right">
+                            <div class="bubble-meta">
+                                <strong><c:out value="${m.senderName}"/></strong>
+                                · <c:out value="${m.timestamp}"/>
+                            </div>
+                            <div style="white-space: pre-wrap;"><c:out value="${m.content}"/></div>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="bubble bubble-left">
+                            <div class="bubble-meta">
+                                <strong><c:out value="${m.senderName}"/></strong>
+                                · <c:out value="${m.timestamp}"/>
+                            </div>
+                            <div style="white-space: pre-wrap;"><c:out value="${m.content}"/></div>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </c:forEach>
+        </div>
+    </c:forEach>
+</div>
 
 </body>
 </html>

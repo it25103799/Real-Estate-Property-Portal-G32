@@ -616,6 +616,41 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
 }
 .auth-input:focus { border-color: var(--accent); background: white; box-shadow: 0 0 0 3px rgba(26,86,219,.1); }
 .auth-input::placeholder { color: var(--ink4); }
+
+/* ── PASSWORD EYE TOGGLE ── */
+.pw-wrap { position: relative; }
+.pw-wrap .auth-input { padding-right: 46px; }
+.pw-eye {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--ink4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--t);
+}
+.pw-eye:hover {
+  background: var(--bg2);
+  border-color: var(--line);
+  color: var(--ink2);
+}
+.pw-eye:active { transform: translateY(-50%) scale(0.98); }
+.pw-eye:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(26,86,219,.18);
+  border-color: rgba(26,86,219,.35);
+  background: var(--accent-l);
+  color: var(--accent);
+}
+.pw-eye svg { width: 18px; height: 18px; }
 .auth-divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; }
 .auth-divider::before, .auth-divider::after { content:''; flex:1; height:1px; background:var(--line); }
 .auth-divider span { font-size: .78rem; color: var(--ink4); white-space: nowrap; }
@@ -1556,7 +1591,15 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
 
            <div class="auth-field">
              <label>Password</label>
-             <input class="auth-input" type="password" name="password" placeholder="••••••••" required/>
+             <div class="pw-wrap">
+               <input class="auth-input" id="login-password" type="password" name="password" placeholder="••••••••" required/>
+               <button class="pw-eye" type="button" aria-label="Toggle password visibility" onclick="togglePw('login-password', this)">
+                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                   <circle cx="12" cy="12" r="3"></circle>
+                 </svg>
+               </button>
+             </div>
            </div>
 
            <button type="submit" class="auth-submit">Sign In →</button>
@@ -1605,7 +1648,15 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
             </div>
             <div class="auth-field">
               <label>Password</label>
-              <input class="auth-input" type="password" name="password" placeholder="Min 8 characters" required minlength="8"/>
+              <div class="pw-wrap">
+                <input class="auth-input" id="register-password" type="password" name="password" placeholder="Min 8 characters" required minlength="8"/>
+                <button class="pw-eye" type="button" aria-label="Toggle password visibility" onclick="togglePw('register-password', this)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                </button>
+              </div>
             </div>
 
             <button type="submit" class="auth-submit">Create Account →</button>
@@ -1624,6 +1675,7 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
 <script>
     // 1. Identity Bridge
     window.currentUser = "${sessionScope.loggedUser}";
+    window.currentRole = "${sessionScope.loggedRole}";
 
     // Convert Java List to JS Array
     window.allNotifications = [];
@@ -1633,7 +1685,8 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
             receiver: "${n.receiver}",
             message: "${n.content}",
             property: "${n.propTitle}",
-            type: "${n.type}"
+            type: "${n.type}",
+            threadId: "${n.threadId}"
         });
     </c:forEach>
 
@@ -1663,6 +1716,27 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
     console.log("✅ ENGINE ONLINE. User:", window.currentUser, "| Reviews:", window.allReviews.length);
 </script>
 <script src="app.js"></script>
+
+<script>
+  function togglePw(inputId, btn) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    const show = input.type === 'password';
+    input.type = show ? 'text' : 'password';
+
+    if (btn) {
+      btn.innerHTML = show
+        ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+             <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+             <line x1="1" y1="1" x2="23" y2="23"></line>
+           </svg>`
+        : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+             <circle cx="12" cy="12" r="3"></circle>
+           </svg>`;
+    }
+  }
+</script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
