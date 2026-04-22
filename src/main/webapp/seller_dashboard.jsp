@@ -174,6 +174,65 @@
     </div>
 
     <div class="card">
+        <h3 class="card-title">💬 Property Reviews</h3>
+        <div style="color: var(--ink); opacity: 0.75; font-size: 0.9rem; margin-top: -10px; margin-bottom: 16px;">
+            Reviews posted by buyers for your listings.
+        </div>
+
+        <c:choose>
+            <c:when test="${empty myProperties}">
+                <div style="text-align:center; padding: 18px; opacity: 0.8;">
+                    No properties found. Add a property to start receiving reviews.
+                </div>
+            </c:when>
+            <c:otherwise>
+                <div style="display:flex; flex-direction:column; gap: 16px;">
+                    <c:forEach var="p" items="${myProperties}">
+                        <div style="border: 1px solid var(--line); border-radius: var(--r); background: var(--bg2); padding: 16px;">
+                            <div style="display:flex; justify-content:space-between; gap: 12px; flex-wrap: wrap;">
+                                <div>
+                                    <div style="font-weight: 800;">${p.title}</div>
+                                    <div style="font-size: 0.85rem; opacity: 0.8;">Property ID: <small>${p.id}</small></div>
+                                </div>
+                                <div style="font-size: 0.85rem; opacity: 0.8;">
+                                    ${p.location} · ${p.type}
+                                </div>
+                            </div>
+
+                            <c:set var="revList" value="${reviewsByProperty[p.id]}"/>
+                            <c:choose>
+                                <c:when test="${empty revList}">
+                                    <div style="margin-top: 12px; padding: 12px; border-radius: 8px; background: var(--bg); border: 1px solid var(--line); opacity: 0.9;">
+                                        No reviews yet.
+                                    </div>
+                                </c:when>
+                                <c:otherwise>
+                                    <div style="margin-top: 12px; display:flex; flex-direction:column; gap: 10px;">
+                                        <c:forEach var="r" items="${revList}">
+                                            <div style="padding: 12px; border-radius: 8px; background: var(--bg); border: 1px solid var(--line);">
+                                                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap: 10px; flex-wrap: wrap;">
+                                                    <div style="font-weight: 700;"><c:out value="${r.buyerName}"/></div>
+                                                    <div style="color: #d97706; letter-spacing: 1px; font-size: 0.9rem;">
+                                                        <c:forEach begin="1" end="${r.rating}" var="i">★</c:forEach>
+                                                        <c:forEach begin="1" end="${5 - r.rating}" var="i">☆</c:forEach>
+                                                    </div>
+                                                </div>
+                                                <div style="margin-top: 6px; opacity: 0.9; white-space: pre-wrap;">
+                                                    <c:out value="${r.comment}"/>
+                                                </div>
+                                            </div>
+                                        </c:forEach>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                    </c:forEach>
+                </div>
+            </c:otherwise>
+        </c:choose>
+    </div>
+
+    <div class="card">
         <div style="display:flex; align-items:center; justify-content:space-between; gap: 12px; flex-wrap: wrap;">
             <h3 class="card-title" style="margin-bottom: 0;">📩 Buyer Inquiries</h3>
             <div style="display:flex; gap: 10px; align-items:center;">

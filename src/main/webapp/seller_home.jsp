@@ -252,6 +252,43 @@
         </aside>
     </section>
 
+    <section style="margin-top: 32px;">
+        <div class="q-title" style="font-size: 1.2rem; margin-bottom: 20px;">⭐ Recent Buyer Reviews</div>
+        <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));">
+            <c:set var="hasAnyReview" value="false"/>
+            <c:forEach var="p" items="${myProperties}">
+                <c:forEach var="r" items="${reviewsByProperty[p.id]}">
+                    <c:set var="hasAnyReview" value="true"/>
+                    <div class="card" style="display: flex; flex-direction: column; gap: 10px;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div>
+                                <div style="font-weight: 800; font-size: 0.95rem;">${r.buyerName}</div>
+                                <div style="font-size: 0.75rem; color: var(--ink4); margin-top: 2px;">on ${p.title}</div>
+                            </div>
+                            <div style="color: var(--amber); letter-spacing: 1px; font-size: 0.85rem;">
+                                <c:forEach begin="1" end="${r.rating}" var="i">★</c:forEach>
+                                <c:forEach begin="1" end="${5 - r.rating}" var="i">☆</c:forEach>
+                            </div>
+                        </div>
+                        <div class="muted" style="font-style: italic; font-size: 0.85rem;">
+                            "${r.comment}"
+                        </div>
+                        <c:if test="${r.verified}">
+                            <div style="font-size: 0.7rem; font-weight: 800; color: var(--green); background: var(--green-l); padding: 2px 6px; border-radius: 4px; width: fit-content; text-transform: uppercase;">
+                                Verified Purchase
+                            </div>
+                        </c:if>
+                    </div>
+                </c:forEach>
+            </c:forEach>
+            <c:if test="${!hasAnyReview}">
+                <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 40px; opacity: 0.6;">
+                    No reviews received yet from buyers.
+                </div>
+            </c:if>
+        </div>
+    </section>
+
     <section class="scene" aria-label="Seller workspace highlight">
         <div class="scene-img" role="img" aria-label="Professional real estate workspace image"></div>
         <div class="scene-body">

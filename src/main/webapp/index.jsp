@@ -1536,8 +1536,6 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
             <textarea name="message" class="contact-form-input" rows="3" placeholder="I'm interested in this property..." required></textarea>
 
             <button type="submit" class="btn-contact">Send Message</button>
-
-            <button type="button" class="btn-contact-outline" onclick="alert('Viewing scheduler coming soon!')">📅 Schedule Viewing</button>
         </form>
       </div>
     </div>
