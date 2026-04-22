@@ -65,8 +65,8 @@ public class LoginServlet extends HttpServlet {
                 return;
 
             } else if ("SELLER".equalsIgnoreCase(role)) {
-                // Send to the Servlet Engine, NOT the raw JSP!
-                response.sendRedirect("sellerDashboard");
+                // Send to the Seller main page (separate from Buyer site)
+                response.sendRedirect("sellerHome");
 
             } else if ("BUYER".equalsIgnoreCase(role)) {
                 // Send to the Servlet Engine, NOT the raw JSP!

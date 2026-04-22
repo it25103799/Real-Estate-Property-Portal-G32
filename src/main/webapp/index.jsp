@@ -1,6 +1,14 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%
+    // Role separation: sellers must not see buyer-facing main site pages.
+    String _role = (String) session.getAttribute("loggedRole");
+    if (_role != null && "SELLER".equalsIgnoreCase(_role)) {
+        response.sendRedirect("sellerHome");
+        return;
+    }
+%>
 
 <!DOCTYPE html>
 <html lang="en">
