@@ -1033,9 +1033,9 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
   </div>
   <ul class="nav-links">
     <li><a href="#" onclick="showPage('home')" id="nav-home" class="active">Home</a></li>
-    <li><a href="#" onclick="showPage('listings')">Browse</a></li>
-    <li><a href="#" onclick="showPage('agents')">Agents</a></li>
-    <li><a href="#" onclick="showPage('home')">About</a></li>
+    <li><a href="#" onclick="showPage('listings')" id="nav-listings">Browse</a></li>
+    <li><a href="#" onclick="showPage('agents')" id="nav-agents">Agents</a></li>
+    <li><a href="#" onclick="showPage('about')" id="nav-about">About</a></li>
   </ul>
 
       <div class="nav-actions">
@@ -1301,6 +1301,86 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
       <div class="prop-grid" id="home-agents-grid"></div>
     </div>
   </section>
+</div>
+
+<div class="page" id="page-about">
+  <div class="agents-hero">
+    <div class="container">
+      <div class="section-tag">Our Story</div>
+      <h1 class="section-title mt-8">Redefining Real Estate in Sri Lanka</h1>
+      <p class="section-sub">At NESTIQ, we believe that finding a home is more than just a transaction — it's the start of a new chapter in your life.</p>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;">
+        <div>
+          <h2 style="font-family: var(--font-serif); font-size: 2.4rem; margin-bottom: 24px;">The NESTIQ Mission</h2>
+          <p style="color: var(--ink3); font-size: 1.1rem; line-height: 1.8; margin-bottom: 20px;">
+            Founded in 2020, NESTIQ emerged from a simple observation: the Sri Lankan real estate market was fragmented, opaque, and difficult to navigate. We set out to build a platform that brings transparency, trust, and professional service to every corner of the island.
+          </p>
+          <p style="color: var(--ink3); font-size: 1.1rem; line-height: 1.8;">
+            From the bustling streets of Colombo to the serene beaches of Bentota and the misty hills of Kandy, we are committed to helping every Sri Lankan find their perfect place. Our platform combines cutting-edge technology with deep local expertise.
+          </p>
+        </div>
+        <div style="border-radius: var(--r3); overflow: hidden; box-shadow: var(--shadow-xl);">
+          <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=800&q=80" alt="Sri Lankan Property" style="width: 100%; height: 450px; object-fit: cover;">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--bg2);">
+    <div class="container">
+      <div style="text-align: center; max-width: 800px; margin: 0 auto 60px;">
+        <h2 style="font-family: var(--font-serif); font-size: 2.2rem; margin-bottom: 16px;">What Makes Us Different?</h2>
+        <p style="color: var(--ink3);">We don't just list properties; we verify them. Every agent on our platform is hand-picked for their integrity and track record.</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
+        <div class="why-card" style="background: var(--bg); padding: 40px;">
+          <div style="font-size: 2.5rem; margin-bottom: 20px;">🛡️</div>
+          <h3 style="margin-bottom: 12px; font-size: 1.25rem;">100% Verified Listings</h3>
+          <p style="color: var(--ink4); font-size: 0.95rem;">Every property on NESTIQ undergoes a rigorous verification process to ensure accuracy and prevent fraud.</p>
+        </div>
+        <div class="why-card" style="background: var(--bg); padding: 40px;">
+          <div style="font-size: 2.5rem; margin-bottom: 20px;">💎</div>
+          <h3 style="margin-bottom: 12px; font-size: 1.25rem;">Exclusive Portfolios</h3>
+          <p style="color: var(--ink4); font-size: 0.95rem;">Access luxury apartments and colonial villas that aren't available anywhere else in the market.</p>
+        </div>
+        <div class="why-card" style="background: var(--bg); padding: 40px;">
+          <div style="font-size: 2.5rem; margin-bottom: 20px;">🤝</div>
+          <h3 style="margin-bottom: 12px; font-size: 1.25rem;">Expert Guidance</h3>
+          <p style="color: var(--ink4); font-size: 0.95rem;">Our agents aren't just salespeople; they are consultants with decades of experience in the Sri Lankan market.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container" style="text-align: center;">
+      <h2 style="font-family: var(--font-serif); font-size: 2.2rem; margin-bottom: 40px;">Our Presence Across Sri Lanka</h2>
+      <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;">
+        <div style="text-align: center;">
+          <div style="font-size: 2rem; font-weight: 700; color: var(--accent);">25+</div>
+          <div style="color: var(--ink3); font-weight: 500;">Cities Covered</div>
+        </div>
+        <div style="text-align: center;">
+          <div style="font-size: 2rem; font-weight: 700; color: var(--accent);">5000+</div>
+          <div style="color: var(--ink3); font-weight: 500;">Verified Listings</div>
+        </div>
+        <div style="text-align: center;">
+          <div style="font-size: 2rem; font-weight: 700; color: var(--accent);">150+</div>
+          <div style="color: var(--ink3); font-weight: 500;">Certified Agents</div>
+        </div>
+        <div style="text-align: center;">
+          <div style="font-size: 2rem; font-weight: 700; color: var(--accent);">10k+</div>
+          <div style="color: var(--ink3); font-weight: 500;">Happy Families</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <footer class="footer">
     <div class="container">
@@ -1316,12 +1396,12 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
           </div>
         </div>
         <div>
-          <div class="footer-col-title">Company</div>
+          <div class="footer-col-title">Quick Links</div>
           <ul class="footer-links">
-            <li><a href="#">About Us</a></li>
-            <li><a href="#">Careers</a></li>
-            <li><a href="#">Press</a></li>
-            <li><a href="#">Blog</a></li>
+            <li><a href="#" onclick="showPage('home')">Home</a></li>
+            <li><a href="#" onclick="showPage('listings')">Browse</a></li>
+            <li><a href="#" onclick="showPage('agents')">Agents</a></li>
+            <li><a href="#" onclick="showPage('about')">About Us</a></li>
           </ul>
         </div>
         <div>

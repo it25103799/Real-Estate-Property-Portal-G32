@@ -7,7 +7,7 @@ REV1776009153145,3ea4a9d6,Vishak,5,The Greatest view I ever seen !!,PUBLIC
 REV1776010000510,dff34ab2,Rashmika,5,I love this !!,PUBLIC
 REV1776011153449,ba4ccf7e,Awishka,4,Its feel good..!,PUBLIC
 
-REV1776011405823,ba4ccf7e,Bhashi Navod,5,This is great..!!,PUBLIC
+REV1776011405823,ba4ccf7e,Bhashi Navod,5,This is great..!,PUBLIC
 REV1776012538393,f62059d5,Bhashi Navod,5,I love this property..!! ❤️,PUBLIC
 
 REV1776012871403,c66a23ca,Ravindu Lohan,5,This is great..!!,PUBLIC

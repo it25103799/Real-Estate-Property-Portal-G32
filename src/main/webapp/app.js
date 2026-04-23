@@ -1,34 +1,42 @@
 // ── DARK MODE LOGIC ───────────────────────────────────
-if (localStorage.getItem('nestiq_theme') === 'dark') {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    document.addEventListener("DOMContentLoaded", () => {
-        const btn = document.getElementById('theme-toggle');
+if (window.localStorage.getItem('nestiq_theme') === 'dark') {
+    window.document.documentElement.setAttribute('data-theme', 'dark');
+    window.document.addEventListener("DOMContentLoaded", () => {
+        const btn = window.document.getElementById('theme-toggle');
         if(btn) btn.textContent = '☀️';
     });
 }
 
 function toggleTheme() {
-    const html = document.documentElement;
-    const btn = document.getElementById('theme-toggle');
+    const html = window.document.documentElement;
+    const btn = window.document.getElementById('theme-toggle');
     if (html.getAttribute('data-theme') === 'dark') {
         html.removeAttribute('data-theme');
-        localStorage.setItem('nestiq_theme', 'light');
+        window.localStorage.setItem('nestiq_theme', 'light');
         if(btn) btn.textContent = '🌙';
     } else {
         html.setAttribute('data-theme', 'dark');
-        localStorage.setItem('nestiq_theme', 'dark');
+        window.localStorage.setItem('nestiq_theme', 'dark');
         if(btn) btn.textContent = '☀️';
     }
 }
 
 // ── DATA ──────────────────────────────────────────────
+// Sri Lankan names + Sri Lanka-focused face photos (Unsplash source query).
+// (Using `source.unsplash.com` keeps it simple without needing local image assets.)
 const AGENTS = [
-    { id:1, name:"Senuri Fernando", title:"Senior Luxury Specialist", agency:"Nestiq Colombo 07", phone:"+94 77 101 2020", email:"s.fernando@nestiq.lk", img:"https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80", listings:24, sold:187, rating:4.9, spec:"luxury", years:12 },
-    { id:2, name:"Dinesh Perera", title:"Investment & Commercial", agency:"Nestiq Kandy", phone:"+94 71 202 3030", email:"d.perera@nestiq.lk", img:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80", listings:18, sold:143, rating:4.8, spec:"investment", years:9 },
-    { id:3, name:"Kavindi De Silva", title:"Residential Expert", agency:"Nestiq Kurunegala", phone:"+94 70 303 4040", email:"k.desilva@nestiq.lk", img:"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=80", listings:31, sold:210, rating:4.9, spec:"residential", years:15 },
-    { id:4, name:"Nuwan Rathnayake", title:"Commercial Specialist", agency:"Nestiq Galle", phone:"+94 76 404 5050", email:"n.rathnayake@nestiq.lk", img:"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80", listings:12, sold:98, rating:4.7, spec:"commercial", years:7 },
-    { id:5, name:"Anjali Jayasooriya", title:"Luxury Condo Specialist", agency:"Nestiq Mount Lavinia", phone:"+94 77 505 6060", email:"a.jayasooriya@nestiq.lk", img:"https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400&q=80", listings:20, sold:156, rating:4.8, spec:"luxury", years:10 },
-    { id:6, name:"Mohammed Rizwan", title:"Investment Properties", agency:"Nestiq Negombo", phone:"+94 75 606 7070", email:"m.rizwan@nestiq.lk", img:"https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80", listings:15, sold:121, rating:4.7, spec:"investment", years:8 }
+    { id: 1, name: "Senuri Fernando", title: "Senior Luxury Specialist", agency: "Nestiq Colombo 07", phone: "+94 77 101 2020", email: "s.fernando@nestiq.lk", img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80&fit=crop", listings: 24, sold: 187, rating: 4.9, spec: "luxury", years: 12 },
+    { id: 2, name: "Dinesh Perera", title: "Investment & Commercial", agency: "Nestiq Kandy", phone: "+94 71 202 3030", email: "d.perera@nestiq.lk", img: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600&q=80&fit=crop", listings: 18, sold: 143, rating: 4.8, spec: "investment", years: 9 },
+    { id: 3, name: "Kavindi De Silva", title: "Residential Expert", agency: "Nestiq Kurunegala", phone: "+94 70 303 4040", email: "k.desilva@nestiq.lk", img: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=600&q=80&fit=crop", listings: 31, sold: 210, rating: 4.9, spec: "residential", years: 15 },
+    { id: 4, name: "Nuwan Rathnayake", title: "Commercial Specialist", agency: "Nestiq Galle", phone: "+94 76 404 5050", email: "n.rathnayake@nestiq.lk", img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=600&q=80&fit=crop", listings: 12, sold: 98, rating: 4.7, spec: "commercial", years: 7 },
+    { id: 5, name: "Anjali Jayasooriya", title: "Luxury Condo Specialist", agency: "Nestiq Mount Lavinia", phone: "+94 77 505 6060", email: "a.jayasooriya@nestiq.lk", img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=600&q=80&fit=crop", listings: 20, sold: 156, rating: 4.8, spec: "luxury", years: 10 },
+    { id: 6, name: "Mohammed Rizwan", title: "Investment Properties", agency: "Nestiq Negombo", phone: "+94 75 606 7070", email: "m.rizwan@nestiq.lk", img: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=600&q=80&fit=crop", listings: 15, sold: 121, rating: 4.7, spec: "investment", years: 8 },
+    { id: 7, name: "Thilini Wijeratne", title: "Residential Advisor", agency: "Nestiq Malabe", phone: "+94 76 909 1010", email: "t.wijeratne@nestiq.lk", img: "https://images.unsplash.com/photo-1554151228-14d9def656e4?w=600&q=80&fit=crop", listings: 22, sold: 132, rating: 4.8, spec: "residential", years: 8 },
+    { id: 8, name: "Isuru Bandara", title: "Commercial Leasing", agency: "Nestiq Colombo 03", phone: "+94 77 808 1212", email: "i.bandara@nestiq.lk", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80&fit=crop", listings: 14, sold: 76, rating: 4.6, spec: "commercial", years: 6 },
+    { id: 9, name: "Ruwan Gunawardena", title: "Luxury Beachfront Expert", agency: "Nestiq Bentota", phone: "+94 77 111 2222", email: "r.gunawardena@nestiq.lk", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=600&q=80&fit=crop", listings: 18, sold: 112, rating: 4.9, spec: "luxury", years: 11 },
+    { id: 10, name: "Nilanthi Wickramasinghe", title: "Investment Strategist", agency: "Nestiq Colombo 01", phone: "+94 71 333 4444", email: "n.wickramasinghe@nestiq.lk", img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=600&q=80&fit=crop", listings: 25, sold: 165, rating: 4.8, spec: "investment", years: 14 },
+    { id: 11, name: "Prasanna Kumarage", title: "Residential Sales Head", agency: "Nestiq Maharagama", phone: "+94 76 555 6666", email: "p.kumarage@nestiq.lk", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=600&q=80&fit=crop", listings: 40, sold: 280, rating: 5.0, spec: "residential", years: 18 },
+    { id: 12, name: "Kusal Janith", title: "Commercial Portfolio Manager", agency: "Nestiq Ratnapura", phone: "+94 70 777 8888", email: "k.janith@nestiq.lk", img: "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?w=600&q=80&fit=crop", listings: 10, sold: 65, rating: 4.7, spec: "commercial", years: 5 }
 ];
 
 const TESTIMONIALS = [
@@ -47,6 +55,8 @@ function showPage(name) {
     if(pageObj) pageObj.classList.add('active');
 
     document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    const navItem = document.getElementById('nav-' + name);
+    if(navItem) navItem.classList.add('active');
     window.scrollTo(0,0);
 
     if (name === 'listings') applyFilters();
@@ -95,7 +105,7 @@ function renderTestimonials() {
 function renderHomeAgents() {
     const grid = document.getElementById('home-agents-grid');
     if(!grid) return;
-    grid.innerHTML = AGENTS.slice(0,4).map((a,i) => `
+    grid.innerHTML = AGENTS.slice(0, 4).map((a, i) => `
     <div class="agent-card" style="animation-delay:${i*0.06}s">
         <div class="agent-card-img"><img src="${a.img}" alt="${a.name}" loading="lazy"/></div>
         <div class="agent-card-body">
@@ -104,6 +114,61 @@ function renderHomeAgents() {
             <div style="font-size:.78rem;color:var(--ink4);margin-bottom:14px">${a.agency} · ${a.years} yrs exp</div>
         </div>
     </div>`).join('');
+}
+
+// ── AGENTS PAGE ENGINE ──────────────────────
+let currentAgentFilter = 'all';
+
+function agentCardTemplate(a, i = 0) {
+    const safeRating = (typeof a.rating === 'number') ? a.rating.toFixed(1) : (a.rating || '4.8');
+    return `
+    <div class="agent-card" style="animation-delay:${i * 0.05}s">
+        <div class="agent-card-img">
+            <img src="${a.img}" alt="${a.name}" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80&fit=crop';"/>
+        </div>
+        <div class="agent-card-body">
+            <div class="agent-card-name">${a.name}</div>
+            <div class="agent-card-role">${a.title}</div>
+            <div style="font-size:.78rem;color:var(--ink4);margin-bottom:14px">${a.agency} · ${a.years} yrs exp</div>
+            <div class="agent-card-stats">
+                <div class="ac-stat">
+                    <div class="ac-stat-val">${a.listings}</div>
+                    <div class="ac-stat-label">Listings</div>
+                </div>
+                <div class="ac-stat">
+                    <div class="ac-stat-val">${a.sold}</div>
+                    <div class="ac-stat-label">Sold</div>
+                </div>
+                <div class="ac-stat">
+                    <div class="ac-stat-val">${safeRating}</div>
+                    <div class="ac-stat-label">Rating</div>
+                </div>
+            </div>
+        </div>
+    </div>`;
+}
+
+function renderAgentsFull() {
+    const grid = document.getElementById('agents-grid');
+    if (!grid) return;
+
+    const list = (currentAgentFilter === 'all')
+        ? AGENTS
+        : AGENTS.filter(a => String(a.spec).toLowerCase() === String(currentAgentFilter).toLowerCase());
+
+    if (!list || list.length === 0) {
+        grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--ink3); padding: 40px; font-weight: 500;">No agents found in this category.</p>`;
+        return;
+    }
+
+    grid.innerHTML = list.map((a, i) => agentCardTemplate(a, i)).join('');
+}
+
+function filterAgents(btn, spec) {
+    document.querySelectorAll('#page-agents .filter-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    currentAgentFilter = spec || 'all';
+    renderAgentsFull();
 }
 
 // 🔥 THE FACE ROUTER 🔥
@@ -151,22 +216,22 @@ function resetFilters() {
 }
 
 function applyFilters() {
-    if(typeof properties === 'undefined') return;
+    if(typeof window.properties === 'undefined') return;
 
     const minInput = document.getElementById('filterMinPrice');
     const maxInput = document.getElementById('filterMaxPrice');
     if (minInput) currentFilters.minPrice = minInput.value;
     if (maxInput) currentFilters.maxPrice = maxInput.value;
 
-    let filtered = properties.filter(p => {
+    let filtered = window.properties.filter(p => {
         let matchStatus = currentFilters.status === 'all' || (p.status && p.status.toLowerCase() === currentFilters.status.toLowerCase());
         let matchType = currentFilters.type === 'all' || (p.type && p.type.toLowerCase() === currentFilters.type.toLowerCase());
         let matchCity = currentFilters.city === 'all' || (p.location && p.location.toLowerCase().includes(currentFilters.city.toLowerCase()));
 
         let matchPrice = true;
-        let numPrice = typeof p.price === 'string' ? parseInt(p.price.replace(/[^0-9]/g, '')) : p.price;
-        if (currentFilters.minPrice && numPrice < parseInt(currentFilters.minPrice)) matchPrice = false;
-        if (currentFilters.maxPrice && numPrice > parseInt(currentFilters.maxPrice)) matchPrice = false;
+        let numPrice = typeof p.price === 'string' ? parseInt(p.price.replace(/[^0-9]/g, ''), 10) : p.price;
+        if (currentFilters.minPrice && numPrice < parseInt(currentFilters.minPrice, 10)) matchPrice = false;
+        if (currentFilters.maxPrice && numPrice > parseInt(currentFilters.maxPrice, 10)) matchPrice = false;
 
         return matchStatus && matchType && matchCity && matchPrice;
     });
@@ -226,8 +291,8 @@ function renderListings(list) {
 
 // ── DETAIL PAGE ENGINE ──────────────────────
 function openDetail(id) {
-    if(typeof properties === 'undefined') return;
-    const p = properties.find(prop => String(prop.id) === String(id));
+    if(typeof window.properties === 'undefined') return;
+    const p = window.properties.find(prop => String(prop.id) === String(id));
     if (!p) { console.error("Property not found!"); return; }
 
     document.getElementById('detail-main-img').src = p.image;
@@ -247,54 +312,16 @@ function openDetail(id) {
     document.getElementById('detail-agent-img').src = agent.img;
     if(document.getElementById('detail-agent-name')) document.getElementById('detail-agent-name').innerText = realSeller;
 
-    setTimeout(() => {
+    window.setTimeout(() => {
         if(document.getElementById('inq-prop-id')) document.getElementById('inq-prop-id').value = String(id);
         if(document.getElementById('inq-prop-title')) document.getElementById('inq-prop-title').value = p.title;
         if(document.getElementById('inq-agent-name')) document.getElementById('inq-agent-name').value = realSeller;
     }, 400);
 
     showPage('detail');
+    renderPropertyReviews(id);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    // Filter and show reviews for THIS specific property
-        // 1. Link the form to the current property
-            document.getElementById('review-prop-id').value = id;
-
-            // 2. Filter for reviews that match THIS property ID
-            const filtered = window.allReviews.filter(r => r.propId == id);
-            const container = document.getElementById('reviews-container');
-
-            // 3. Inject the HTML into the page
-            container.innerHTML = filtered.length === 0 ?
-                    "<p style='color: var(--ink4); padding: 10px;'>No reviews yet.</p>" :
-                    filtered.map(r => {
-                        // Check if the current logged-in user is the author
-                        const isOwner = (String(window.currentUser).trim() === String(r.name).trim());
-
-                        return `
-                        <div style="border-bottom: 1px solid var(--line); padding: 20px 0;">
-                            <div class="rev-header">
-                                <div>
-                                    <strong style="color: var(--ink);">${r.name} ${r.isVerified ? '✅' : ''}</strong>
-                                    <div style="color: var(--amber); font-size: 0.75rem; margin-top: 2px;">${'★'.repeat(r.rating)}</div>
-                                </div>
-                                ${isOwner ? `
-                                <div class="rev-menu-wrap">
-                                    <button class="rev-dots-btn" onclick="toggleRevMenu(event, '${r.id}')">⋮</button>
-                                    <div id="drop-${r.id}" class="rev-dropdown">
-                                        <button class="rev-drop-item" onclick="editReview('${r.id}', '${id}')">✏️ Update</button>
-                                        <button class="rev-drop-item del" onclick="deleteReview('${r.id}', '${id}')">🗑️ Delete</button>
-                                    </div>
-                                </div>` : ''}
-                            </div>
-                            <div id="comment-box-${r.id}">
-                                <p style="color: var(--ink3); margin-top: 10px; font-size: 0.95rem; line-height: 1.5;">${r.comment}</p>
-                            </div>
-                        </div>`;
-                    }).join('');
-
-     showPage('detail'); // 🔥 Add this back if it was missing!
- } // <--- End of openDetail function
+} // <--- End of openDetail function
 
 // ── AUTH ROLE SELECTOR ENGINE ─────────────────────────
 function selectRole(btn, role) {
@@ -312,84 +339,71 @@ function showToast(icon, msg, isError=false) {
     document.getElementById('toast-msg').textContent = msg;
     t.style.background = isError ? '#c53030' : 'var(--ink)';
     t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3000);
+    window.setTimeout(() => t.classList.remove('show'), 3000);
 }
 
 window.addEventListener('scroll', () => {
     const nav = document.getElementById('navbar');
-    if(nav) nav.classList.toggle('scrolled', scrollY > 20);
+    if(nav) nav.classList.toggle('scrolled', window.scrollY > 20);
 });
 
 // ── SYSTEM BOOT ─────────────────────────────────
-document.addEventListener("DOMContentLoaded", () => {
+window.document.addEventListener("DOMContentLoaded", () => {
     initHome();
 
     // Force the Dark Mode button to listen for clicks safely!
-    const themeBtn = document.getElementById('theme-toggle');
+    const themeBtn = window.document.getElementById('theme-toggle');
     if (themeBtn) {
         themeBtn.onclick = toggleTheme;
     }
 });
 
-function editReview(revId, propId) {
-    // 1. Find the current container and existing text
-    const container = document.getElementById('comment-container-' + revId);
-    const oldText = container.querySelector('p').innerText;
+// ── REVIEWS ENGINE ────────────────────────────
+function renderPropertyReviews(propId) {
+    if (!window.allReviews) return;
+    const filtered = window.allReviews.filter(r => String(r.propId) === String(propId));
+    const container = document.getElementById('reviews-container');
+    if (!container) return;
 
-    // 2. Transform the UI into an inline editing box
-    container.innerHTML = `
-        <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 8px;">
-            <textarea id="edit-box-${revId}" class="contact-form-input"
-                style="width: 100%; min-height: 80px; background: var(--bg2); border: 1.5px solid var(--accent); color: var(--ink); padding: 10px; border-radius: 8px;"
-            >${oldText}</textarea>
+    const reviewPropIdInput = document.getElementById('review-prop-id');
+    if (reviewPropIdInput) reviewPropIdInput.value = propId;
 
-            <div style="display: flex; gap: 8px;">
-                <button onclick="submitInlineEdit('${revId}', '${propId}')"
-                    style="background: var(--accent); color: white; padding: 6px 14px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer;">
-                    Save Changes
-                </button>
-                <button onclick="location.reload()"
-                    style="background: none; border: 1px solid var(--line); color: var(--ink3); padding: 6px 14px; border-radius: 6px; font-size: 0.8rem; cursor: pointer;">
-                    Cancel
-                </button>
-            </div>
-        </div>
-    `;
-
-    // Auto-focus the box so you can start typing immediately!
-    document.getElementById('edit-box-' + revId).focus();
+    container.innerHTML = filtered.length === 0 ?
+        "<p style='color: var(--ink4); padding: 10px;'>No reviews yet.</p>" :
+        filtered.map(r => {
+            const isOwner = (window.currentUser && String(window.currentUser).trim() === String(r.name).trim());
+            return `
+            <div style="border-bottom: 1px solid var(--line); padding: 20px 0;">
+                <div class="rev-header">
+                    <div>
+                        <strong style="color: var(--ink);">${r.name} ${r.isVerified ? '✅' : ''}</strong>
+                        <div style="color: var(--amber); font-size: 0.75rem; margin-top: 2px;">${'★'.repeat(r.rating)}</div>
+                    </div>
+                    ${isOwner ? `
+                    <div class="rev-menu-wrap">
+                        <button class="rev-dots-btn" onclick="toggleRevMenu(event, '${r.id}')">⋮</button>
+                        <div id="drop-${r.id}" class="rev-dropdown">
+                            <button class="rev-drop-item" onclick="editReview('${r.id}', '${propId}')">✏️ Update</button>
+                            <button class="rev-drop-item del" onclick="deleteReview('${r.id}', '${propId}')">🗑️ Delete</button>
+                        </div>
+                    </div>` : ''}
+                </div>
+                <div id="comment-container-${r.id}">
+                    <p style="color: var(--ink3); margin-top: 10px; font-size: 0.95rem; line-height: 1.5;">${r.comment}</p>
+                </div>
+            </div>`;
+        }).join('');
 }
 
-// 3. Helper function to fly the data to Java
-function submitInlineEdit(revId, propId) {
-    const newMsg = document.getElementById('edit-box-' + revId).value;
-
-    if (newMsg.trim() === "") {
-        alert("Feedback cannot be empty!");
-        return;
-    }
-
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = 'reviews';
-    form.innerHTML = `
-        <input type="hidden" name="action" value="update">
-        <input type="hidden" name="reviewId" value="${revId}">
-        <input type="hidden" name="propertyId" value="${propId}">
-        <input type="hidden" name="comment" value="${newMsg}">
-    `;
-    document.body.appendChild(form);
-    form.submit();
-}
 function toggleRevMenu(event, revId) {
     event.stopPropagation();
     document.querySelectorAll('.rev-dropdown').forEach(d => d.classList.remove('show'));
-    document.getElementById('drop-' + revId).classList.toggle('show');
+    const drop = document.getElementById('drop-' + revId);
+    if (drop) drop.classList.toggle('show');
 }
 
-// 1. DELETE FUNCTION (The one you were missing!)
 function deleteReview(revId, propId) {
-    if (confirm("Delete this review forever?")) {
+    if (window.confirm("Delete this review forever?")) {
         const form = document.createElement('form');
         form.method = 'POST'; form.action = 'reviews';
         form.innerHTML = `
@@ -402,9 +416,9 @@ function deleteReview(revId, propId) {
     }
 }
 
-// 2. INLINE EDIT FUNCTION (No more pop-ups!)
 function editReview(revId, propId) {
-    const container = document.getElementById('comment-box-' + revId);
+    const container = document.getElementById('comment-container-' + revId);
+    if (!container) return;
     const oldText = container.querySelector('p').innerText;
 
     container.innerHTML = `
@@ -412,18 +426,32 @@ function editReview(revId, propId) {
             <textarea id="inline-edit-${revId}" class="contact-form-input" style="min-height: 80px; border: 1.5px solid var(--accent); color: var(--ink);">${oldText}</textarea>
             <div style="display: flex; gap: 8px;">
                 <button onclick="saveInlineEdit('${revId}', '${propId}')" style="background: var(--accent); color:white; padding:6px 12px; border-radius:6px; font-size:0.75rem; font-weight:600; cursor:pointer;">Save Changes</button>
-                <button onclick="location.reload()" style="background:none; border:1px solid var(--line); color:var(--ink3); padding:6px 12px; border-radius:6px; font-size:0.75rem; cursor:pointer;">Cancel</button>
+                <button onclick="window.location.reload()" style="background:none; border:1px solid var(--line); color:var(--ink3); padding:6px 12px; border-radius:6px; font-size:0.75rem; cursor:pointer;">Cancel</button>
             </div>
         </div>
     `;
-    document.getElementById('inline-edit-' + revId).focus();
+    const editBox = document.getElementById('inline-edit-' + revId);
+    if (editBox) editBox.focus();
 }
 
 function saveInlineEdit(revId, propId) {
-    const newMsg = document.getElementById('inline-edit-' + revId).value;
+    const editBox = document.getElementById('inline-edit-' + revId);
+    if (!editBox) return;
+    const newMsg = editBox.value;
+    
+    if (newMsg.trim() === "") {
+        window.alert("Feedback cannot be empty!");
+        return;
+    }
+
     const form = document.createElement('form');
     form.method = 'POST'; form.action = 'reviews';
-    form.innerHTML = `<input type="hidden" name="action" value="update"><input type="hidden" name="reviewId" value="${revId}"><input type="hidden" name="propertyId" value="${propId}"><input type="hidden" name="comment" value="${newMsg}">`;
+    form.innerHTML = `
+        <input type="hidden" name="action" value="update">
+        <input type="hidden" name="reviewId" value="${revId}">
+        <input type="hidden" name="propertyId" value="${propId}">
+        <input type="hidden" name="comment" value="${newMsg}">
+    `;
     document.body.appendChild(form);
     form.submit();
 }
@@ -491,14 +519,14 @@ function openNotifThread(threadId) {
     if (!threadId) return;
 
     // If we are already on a dashboard that can open the modal, open directly.
-    if (window.currentRole && String(window.currentRole).toUpperCase() === 'SELLER' && typeof openChat === 'function') {
-        openChat(threadId);
+    if (window.currentRole && String(window.currentRole).toUpperCase() === 'SELLER' && typeof window.openChat === 'function') {
+        window.openChat(threadId);
         const panel = document.getElementById('notif-panel');
         if (panel) panel.style.display = 'none';
         return;
     }
-    if (window.currentRole && String(window.currentRole).toUpperCase() === 'BUYER' && typeof openBuyerChat === 'function') {
-        openBuyerChat(threadId);
+    if (window.currentRole && String(window.currentRole).toUpperCase() === 'BUYER' && typeof window.openBuyerChat === 'function') {
+        window.openBuyerChat(threadId);
         const panel = document.getElementById('notif-panel');
         if (panel) panel.style.display = 'none';
         return;
@@ -514,4 +542,4 @@ function openNotifThread(threadId) {
 }
 
 // Run this logic as soon as the page loads
-document.addEventListener("DOMContentLoaded", renderNotifications);
+window.document.addEventListener("DOMContentLoaded", renderNotifications);
