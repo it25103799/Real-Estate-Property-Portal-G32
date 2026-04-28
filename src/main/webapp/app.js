@@ -189,11 +189,16 @@ function getAgentForSeller(sellerName) {
 }
 
 // ── LISTINGS ENGINE ──────────────────────
+let currentListingsPage = 0;
+let itemsPerPage = 10;
+let allFilteredProperties = [];
+
 function toggleChip(btn, category, value) {
     let siblings = btn.parentElement.querySelectorAll('.filter-chip');
     siblings.forEach(s => s.classList.remove('active'));
     btn.classList.add('active');
     currentFilters[category] = value;
+    currentListingsPage = 0;  // Reset to first page when filtering
     applyFilters();
 }
 
@@ -202,11 +207,13 @@ function setBeds(btn, value) {
     siblings.forEach(s => s.classList.remove('active'));
     btn.classList.add('active');
     currentFilters.beds = value;
+    currentListingsPage = 0;  // Reset to first page when filtering
     applyFilters();
 }
 
 function resetFilters() {
     currentFilters = { status: 'all', type: 'all', city: 'all', beds: 'any', minPrice: '', maxPrice: '' };
+    currentListingsPage = 0;  // Reset to first page
     document.querySelectorAll('.filter-chip, .bed-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.filter-chip[onclick*="\'all\'"]').forEach(c => c.classList.add('active'));
     document.querySelectorAll('.bed-btn[onclick*="\'any\'"]').forEach(b => b.classList.add('active'));
@@ -224,7 +231,7 @@ function applyFilters() {
     if (maxInput) currentFilters.maxPrice = maxInput.value;
 
     let filtered = window.properties.filter(p => {
-        let matchStatus = currentFilters.status === 'all' || (p.status && p.status.toLowerCase() === currentFilters.status.toLowerCase());
+        let matchStatus = currentFilters.status === 'all' || (p.status && p.status.toLowerCase().includes(currentFilters.status.toLowerCase()));
         let matchType = currentFilters.type === 'all' || (p.type && p.type.toLowerCase() === currentFilters.type.toLowerCase());
         let matchCity = currentFilters.city === 'all' || (p.location && p.location.toLowerCase().includes(currentFilters.city.toLowerCase()));
 
@@ -236,21 +243,31 @@ function applyFilters() {
         return matchStatus && matchType && matchCity && matchPrice;
     });
 
-    renderListings(filtered);
+    allFilteredProperties = filtered;
+    currentListingsPage = 0;
+    renderListings();
 }
 
-function renderListings(list) {
+function renderListings() {
     const grid = document.getElementById('listings-grid');
     const countEl = document.getElementById('listings-count');
+    const loadMoreBtn = document.getElementById('listings-load-more');
     if (!grid) return;
 
-    if (list.length === 0) {
+    if (allFilteredProperties.length === 0) {
         grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--ink3); padding: 40px; font-weight: 500;">No properties match your filters.</p>';
         if (countEl) countEl.innerText = "0";
+        if (loadMoreBtn) loadMoreBtn.style.display = 'none';
         return;
     }
 
-    grid.innerHTML = list.map(p => {
+    // Calculate pagination
+    const startIndex = currentListingsPage * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedList = allFilteredProperties.slice(startIndex, endIndex);
+
+    // Build HTML for current page
+    const html = paginatedList.map(p => {
         const displayPrice = typeof p.price === 'number' ? p.price.toLocaleString() : p.price;
         const safeStatus = p.status ? p.status.toLowerCase() : 'sale';
 
@@ -263,17 +280,17 @@ function renderListings(list) {
             <div class="prop-img-wrap">
                 <img src="${p.image}" alt="${p.title}">
                 <div class="prop-tags">
-                    <span class="prop-tag tag-sale">${safeStatus === 'rent' ? 'For Rent' : 'For Sale'}</span>
+                    <span class="prop-tag ${safeStatus.includes('rent') ? 'tag-rent' : 'tag-sale'}">${safeStatus.includes('rent') ? 'For Rent' : 'For Sale'}</span>
                 </div>
             </div>
             <div class="prop-body">
-                <div class="prop-price">$${displayPrice} ${safeStatus === 'rent' ? '<span style="font-size:0.6em; color:var(--ink4)">/mo</span>' : ''}</div>
+                <div class="prop-price">$${displayPrice} ${safeStatus.includes('rent') ? '<span style="font-size:0.6em; color:var(--ink4)">/mo</span>' : ''}</div>
                 <div class="prop-name">${p.title}</div>
                 <div class="prop-loc">📍 ${p.location}</div>
                 <div class="prop-divider"></div>
                 <div class="prop-meta">
-                    <div class="prop-meta-item">🛏️ 3 Beds</div>
-                    <div class="prop-meta-item">🛁 2 Baths</div>
+                    <div class="prop-meta-item">🛏️ ${p.bedrooms} Beds</div>
+                    <div class="prop-meta-item">🛁 ${p.bathrooms} Baths</div>
                     <div class="prop-meta-item">👁️ 342 Views</div>
                 </div>
                 <div class="prop-agent-row">
@@ -286,7 +303,29 @@ function renderListings(list) {
         </div>`;
     }).join('');
 
-    if (countEl) countEl.innerText = list.length;
+    if (startIndex === 0) {
+        // First page - replace content
+        grid.innerHTML = html;
+    } else {
+        // Load more - append content
+        grid.innerHTML += html;
+    }
+
+    if (countEl) countEl.innerText = allFilteredProperties.length;
+
+    // Show/hide Load More button
+    if (loadMoreBtn) {
+        if (endIndex >= allFilteredProperties.length) {
+            loadMoreBtn.style.display = 'none';
+        } else {
+            loadMoreBtn.style.display = 'flex';
+        }
+    }
+}
+
+function loadMoreListings() {
+    currentListingsPage++;
+    renderListings();
 }
 
 // ── DETAIL PAGE ENGINE ──────────────────────
@@ -304,6 +343,39 @@ function openDetail(id) {
 
     const favInput = document.getElementById('fav-property-id');
     if (favInput) favInput.value = String(id);
+
+    // Set description
+    const detailDescEl = document.getElementById('detail-desc');
+    if (detailDescEl) {
+        detailDescEl.innerText = p.description && p.description.trim() !== "" ? p.description : "No Description yet..";
+    }
+
+    // Set bedrooms and bathrooms in detail-specs
+    const detailSpecsEl = document.getElementById('detail-specs');
+    if (detailSpecsEl) {
+        detailSpecsEl.innerHTML = `
+            <div class="spec-box">
+                <div class="spec-icon">🛏️</div>
+                <div class="spec-value">${p.bedrooms}</div>
+                <div class="spec-label">Bedrooms</div>
+            </div>
+            <div class="spec-box">
+                <div class="spec-icon">🛁</div>
+                <div class="spec-value">${p.bathrooms}</div>
+                <div class="spec-label">Bathrooms</div>
+            </div>
+            <div class="spec-box">
+                <div class="spec-icon">📐</div>
+                <div class="spec-value">1,200</div>
+                <div class="spec-label">Sq Ft</div>
+            </div>
+            <div class="spec-box">
+                <div class="spec-icon">🏡</div>
+                <div class="spec-value">${p.type}</div>
+                <div class="spec-label">Type</div>
+            </div>
+        `;
+    }
 
     // Face Router Execution for Details Page
     const realSeller = (p.seller && p.seller !== "null" && p.seller.trim() !== "") ? p.seller : "Verified Seller";
@@ -438,7 +510,7 @@ function saveInlineEdit(revId, propId) {
     const editBox = document.getElementById('inline-edit-' + revId);
     if (!editBox) return;
     const newMsg = editBox.value;
-    
+
     if (newMsg.trim() === "") {
         window.alert("Feedback cannot be empty!");
         return;
