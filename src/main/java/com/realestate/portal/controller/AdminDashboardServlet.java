@@ -19,7 +19,7 @@ public class AdminDashboardServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        
         HttpSession session = request.getSession();
         String loggedRole = (String) session.getAttribute("loggedRole");
         String loggedUser = (String) session.getAttribute("loggedUser");
@@ -32,6 +32,8 @@ public class AdminDashboardServlet extends HttpServlet {
             response.sendRedirect("properties");
             return;
         }
+
+        System.out.println("✅ ADMIN LOGGED IN: " + loggedUser);
 
         // Load all users from file
         List<User> allUsers = new ArrayList<>();
@@ -97,5 +99,10 @@ public class AdminDashboardServlet extends HttpServlet {
         // Forward to admin dashboard JSP
         request.getRequestDispatcher("/admin_dashboard.jsp").forward(request, response);
     }
-}
 
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // This is good practice: have doPost call doGet to handle both request types
+        doGet(request, response);
+    }
+}

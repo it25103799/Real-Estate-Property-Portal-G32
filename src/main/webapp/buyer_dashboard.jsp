@@ -279,6 +279,8 @@
                     <th>Location</th>
                     <th>Price</th>
                     <th>Type</th>
+                    <th>Beds</th>
+                    <th>Baths</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -297,6 +299,8 @@
                                 <td>📍 ${p.location}</td>
                                 <td style="font-weight: 600; color: var(--accent);">$<fmt:formatNumber value="${p.price}" pattern="#,##0.00" /></td>
                                 <td>${p.type}</td>
+                                <td>${p.bedrooms}</td>
+                                <td>${p.bathrooms}</td>
                                 <td style="display: flex; gap: 10px; align-items: center;">
                                     <button class="btn" style="padding: 8px 15px; font-size: 0.85rem;" onclick="window.location.href='properties?viewId=${p.id}'">View</button>
 
@@ -309,7 +313,7 @@
                         </c:forEach>
                     </c:when>
                     <c:otherwise>
-                        <tr><td colspan="5" style="text-align:center; padding: 40px; color: var(--ink); opacity: 0.6;">You haven't saved any properties yet. Go browse the listings!</td></tr>
+                        <tr><td colspan="7" style="text-align:center; padding: 40px; color: var(--ink); opacity: 0.6;">You haven't saved any properties yet. Go browse the listings!</td></tr>
                     </c:otherwise>
                 </c:choose>
             </tbody>

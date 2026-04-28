@@ -18,7 +18,6 @@ public class AddPropertyServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        // 🔥 FIX 1: Tell Tomcat to expect Sinhala (UTF-8) text from the form!
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
 
@@ -33,12 +32,14 @@ public class AddPropertyServlet extends HttpServlet {
 
         String propertyId = UUID.randomUUID().toString().substring(0, 8);
 
-        // Grab inputs (Now safely in UTF-8 format)
         String title = request.getParameter("title").replace(",", " ");
         String price = request.getParameter("price").replace(",", "");
         String location = request.getParameter("location").replace(",", " ");
         String status = request.getParameter("status");
         String type = request.getParameter("type");
+        String bedrooms = request.getParameter("bedrooms");
+        String bathrooms = request.getParameter("bathrooms");
+        String description = request.getParameter("description").replace(",", " ");
 
         String staticImageUrl = "assets/images/property-types/house.jpg";
 
@@ -52,11 +53,10 @@ public class AddPropertyServlet extends HttpServlet {
         }
 
         String imageUrl = staticImageUrl;
-        String propertyRecord = propertyId + "," + title + "," + price + "," + location + "," + type + "," + status + "," + sellerName + "," + imageUrl;
+        String propertyRecord = propertyId + "," + title + "," + price + "," + location + "," + type + "," + status + "," + sellerName + "," + imageUrl + "," + bedrooms + "," + bathrooms + "," + description;
 
         String filePath = getServletContext().getRealPath("/WEB-INF/properties.txt");
 
-        // 🔥 FIX 2: Force the text file to save in UTF-8 format!
         try (PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(filePath, true), "UTF-8"))) {
             out.println(propertyRecord);
         } catch (Exception e) {

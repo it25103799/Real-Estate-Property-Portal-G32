@@ -26,12 +26,62 @@ public class PropertyServlet extends HttpServlet {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(propFile), "UTF-8"))) {
                 String line;
                 while ((line = br.readLine()) != null) {
+                    if (line.trim().isEmpty()) {
+                        continue; // Skip empty lines
+                    }
                     String[] data = line.split(",");
-                    if (data.length == 8) {
-                        propertyList.add(new Property(data[0], data[1], Double.parseDouble(data[2]), data[3], data[4], data[5], data[6], data[7]));
+                    // A valid property must have at least the first 8 fields (id, title, price, location, type, status, sellerName, imageUrl)
+                    if (data.length >= 8) {
+                        try {
+                            Property p = new Property();
+                            p.setId(data[0]);
+                            p.setTitle(data[1]);
+                            p.setPrice(Double.parseDouble(data[2]));
+                            p.setLocation(data[3]);
+                            p.setType(data[4]);
+                            
+                            // Normalize status to "For Rent" or "For Sale"
+                            String status = data[5].trim();
+                            if ("for rent".equalsIgnoreCase(status)) {
+                                p.setStatus("For Rent");
+                            } else {
+                                p.setStatus("For Sale");
+                            }
+
+                            // Safely set optional fields based on data length
+                            p.setSellerName(data[6]);
+                            p.setImageUrl(data[7]);
+
+                            // Safely parse bedrooms and bathrooms if they exist
+                            int bedrooms = 0;
+                            if (data.length > 8 && data[8] != null && !data[8].trim().isEmpty()) {
+                                bedrooms = Integer.parseInt(data[8].trim());
+                            }
+                            p.setBedrooms(bedrooms);
+
+                            int bathrooms = 0;
+                            if (data.length > 9 && data[9] != null && !data[9].trim().isEmpty()) {
+                                bathrooms = Integer.parseInt(data[9].trim());
+                            }
+                            p.setBathrooms(bathrooms);
+
+                            String description = "No Description yet..";
+                            if (data.length > 10 && data[10] != null && !data[10].trim().isEmpty()) {
+                                description = data[10];
+                            }
+                            p.setDescription(description);
+
+                            propertyList.add(p);
+                        } catch (NumberFormatException e) {
+                            System.err.println("CRITICAL: Could not parse number in property line. Skipping. Line: \"" + line + "\" Error: " + e.getMessage());
+                        }
+                    } else {
+                        System.err.println("WARNING: Skipping malformed property line (less than 8 fields). Line: \"" + line + "\"");
                     }
                 }
-            } catch (Exception e) { e.printStackTrace(); }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         // 2. LOAD REVIEWS (Kalhari's Module)
@@ -51,7 +101,9 @@ public class PropertyServlet extends HttpServlet {
                         }
                     }
                 }
-            } catch (Exception e) { e.printStackTrace(); }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         request.setAttribute("propertyList", propertyList);
@@ -79,7 +131,8 @@ public class PropertyServlet extends HttpServlet {
                             threads.put(data[0], data);
                         }
                     }
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
             }
 
             Map<String, String> lastRead = new HashMap<>();
@@ -93,7 +146,8 @@ public class PropertyServlet extends HttpServlet {
                             lastRead.put(r[0] + "|" + r[1], r[2]);
                         }
                     }
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
             }
 
             if (messagesFile.exists() && !threads.isEmpty()) {
@@ -128,7 +182,8 @@ public class PropertyServlet extends HttpServlet {
                         String content = "";
                         try {
                             content = new String(Base64.getDecoder().decode(msg[4]), "UTF-8");
-                        } catch (Exception ignored) {}
+                        } catch (Exception ignored) {
+                        }
 
                         Map<String, String> n = new HashMap<>();
                         n.put("sender", sender);
@@ -139,7 +194,8 @@ public class PropertyServlet extends HttpServlet {
                         n.put("threadId", t[0]);
                         allNotifications.add(n);
                     }
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
             }
         }
 

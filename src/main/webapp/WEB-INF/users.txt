@@ -3,3 +3,4 @@ Bhashi Navod,bhashithanavod800@gmail.com,bashimicroalok1232f@,BUYER
 Dinesh,dinesh231@gmail.com,bashimicroalok1232f@d,SELLER
 Kavindi,kavii326@gmail.com,bashimicroalok1232f@k,SELLER
 Ravindu Lohan,ravilohan600@gmail.com,ravil432,BUYER
+John Carter,carterjohn241@gmail.com,cartj4231@,ADMIN

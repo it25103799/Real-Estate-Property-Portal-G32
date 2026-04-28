@@ -1,19 +1,16 @@
-PROP_1772770669697,Colombo Beach Villa,600000.0,Colombo,Villa,null,De Silva
-PROP_1772773352306,Kaduwela Beach view,800000.0,Kaduwela,House,For Rent,De Silva
-PROP_1772777000956,Koswatta new Building,500000,Colombo,Apartment,For Rent,De Silva
-PROP_1772947911735,Kadawatha New Apartment,900000,Kadawatha,Apartment,For Rent,De Silva
-PROP_1772952134817,Kurunegala New Building,300000,Kurunegala,Apartment,For Rent,De Silva
-PROP_1772952140040,Kurunegala New Building,300000,Kurunegala,Apartment,For Rent,De Silva
-1f48f435,Kurunegala New Building,500000.0,Kurunegala,Apartment,For Rent,De Silva
+PROP_1772770669697,Colombo Beach Villa,600000.0,Colombo,Villa,For Sale,De Silva,assets/images/property-types/villa.jpg
+PROP_1772773352306,Kaduwela Beach view,800000.0,Kaduwela,House,For Rent,De Silva,assets/images/property-types/house.jpg
+PROP_1772777000956,Koswatta new Building,500000,Colombo,Apartment,For Rent,De Silva,assets/images/property-types/apartment.jpg
+PROP_1772947911735,Kadawatha New Apartment,900000,Kadawatha,Apartment,For Rent,De Silva,assets/images/property-types/apartment.jpg
+PROP_1772952134817,Kurunegala New Building,300000,Kurunegala,Apartment,For Rent,De Silva,assets/images/property-types/apartment.jpg
+1f48f435,Kurunegala New Building,500000.0,Kurunegala,Apartment,For Rent,De Silva,assets/images/property-types/apartment.jpg
 d4ef95b0,Galle New Building,600000.0,Galle,Apartment,For Rent,De Silva,assets/images/property-types/apartment.jpg
-dff34ab2,Kiribathgoda Faltue,50000,Kiribathgoda,Apartment,For Rent,De Silva,https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80
-
-``
 699613a8,Galle New Villa,85000.0,Galle,Villa,For Rent,De Silva,assets/images/property-types/villa.jpg
 c66a23ca, Kurunegala Lake view,560000,Kurunegala,House,For Sale,De Silva,assets/images/property-types/house.jpg
-ba4ccf7e,Awissawella Pro State,6000000.0,Rathnapura,Apartment,For Sale,De Silva,assets/images/property-types/apartment.jpg
+ba4ccf7e,Awissawella Pro State,6000000.0,Rathnapura,Apartment,For Sale,De Silva,assets/images/property-types/apartment.jpg,2,2,👍❤️
 2a2b0008,Kiribathgoda new building,1700000,Kiribathgoda,Apartment,For Sale,Dinesh,assets/images/property-types/apartment.jpg
-0a22dc7a,Hegalla beach Villa,95000,Galle,Villa,For Sale,Dinesh,assets/images/property-types/villa.jpg
+0a22dc7a,Hegalla beach Villa,95000.0,Galle,Villa,For Rent,Dinesh,assets/images/property-types/villa.jpg,3,3
 f62059d5,Nugegoda Real State,9000000,Colombo,Apartment,For Sale,Kavindi,assets/images/property-types/apartment.jpg
 3ea4a9d6,Kengalla Mount view,1000000,Kandy,House,For Sale,Kavindi,assets/images/property-types/house.jpg
-1bae3ff8,Talawakele Mount Rise,5500000,Nuwara Eliya,Villa,For Sale,De Silva,assets/images/property-types/villa.jpg
+0d3bce27,Baththaramulla pro State,78000.0,Colombo,Apartment,For Rent,De Silva,assets/images/property-types/apartment.jpg,5,5,Step into luxury with this expansive 5-bedroom  5-bathroom apartment located in the prime residential hub of Colombo (Battaramulla). Perfect for large families or corporate executives  this premium property offers unmatched space and privacy. Each of the five generously sized bedrooms features an en-suite bathroom complete with a bathtub. Enjoy modern living with easy access to the city's best schools  shopping  and administrative centers. Available now for rent.
+4c9fd0b9,Ambewela coolspot,56000,Nuwara Eliya,Villa,For Rent,Kavindi,assets/images/property-types/villa.jpg,2,2

@@ -1204,32 +1204,49 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
         <button class="filter-btn" onclick="filterHome(this,'villa')">Villas</button>
       </div>
       <div class="prop-grid" id="home-prop-grid">
-                      <c:choose>
-                          <c:when test="${not empty propertyList}">
-                              <c:forEach var="p" items="${propertyList}">
-                                  <div class="prop-card" onclick="openDetail('${p.id}')" style="cursor: pointer;">
-                                      <div class="prop-img-wrap">
-                                          <img src="${p.imageUrl}" alt="${p.title}"/>
-                                          <div class="prop-tags">
-                                                  <span class="prop-tag tag-feat">${p.status}</span>
-                                                  <span class="prop-tag tag-sale">${p.type}</span>
-                                          </div>
-                                      </div>
-                                      <div class="prop-body">
-                                          <div class="prop-price">$<fmt:formatNumber value="${p.price}" pattern="#,##0.00" /></div>
-                                          <div class="prop-name">${p.title}</div>
-                                          <div class="prop-loc">
-                                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                                              ${p.location}
-                                          </div>
-                                      </div>
+          <c:choose>
+              <c:when test="${not empty propertyList}">
+                  <c:forEach var="p" items="${propertyList}">
+                      <div class="prop-card" onclick="openDetail('${p.id}')" style="cursor: pointer;">
+                          <div class="prop-img-wrap">
+                              <img src="${p.imageUrl}" alt="${p.title}"/>
+                              <div class="prop-tags">
+                                  <c:choose>
+                                      <c:when test="${p.status.trim() == 'For Rent'}">
+                                          <span class="prop-tag tag-rent">${p.status}</span>
+                                      </c:when>
+                                      <c:otherwise>
+                                          <span class="prop-tag tag-sale">${p.status}</span>
+                                      </c:otherwise>
+                                  </c:choose>
+                              </div>
+                          </div>
+                          <div class="prop-body">
+                              <div class="prop-price">$<fmt:formatNumber value="${p.price}" pattern="#,##0.00" /></div>
+                              <div class="prop-name">${p.title}</div>
+                              <div class="prop-loc">
+                                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                  ${p.location}
+                              </div>
+                              <div class="prop-divider"></div>
+                              <div class="prop-meta">
+                                  <div class="prop-meta-item">
+                                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 10V4h-5"/><path d="M15 10l-6 6-4-4"/></svg>
+                                      ${p.bedrooms} Beds
                                   </div>
-                              </c:forEach>
-                          </c:when>
-                          <c:otherwise>
-                              <p style="grid-column: 1 / -1; text-align: center; color: var(--ink3); padding: 40px;">No properties available at the moment. Please check back later!</p>
-                          </c:otherwise>
-                      </c:choose>
+                                  <div class="prop-meta-item">
+                                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 10V4h-5"/><path d="M15 10l-6 6-4-4"/></svg>
+                                      ${p.bathrooms} Baths
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </c:forEach>
+              </c:when>
+              <c:otherwise>
+                  <p style="grid-column: 1 / -1; text-align: center; color: var(--ink3); padding: 40px;">No properties available at the moment. Please check back later!</p>
+              </c:otherwise>
+          </c:choose>
       </div>
     </div>
   </section>
@@ -1539,7 +1556,7 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
       <div class="detail-tag-row" id="detail-tags"></div>
       <h1 class="detail-title" id="detail-title"></h1>
       <div class="detail-address" id="detail-address">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="12" r="3"/></svg>
         <span id="detail-address-text"></span>
       </div>
 
@@ -1578,9 +1595,7 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
           </form>
       </div>
           <div class="detail-section-title" style="font-size: 1.4rem; margin-top: 0; margin-bottom: 15px;">📝 About This Property</div>
-          <p class="detail-desc" id="detail-desc" style="line-height: 1.8; color: var(--ink); opacity: 0.8; font-size: 1.05rem;">
-              Welcome to your luxurious new Sri Lankan retreat. This premium property boasts an expansive open-concept layout, state-of-the-art modern finishes, and breathtaking views. Perfectly situated in a highly sought-after neighborhood, it offers unparalleled convenience to top-tier schools, exclusive shopping, and fine dining.
-          </p>
+          <p class="detail-desc" id="detail-desc" style="line-height: 1.8; color: var(--ink); opacity: 0.8; font-size: 1.05rem;"></p>
 
           <div class="detail-section-title" style="font-size: 1.4rem; margin-top: 40px; margin-bottom: 20px;">✨ Premium Amenities</div>
           <div class="features-grid" id="detail-features" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; color: var(--ink); opacity: 0.8; font-size: 1.05rem;">
@@ -1714,40 +1729,47 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
         <h2 class="auth-title">Create account</h2>
         <p class="auth-sub" style="margin-bottom: 30px;">Join 50,000+ users on Nestiq</p>
 
-        <form action="register" method="post">
-            <div class="filter-section-title" style="margin-bottom:10px">I am a...</div>
-            <div class="auth-role-grid" id="role-grid">
-              <div class="role-btn selected" onclick="selectRole(this,'BUYER')"><span class="ri">🏠</span>Buyer</div>
-              <div class="role-btn" onclick="selectRole(this,'SELLER')"><span class="ri">💼</span>Seller</div>
+         <form action="register" method="post">
+             <div class="filter-section-title" style="margin-bottom:10px">I am a...</div>
+             <div class="auth-role-grid" id="role-grid">
+               <div class="role-btn selected" onclick="selectRole(this,'BUYER')"><span class="ri">🏠</span>Buyer</div>
+               <div class="role-btn" onclick="selectRole(this,'SELLER')"><span class="ri">💼</span>Seller</div>
+               <div class="role-btn" onclick="selectRole(this,'ADMIN')"><span class="ri">👑</span>Admin</div>
+             </div>
 
-            </div>
+             <input type="hidden" name="role" id="hiddenRole" value="BUYER"/>
 
-            <input type="hidden" name="role" id="hiddenRole" value="BUYER"/>
+             <!-- ADMIN KEY INPUT - HIDDEN BY DEFAULT -->
+             <div id="adminKeySection" style="display: none; margin-top: 20px; padding: 16px; background: rgba(255, 193, 7, 0.1); border: 1.5px solid #FFC107; border-radius: 8px;">
+               <label style="font-weight: 600; color: #FFC107; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Admin License Key</label>
+               <input class="auth-input" type="text" name="adminKey" id="adminKey" placeholder="XXXXX - XXXXX - XXXXX - XXXXX" style="text-transform: uppercase; letter-spacing: 2px; font-weight: 600; font-family: 'Courier New', monospace;"/>
+               <p style="font-size: 0.75rem; color: var(--ink4); margin-top: 8px; text-align: center;">🔐 This key is provided by the main company only</p>
+             </div>
 
-            <div class="auth-field">
-              <label>Full Name</label>
-              <input class="auth-input" type="text" name="fullName" placeholder="John Smith" required/>
-            </div>
-            <div class="auth-field">
-              <label>Email Address</label>
-              <input class="auth-input" type="email" name="email" placeholder="you@example.com" required/>
-            </div>
-            <div class="auth-field">
-              <label>Password</label>
-              <div class="pw-wrap">
-                <input class="auth-input" id="register-password" type="password" name="password" placeholder="Min 8 characters" required minlength="8"/>
-                <button class="pw-eye" type="button" aria-label="Toggle password visibility" onclick="togglePw('register-password', this)">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                    <circle cx="12" cy="12" r="3"></circle>
-                  </svg>
-                </button>
-              </div>
-            </div>
+             <div class="auth-field">
+               <label>Full Name</label>
+               <input class="auth-input" type="text" name="fullName" placeholder="John Smith" required/>
+             </div>
+             <div class="auth-field">
+               <label>Email Address</label>
+               <input class="auth-input" type="email" name="email" placeholder="you@example.com" required/>
+             </div>
+             <div class="auth-field">
+               <label id="passwordLabel">Password</label>
+               <div class="pw-wrap">
+                 <input class="auth-input" id="register-password" type="password" name="password" placeholder="Min 8 characters" required minlength="8"/>
+                 <button class="pw-eye" type="button" aria-label="Toggle password visibility" onclick="togglePw('register-password', this)">
+                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                     <circle cx="12" cy="12" r="3"></circle>
+                   </svg>
+                 </button>
+               </div>
+             </div>
 
-            <button type="submit" class="auth-submit">Create Account →</button>
-        </form>
-        <p class="auth-switch">Already have an account? <a onclick="showPage('login')">Sign in</a></p>
+             <button type="submit" class="auth-submit">Create Account →</button>
+         </form>
+         <p class="auth-switch">Already have an account? <a onclick="showPage('login')">Sign in</a></p>
       </div>
     </div>
   </div>
@@ -1784,7 +1806,9 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
         window.properties.push({
             id: "${p.id}", title: "${p.title}", price: Number("${p.price}"),
             location: "${p.location}", type: "${p.type}", status: "${p.status}",
-            image: "${p.imageUrl}", seller: "${p.sellerName}"
+            image: "${p.imageUrl}", seller: "${p.sellerName}",
+            bedrooms: "${p.bedrooms}", bathrooms: "${p.bathrooms}",
+            description: "${p.description}"
         });
     </c:forEach>
 
@@ -1804,6 +1828,37 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
 <script src="app.js"></script>
 
 <script>
+  function selectRole(btn, role) {
+    // Remove 'selected' class from all role buttons
+    const allRoleButtons = document.querySelectorAll('.role-btn');
+    allRoleButtons.forEach(b => b.classList.remove('selected'));
+
+    // Add 'selected' class to clicked button
+    btn.classList.add('selected');
+
+    // Set the hidden role input
+    document.getElementById('hiddenRole').value = role;
+
+    // Show admin key section only if ADMIN is selected
+    const adminKeySection = document.getElementById('adminKeySection');
+    const adminKeyInput = document.getElementById('adminKey');
+    const passwordLabel = document.getElementById('passwordLabel');
+
+    if (role === 'ADMIN') {
+      adminKeySection.style.display = 'block';
+      adminKeyInput.setAttribute('required', '');
+      // Make password optional for admin (they only need the key)
+      document.getElementById('register-password').removeAttribute('required');
+      passwordLabel.innerText = 'Password (Optional)';
+    } else {
+      adminKeySection.style.display = 'none';
+      adminKeyInput.removeAttribute('required');
+      // Make password required for regular users
+      document.getElementById('register-password').setAttribute('required', '');
+      passwordLabel.innerText = 'Password';
+    }
+  }
+
   function togglePw(inputId, btn) {
     const input = document.getElementById(inputId);
     if (!input) return;
@@ -1813,7 +1868,7 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
     if (btn) {
       btn.innerHTML = show
         ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-             <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+             <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 0 1 1-4.24-4.24"></path>
              <line x1="1" y1="1" x2="23" y2="23"></line>
            </svg>`
         : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

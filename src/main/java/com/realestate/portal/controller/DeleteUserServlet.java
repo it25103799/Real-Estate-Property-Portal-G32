@@ -18,39 +18,45 @@ public class DeleteUserServlet extends HttpServlet {
         HttpSession session = request.getSession();
         String role = (String) session.getAttribute("loggedRole");
 
-        // Kick out anyone who isn't the Admin!
         if (role == null || !"ADMIN".equalsIgnoreCase(role)) {
-            response.sendRedirect("login");
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
 
-        // Grab the email of the user we want to delete from the hidden input
         String emailToDelete = request.getParameter("userEmail");
         String filePath = getServletContext().getRealPath("/WEB-INF/users.txt");
-        List<String> remainingUsers = new ArrayList<>();
+        File inputFile = new File(filePath);
+        List<String> lines = new ArrayList<>();
+        boolean userFound = false;
 
-        // 1. Read the file and SKIP the user with the matching email
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (!line.contains(emailToDelete)) {
-                    remainingUsers.add(line); // Keep everyone else!
+        if (inputFile.exists()) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
+                String currentLine;
+                while ((currentLine = reader.readLine()) != null) {
+                    String[] userData = currentLine.split(",");
+                    if (userData.length > 1 && userData[1].equals(emailToDelete)) {
+                        userFound = true;
+                    } else {
+                        lines.add(currentLine);
+                    }
                 }
             }
-        } catch (Exception e) {
-            System.out.println("Error reading users: " + e.getMessage());
         }
 
-        // 2. Overwrite the file with the remaining users
-        try (PrintWriter out = new PrintWriter(new FileWriter(filePath, false))) {
-            for (String u : remainingUsers) {
-                out.println(u);
+        if (userFound) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(inputFile, false))) { // false to overwrite
+                for (String line : lines) {
+                    writer.write(line);
+                    writer.newLine();
+                }
             }
-        } catch (Exception e) {
-            System.out.println("Error deleting user: " + e.getMessage());
+            session.setAttribute("flashMessage", "✅ User '" + emailToDelete + "' was successfully deleted.");
+            session.setAttribute("flashMessageType", "success");
+        } else {
+            session.setAttribute("flashMessage", "❌ Error: User '" + emailToDelete + "' not found.");
+            session.setAttribute("flashMessageType", "error");
         }
 
-        // 3. Route back to the Admin Dashboard to refresh the table
-        request.getRequestDispatcher("/adminDashboard").forward(request, response);
+        response.sendRedirect(request.getContextPath() + "/adminDashboard");
     }
 }

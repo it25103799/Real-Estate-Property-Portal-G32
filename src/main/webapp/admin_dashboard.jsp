@@ -74,6 +74,28 @@
 
         .search-box { width: 100%; max-width: 400px; padding: 10px 14px; border: 1.5px solid var(--line); border-radius: var(--r); background: var(--bg); color: var(--ink); font-family: var(--font-sans); }
         .search-box:focus { border-color: var(--accent); outline: none; }
+
+        /* Flash Message Styling */
+        .flash-message {
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: var(--r);
+            font-weight: 600;
+            border: 1px solid transparent;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .flash-success {
+            background-color: rgba(13, 158, 110, 0.1);
+            color: var(--green);
+            border-color: var(--green);
+        }
+        .flash-error {
+            background-color: rgba(224, 40, 40, 0.1);
+            color: var(--red);
+            border-color: var(--red);
+        }
     </style>
 </head>
 <body data-theme="light" id="body-theme">
@@ -94,6 +116,15 @@
             </form>
         </div>
     </div>
+
+    <!-- FLASH MESSAGE -->
+    <c:if test="${not empty sessionScope.flashMessage}">
+        <div class="flash-message ${sessionScope.flashMessageType == 'success' ? 'flash-success' : 'flash-error'}">
+            <span>${sessionScope.flashMessage}</span>
+        </div>
+        <c:remove var="flashMessage" scope="session"/>
+        <c:remove var="flashMessageType" scope="session"/>
+    </c:if>
 
     <!-- STATISTICS -->
     <div class="stats-grid">
@@ -165,7 +196,7 @@
                                 </td>
                                 <td>
                                     <c:if test="${user.role ne 'ADMIN'}">
-                                        <form action="DeleteUserServlet" method="post" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                        <form action="deleteUser" method="post" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this user?');">
                                             <input type="hidden" name="userEmail" value="${user.password}">
                                             <button type="submit" class="btn btn-danger" style="padding: 6px 12px; font-size: 0.85rem;">Delete</button>
                                         </form>
@@ -284,4 +315,3 @@
 
 </body>
 </html>
-

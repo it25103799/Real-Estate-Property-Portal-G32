@@ -13,6 +13,14 @@ public class UpdateProfileServlet extends HttpServlet {
         String newName = request.getParameter("newName");
         String newEmail = request.getParameter("newEmail");
         String newPassword = request.getParameter("newPassword");
+        
+        HttpSession session = request.getSession();
+        String currentRole = (String) session.getAttribute("loggedRole");
+
+        if (currentRole == null) {
+            response.sendRedirect("login");
+            return;
+        }
 
         // Setup file paths (adjust the path to match your WEB-INF setup)
         String filePath = getServletContext().getRealPath("/WEB-INF/users.txt");
@@ -27,10 +35,10 @@ public class UpdateProfileServlet extends HttpServlet {
             while ((currentLine = reader.readLine()) != null) {
                 String[] userData = currentLine.split(",");
 
-                // Check if this line is the user we want to update AND they are a BUYER
-                if (userData.length == 4 && userData[1].equals(oldEmail) && userData[3].equals("BUYER")) {
+                // Check if this line is the user we want to update
+                if (userData.length == 4 && userData[1].equals(oldEmail) && userData[3].equals(currentRole)) {
                     // Write the updated line instead of the old one
-                    writer.write(newName + "," + newEmail + "," + newPassword + ",BUYER");
+                    writer.write(newName + "," + newEmail + "," + newPassword + "," + currentRole);
                 } else {
                     // Keep the original line (Sellers and other buyers stay untouched)
                     writer.write(currentLine);
@@ -47,10 +55,15 @@ public class UpdateProfileServlet extends HttpServlet {
         }
 
         // Update the session with the new email so the user stays logged in
-        HttpSession session = request.getSession();
-        session.setAttribute("userEmail", newEmail);
+        session.setAttribute("loggedUser", newName);
+        session.setAttribute("loggedEmail", newEmail);
+        session.setAttribute("loggedPassword", newPassword);
 
         // Redirect back to the dashboard
-        response.sendRedirect("buyerDashboard");
+        if ("SELLER".equals(currentRole)) {
+            response.sendRedirect("sellerDashboard");
+        } else {
+            response.sendRedirect("buyerDashboard");
+        }
     }
 }

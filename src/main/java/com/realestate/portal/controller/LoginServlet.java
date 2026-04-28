@@ -55,14 +55,12 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("loggedPassword", inputPassword);
             // ----------------------------
 
-            // --- THE TRAFFIC COP LOGIC (BUYER & SELLER ONLY) ---
+            // --- THE TRAFFIC COP LOGIC (BUYER, SELLER & ADMIN) ---
 
             if ("ADMIN".equalsIgnoreCase(role)) {
-                // If an Admin tries to sneak in, kill the session and kick them to the login screen!
-                session.invalidate();
-                request.setAttribute("errorMessage", "Admin access has been permanently disabled.");
-                request.getRequestDispatcher("/index.jsp").forward(request, response);
-                return;
+                // ✅ ADMINS CAN NOW LOGIN! Redirect to Admin Dashboard
+                System.out.println("🔐 ADMIN LOGIN SUCCESSFUL: " + fullName);
+                response.sendRedirect("adminDashboard");
 
             } else if ("SELLER".equalsIgnoreCase(role)) {
                 // Send to the Seller main page (separate from Buyer site)

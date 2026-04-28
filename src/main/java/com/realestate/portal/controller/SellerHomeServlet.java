@@ -43,14 +43,51 @@ public class SellerHomeServlet extends HttpServlet {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"))) {
                 String line;
                 while ((line = br.readLine()) != null) {
+                    if (line.trim().isEmpty()) {
+                        continue; // Skip empty lines
+                    }
                     String[] data = line.split(",");
-                    // id, title, price, location, type, status, sellerName, imageUrl
-                    if (data.length >= 7 && loggedUser.equals(data[6])) {
-                        String imageUrl = (data.length >= 8) ? data[7] : "";
-                        myProperties.add(new Property(
-                                data[0], data[1], Double.parseDouble(data[2]),
-                                data[3], data[4], data[5], data[6], imageUrl
-                        ));
+                    // A valid property must have at least the first 8 fields.
+                    if (data.length >= 8) {
+                        try {
+                            Property p = new Property();
+                            p.setId(data[0]);
+                            p.setTitle(data[1]);
+                            p.setPrice(Double.parseDouble(data[2]));
+                            p.setLocation(data[3]);
+                            p.setType(data[4]);
+                            p.setStatus(data[5]);
+                            p.setSellerName(data[6]);
+                            p.setImageUrl(data[7]);
+
+                            // Safely parse bedrooms and bathrooms if they exist
+                            int bedrooms = 0;
+                            if (data.length > 8 && data[8] != null && !data[8].trim().isEmpty()) {
+                                bedrooms = Integer.parseInt(data[8].trim());
+                            }
+                            p.setBedrooms(bedrooms);
+
+                            int bathrooms = 0;
+                            if (data.length > 9 && data[9] != null && !data[9].trim().isEmpty()) {
+                                bathrooms = Integer.parseInt(data[9].trim());
+                            }
+                            p.setBathrooms(bathrooms);
+
+                            String description = "No Description yet..";
+                            if (data.length > 10 && data[10] != null && !data[10].trim().isEmpty()) {
+                                description = data[10];
+                            }
+                            p.setDescription(description);
+
+                            // Only add properties belonging to the logged-in seller
+                            if (loggedUser.equals(p.getSellerName())) {
+                                myProperties.add(p);
+                            }
+                        } catch (NumberFormatException e) {
+                            System.err.println("CRITICAL: Could not parse number in property line. Skipping. Line: \"" + line + "\"");
+                        }
+                    } else {
+                        System.err.println("WARNING: Skipping malformed property line (less than 8 fields). Line: \"" + line + "\"");
                     }
                 }
             } catch (Exception e) {
@@ -98,4 +135,3 @@ public class SellerHomeServlet extends HttpServlet {
         doGet(request, response);
     }
 }
-
