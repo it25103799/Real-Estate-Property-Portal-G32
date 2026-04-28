@@ -8,10 +8,11 @@ import com.realestate.portal.model.Review;
 import com.realestate.portal.model.VerifiedReview;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.FileInputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,27 +45,30 @@ public class SellerDashboardServlet extends HttpServlet {
         File file = new File(filePath);
 
         if (file.exists()) {
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"))) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(file.getAbsolutePath())), StandardCharsets.UTF_8))) {
                 String line;
                 while ((line = br.readLine()) != null) {
                     String[] data = line.split(",");
-
-                    // UPGRADED to check for >= 7 columns and match the Seller Name
                     if (data.length >= 7 && data[6].equals(loggedUser)) {
+                        Property p = null;
                         try {
-                            double price = Double.parseDouble(data[2]);
-                            String imageUrl = (data.length >= 8 && data[7] != null && !data[7].trim().isEmpty()) ? data[7] : "https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=900&q=80";
-
-                            // Pass all 8 items!
-                            Property p = new Property(data[0], data[1], price, data[3], data[4], data[5], data[6], imageUrl);
-                            myProperties.add(p);
+                            if (data.length == 11) { // New format with description
+                                p = new Property(data[0], data[1], Double.parseDouble(data[2]), data[3], data[4], data[5], data[6], data[7], Integer.parseInt(data[8]), Integer.parseInt(data[9]), data[10]);
+                            } else if (data.length == 10) { // Format without description
+                                p = new Property(data[0], data[1], Double.parseDouble(data[2]), data[3], data[4], data[5], data[6], data[7], Integer.parseInt(data[8]), Integer.parseInt(data[9]), "");
+                            } else if (data.length == 8) { // Old format
+                                p = new Property(data[0], data[1], Double.parseDouble(data[2]), data[3], data[4], data[5], data[6], data[7], 0, 0, "");
+                            }
+                            if (p != null) {
+                                myProperties.add(p);
+                            }
                         } catch (NumberFormatException e) {
-                            System.out.println("Skipping invalid price: " + data[2]);
+                            System.err.println("Skipping malformed property line: " + line);
                         }
                     }
                 }
             } catch (Exception e) {
-                System.out.println("Error reading properties: " + e.getMessage());
+                System.err.println("Error reading properties: " + e.getMessage());
             }
         }
 
@@ -78,7 +82,7 @@ public class SellerDashboardServlet extends HttpServlet {
         String revPath = getServletContext().getRealPath("/WEB-INF/reviews.txt");
         File revFile = new File(revPath);
         if (revFile.exists() && !myPropIds.isEmpty()) {
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(revFile), "UTF-8"))) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(revFile.getAbsolutePath())), StandardCharsets.UTF_8))) {
                 String line;
                 while ((line = br.readLine()) != null) {
                     String[] data = line.split(",");
@@ -93,7 +97,7 @@ public class SellerDashboardServlet extends HttpServlet {
                     }
                 }
             } catch (Exception e) {
-                System.out.println("Error reading reviews: " + e.getMessage());
+                System.err.println("Error reading reviews: " + e.getMessage());
             }
         }
 
@@ -103,7 +107,7 @@ public class SellerDashboardServlet extends HttpServlet {
 
         File threadsFile = new File(getServletContext().getRealPath("/WEB-INF/inquiry_threads.tsv"));
         if (threadsFile.exists()) {
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(threadsFile), "UTF-8"))) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(threadsFile.getAbsolutePath())), StandardCharsets.UTF_8))) {
                 String line;
                 while ((line = br.readLine()) != null) {
                     String[] data = line.split("\t", -1);
@@ -119,13 +123,13 @@ public class SellerDashboardServlet extends HttpServlet {
                     }
                 }
             } catch (Exception e) {
-                System.out.println("Error reading inquiry threads: " + e.getMessage());
+                System.err.println("Error reading inquiry threads: " + e.getMessage());
             }
         }
 
         File messagesFile = new File(getServletContext().getRealPath("/WEB-INF/inquiry_messages.tsv"));
         if (messagesFile.exists() && !byId.isEmpty()) {
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(messagesFile), "UTF-8"))) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(messagesFile.getAbsolutePath())), StandardCharsets.UTF_8))) {
                 String line;
                 while ((line = br.readLine()) != null) {
                     String[] data = line.split("\t", -1);
@@ -137,7 +141,7 @@ public class SellerDashboardServlet extends HttpServlet {
                         String content = "";
                         try {
                             byte[] decoded = Base64.getDecoder().decode(data[4]);
-                            content = new String(decoded, "UTF-8");
+                            content = new String(decoded, StandardCharsets.UTF_8);
                         } catch (Exception ignored) {}
 
                         InquiryMessage msg = new InquiryMessage(data[0], data[1], data[2], data[3], content);
@@ -145,7 +149,7 @@ public class SellerDashboardServlet extends HttpServlet {
                     }
                 }
             } catch (Exception e) {
-                System.out.println("Error reading inquiry messages: " + e.getMessage());
+                System.err.println("Error reading inquiry messages: " + e.getMessage());
             }
         }
 
@@ -154,7 +158,7 @@ public class SellerDashboardServlet extends HttpServlet {
         File readsFile = new File(getServletContext().getRealPath("/WEB-INF/inquiry_reads.tsv"));
         if (threadsFile.exists() && messagesFile.exists()) {
             Map<String, String[]> threads = new HashMap<>();
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(threadsFile), "UTF-8"))) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(threadsFile.getAbsolutePath())), StandardCharsets.UTF_8))) {
                 String line;
                 while ((line = br.readLine()) != null) {
                     String[] data = line.split("\t", -1);
@@ -164,7 +168,7 @@ public class SellerDashboardServlet extends HttpServlet {
 
             Map<String, String> lastRead = new HashMap<>();
             if (readsFile.exists()) {
-                try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(readsFile), "UTF-8"))) {
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(readsFile.getAbsolutePath())), StandardCharsets.UTF_8))) {
                     String line;
                     while ((line = br.readLine()) != null) {
                         String[] r = line.split("\t", -1);
@@ -173,7 +177,7 @@ public class SellerDashboardServlet extends HttpServlet {
                 } catch (Exception ignored) {}
             }
 
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(messagesFile), "UTF-8"))) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(messagesFile.getAbsolutePath())), StandardCharsets.UTF_8))) {
                 String line;
                 while ((line = br.readLine()) != null) {
                     String[] msg = line.split("\t", -1);
@@ -198,7 +202,7 @@ public class SellerDashboardServlet extends HttpServlet {
                     if (lr != null && ts != null && ts.compareTo(lr) <= 0) continue;
 
                     String content = "";
-                    try { content = new String(Base64.getDecoder().decode(msg[4]), "UTF-8"); } catch (Exception ignored) {}
+                    try { content = new String(Base64.getDecoder().decode(msg[4]), StandardCharsets.UTF_8); } catch (Exception ignored) {}
 
                     Map<String, String> n = new HashMap<>();
                     n.put("sender", sender);

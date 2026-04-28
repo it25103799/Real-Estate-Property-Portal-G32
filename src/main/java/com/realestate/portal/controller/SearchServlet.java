@@ -2,6 +2,9 @@ package com.realestate.portal.controller;
 
 import com.realestate.portal.model.Property;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,26 +38,24 @@ public class SearchServlet extends HttpServlet {
                 while ((line = br.readLine()) != null) {
                     String[] data = line.split(",");
 
-                    // Remember, we upgraded to 8 columns for the Image URL!
-                    if (data.length == 8) {
+                    if (data.length == 10) {
                         String propLocation = data[3];
                         String propType = data[4];
 
                         // 3. THE FILTERING LOGIC
-                        // Check if the location matches (ignores uppercase/lowercase, and handles empty searches)
                         boolean matchesLocation = (searchLocation == null || searchLocation.trim().isEmpty())
                                 || propLocation.toLowerCase().contains(searchLocation.toLowerCase().trim());
 
-                        // Check if the property type matches (or if they selected "Any Type")
                         boolean matchesType = (searchType == null || searchType.trim().isEmpty())
                                 || propType.equalsIgnoreCase(searchType);
 
-                        // If it passes both tests, add it to the final results!
                         if (matchesLocation && matchesType) {
                             double price = Double.parseDouble(data[2]);
+                            int bedrooms = Integer.parseInt(data[8]);
+                            int bathrooms = Integer.parseInt(data[9]);
                             String imageUrl = (data[7] == null || data[7].trim().isEmpty()) ? "https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=900&q=80" : data[7];
 
-                            Property p = new Property(data[0], data[1], price, propLocation, propType, data[5], data[6], imageUrl);
+                            Property p = new Property(data[0], data[1], price, propLocation, propType, data[5], data[6], imageUrl, bedrooms, bathrooms, "");
                             searchResults.add(p);
                         }
                     }
@@ -83,7 +84,7 @@ public class SearchServlet extends HttpServlet {
 
             Map<String, String[]> threads = new HashMap<>();
             if (threadsFile.exists()) {
-                try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(threadsFile), "UTF-8"))) {
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(threadsFile.getAbsolutePath())), StandardCharsets.UTF_8))) {
                     String line;
                     while ((line = br.readLine()) != null) {
                         String[] data = line.split("\t", -1);
@@ -96,7 +97,7 @@ public class SearchServlet extends HttpServlet {
 
             Map<String, String> lastRead = new HashMap<>();
             if (readsFile.exists()) {
-                try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(readsFile), "UTF-8"))) {
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(readsFile.getAbsolutePath())), StandardCharsets.UTF_8))) {
                     String line;
                     while ((line = br.readLine()) != null) {
                         String[] r = line.split("\t", -1);
@@ -108,7 +109,7 @@ public class SearchServlet extends HttpServlet {
             }
 
             if (messagesFile.exists() && !threads.isEmpty()) {
-                try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(messagesFile), "UTF-8"))) {
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(messagesFile.getAbsolutePath())), StandardCharsets.UTF_8))) {
                     String line;
                     while ((line = br.readLine()) != null) {
                         String[] msg = line.split("\t", -1);
@@ -136,7 +137,7 @@ public class SearchServlet extends HttpServlet {
 
                         String content = "";
                         try {
-                            content = new String(Base64.getDecoder().decode(msg[4]), "UTF-8");
+                            content = new String(Base64.getDecoder().decode(msg[4]), StandardCharsets.UTF_8);
                         } catch (Exception ignored) {}
 
                         Map<String, String> n = new HashMap<>();

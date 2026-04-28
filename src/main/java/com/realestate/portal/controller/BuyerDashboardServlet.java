@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
@@ -43,22 +46,37 @@ public class BuyerDashboardServlet extends HttpServlet {
                     }
                 }
             } catch (Exception e) {
+                System.err.println("Error reading favorites: " + e.getMessage());
             }
         }
 
         // 2. Read properties.txt, grab the full details for those specific IDs
         File propFile = new File(getServletContext().getRealPath("/WEB-INF/properties.txt"));
         if (propFile.exists() && !myFavIds.isEmpty()) {
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(propFile), "UTF-8"))) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(propFile.getAbsolutePath())), StandardCharsets.UTF_8))) {
                 String line;
                 while ((line = br.readLine()) != null) {
                     String[] data = line.split(",");
-                    if (data.length == 8 && myFavIds.contains(data[0])) {
-                        double price = Double.parseDouble(data[2]);
-                        savedProperties.add(new Property(data[0], data[1], price, data[3], data[4], data[5], data[6], data[7]));
+                    if (myFavIds.contains(data[0])) {
+                        Property p = null;
+                        try {
+                            if (data.length == 11) { // New format with description
+                                p = new Property(data[0], data[1], Double.parseDouble(data[2]), data[3], data[4], data[5], data[6], data[7], Integer.parseInt(data[8]), Integer.parseInt(data[9]), data[10]);
+                            } else if (data.length == 10) { // Format without description
+                                p = new Property(data[0], data[1], Double.parseDouble(data[2]), data[3], data[4], data[5], data[6], data[7], Integer.parseInt(data[8]), Integer.parseInt(data[9]), "");
+                            } else if (data.length == 8) { // Old format
+                                p = new Property(data[0], data[1], Double.parseDouble(data[2]), data[3], data[4], data[5], data[6], data[7], 0, 0, "");
+                            }
+                            if (p != null) {
+                                savedProperties.add(p);
+                            }
+                        } catch (NumberFormatException e) {
+                            System.err.println("Skipping malformed property line: " + line);
+                        }
                     }
                 }
             } catch (Exception e) {
+                System.err.println("Error reading properties: " + e.getMessage());
             }
         }
         // --- INQUIRY THREAD READER ENGINE (new threaded system) ---
@@ -68,7 +86,7 @@ public class BuyerDashboardServlet extends HttpServlet {
 
         File threadsFile = new File(getServletContext().getRealPath("/WEB-INF/inquiry_threads.tsv"));
         if (threadsFile.exists()) {
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(threadsFile), "UTF-8"))) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(threadsFile.getAbsolutePath())), StandardCharsets.UTF_8))) {
                 String line;
                 while ((line = br.readLine()) != null) {
                     String[] data = line.split("\t", -1);
@@ -96,12 +114,12 @@ public class BuyerDashboardServlet extends HttpServlet {
                     }
                 }
             } catch (Exception e) {
-                System.out.println("Error reading inquiry threads: " + e.getMessage());
+                System.err.println("Error reading inquiry threads: " + e.getMessage());
             }
 
             File messagesFile = new File(getServletContext().getRealPath("/WEB-INF/inquiry_messages.tsv"));
             if (messagesFile.exists() && !byId.isEmpty()) {
-                try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(messagesFile), "UTF-8"))) {
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(messagesFile.getAbsolutePath())), StandardCharsets.UTF_8))) {
                     String line;
                     while ((line = br.readLine()) != null) {
                         String[] data = line.split("\t", -1);
@@ -112,21 +130,21 @@ public class BuyerDashboardServlet extends HttpServlet {
                             String content = "";
                             try {
                                 byte[] decoded = Base64.getDecoder().decode(data[4]);
-                                content = new String(decoded, "UTF-8");
+                                content = new String(decoded, StandardCharsets.UTF_8);
                             } catch (Exception ignored) {}
 
                             t.getMessages().add(new InquiryMessage(data[0], data[1], data[2], data[3], content));
                         }
                     }
                 } catch (Exception e) {
-                    System.out.println("Error reading inquiry messages: " + e.getMessage());
+                    System.err.println("Error reading inquiry messages: " + e.getMessage());
                 }
             }
         } else {
             // Backward compat: read old inquiries.txt if new threads file doesn't exist
             File inqFile = new File(getServletContext().getRealPath("/WEB-INF/inquiries.txt"));
             if (inqFile.exists()) {
-                try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inqFile), "UTF-8"))) {
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(inqFile.getAbsolutePath())), StandardCharsets.UTF_8))) {
                     String line;
                     while ((line = br.readLine()) != null) {
                         String[] data = line.split(",");
@@ -140,7 +158,7 @@ public class BuyerDashboardServlet extends HttpServlet {
                         }
                     }
                 } catch (Exception e) {
-                    System.out.println("Error reading inquiries: " + e.getMessage());
+                    System.err.println("Error reading inquiries: " + e.getMessage());
                 }
             }
         }
