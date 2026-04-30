@@ -1,0 +1,91 @@
+================================================================================
+BUGFIX SUMMARY - Featured Properties City Search & Browse Tab Independence
+================================================================================
+
+DATE: April 30, 2026
+ISSUE: Two critical bugs in the Featured Properties filtering:
+  1. City search (Kurunegala, Rathnapura) not filtering properties
+  2. Featured Properties filtering was affecting the Browse tab
+
+ROOT CAUSE:
+  - The old filterHome() function was using DOM manipulation (show/hide elements)
+  - The old city search was also DOM-based, querying `.prop-loc` elements
+  - Both filters were competing and not working properly with the property data
+  - The Browse tab (listings) and Featured Properties were not truly independent
+
+SOLUTION:
+  - Created separate state management for Featured Properties (homeFilterType, homeSearchCity)
+  - Implemented renderHomeFeaturedProperties() function that:
+    * Filters from window.properties data (not DOM)
+    * Combines both type filter AND city search filter
+    * Re-renders the entire grid when filters change
+  - Completely separated Featured Properties from Browse tab filtering
+  - Browse tab continues to use its own filter state (currentFilters)
+
+FILES MODIFIED:
+
+1. app.js
+   - Added: homeFilterType and homeSearchCity state variables
+   - Updated: initHome() to reset filters and call renderHomeFeaturedProperties()
+   - Updated: filterHome(btn, filterType) to update state and re-render
+   - Added: searchHomeByCity(searchTerm) function for city search
+   - Added: renderHomeFeaturedProperties() function that:
+     * Filters window.properties based on BOTH filters
+     * Re-renders HTML when filters change
+     * Works independently from Browse tab
+
+2. index.jsp
+   - Added: Search input field with label "Search by City"
+   - Updated: DOMContentLoaded listener to call searchHomeByCity()
+   - Removed: Old DOM-based filtering logic
+
+BENEFITS:
+
+✓ City search now properly filters Featured Properties
+✓ Partial city name matching works (e.g., "Kuru" finds "Kurunegala")
+✓ Case-insensitive search
+✓ Type filters (All, For Sale, For Rent, Apartments, Houses, Villas) work correctly
+✓ Both filters work together (city + type)
+✓ Browse tab is completely unaffected by Featured Properties filtering
+✓ Clean state management - each page has its own filter variables
+
+HOW IT WORKS:
+
+Featured Properties Filtering Flow:
+1. User types city in search box → searchHomeByCity(value) called
+2. homeSearchCity state updated
+3. renderHomeFeaturedProperties() called
+4. Properties filtered from window.properties:
+   - Match homeFilterType? (all/sale/rent/apartment/house/villa)
+   - Match homeSearchCity? (empty or location includes search term)
+5. Grid HTML re-rendered with filtered results
+6. Browse tab remains unaffected (uses different filter state)
+
+Example:
+- Type filter set to "All" + City search "Kurunegala"
+  → Shows only properties in Kurunegala
+- Type filter set to "House" + City search "Colombo"
+  → Shows only houses in Colombo
+- Type filter set to "Villa" + City search ""
+  → Shows all villas (no city restriction)
+
+TESTING CHECKLIST:
+
+□ Type filter buttons (All, For Sale, For Rent, etc.) work independently
+□ City search works with full city names (Kurunegala, Rathnapura, Colombo, etc.)
+□ City search works with partial names (Kuru, Rata, etc.)
+□ Case-insensitive search
+□ Both filters work together
+□ Clearing city search shows all properties of selected type
+□ Browse tab filters remain independent
+□ No console errors
+□ Page loads correctly with all properties
+
+TECHNICAL NOTES:
+
+- window.properties is populated from Java backend in <script> tag
+- renderHomeFeaturedProperties() is called whenever filters change
+- Featured grid (#home-prop-grid) is completely re-rendered
+- Browse tab uses completely separate applyFilters() function
+- Both pages can operate independently without interference
+

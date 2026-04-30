@@ -305,7 +305,7 @@
         </table>
     </div>
 
-    <div class="card">
+    <div class="card" id="reviews-section">
         <h3 class="card-title">💬 Property Reviews</h3>
         <div style="color: var(--ink); opacity: 0.75; font-size: 0.9rem; margin-top: -10px; margin-bottom: 16px;">
             Reviews posted by buyers for your listings.
@@ -344,9 +344,15 @@
                                             <div style="padding: 12px; border-radius: 8px; background: var(--bg); border: 1px solid var(--line);">
                                                 <div style="display:flex; justify-content:space-between; align-items:flex-start; gap: 10px; flex-wrap: wrap;">
                                                     <div style="font-weight: 700;"><c:out value="${r.buyerName}"/></div>
-                                                    <div style="color: #d97706; letter-spacing: 1px; font-size: 0.9rem;">
-                                                        <c:forEach begin="1" end="${r.rating}" var="i">★</c:forEach>
-                                                        <c:forEach begin="1" end="${5 - r.rating}" var="i">☆</c:forEach>
+                                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                                        <div style="color: #d97706; letter-spacing: 1px; font-size: 0.9rem;">
+                                                            <c:forEach begin="1" end="${r.rating}" var="i">★</c:forEach>
+                                                            <c:forEach begin="1" end="${5 - r.rating}" var="i">☆</c:forEach>
+                                                        </div>
+                                                        <form action="deleteReview" method="post" onsubmit="return confirm('Are you sure you want to delete this review?');">
+                                                            <input type="hidden" name="reviewId" value="${r.reviewID}">
+                                                            <button type="submit" class="btn-edit" style="color: var(--red); border-color: var(--red);">Remove</button>
+                                                        </form>
                                                     </div>
                                                 </div>
                                                 <div style="margin-top: 6px; opacity: 0.9; white-space: pre-wrap;">
@@ -624,7 +630,7 @@
         document.getElementById('chatThreadIdInput').value = t.id;
 
         const msgs = document.getElementById('chatMsgs');
-        const container = document.getElementById('thread-msgs-' + threadId);
+        const container = document.getElementById('thread-msgs-' + t.id);
         msgs.innerHTML = container ? container.innerHTML : '';
 
         document.getElementById('chatOverlay').classList.add('open');
@@ -663,6 +669,22 @@
             setTimeout(() => openChat(threadId), 150);
         }
     });
+</script>
+
+<script>
+    // Auto-scroll to reviews section after a review deletion
+    (function() {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('scrollTo') === 'reviews') {
+            const reviewsSection = document.getElementById('reviews-section');
+            if (reviewsSection) {
+                reviewsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            // Clean the URL so refreshing doesn't re-scroll
+            const cleanUrl = window.location.pathname;
+            history.replaceState(null, '', cleanUrl);
+        }
+    })();
 </script>
 
 <!-- Hidden rendered messages per thread (safe HTML escaping) -->

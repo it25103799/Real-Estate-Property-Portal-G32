@@ -108,6 +108,10 @@
             <p style="margin: 8px 0 0 0; color: var(--ink); opacity: 0.6;">Manage the entire NESTIQ system</p>
         </div>
         <div class="header-actions">
+            <div style="display: flex; flex-direction: column; align-items: flex-start; margin-right: 18px;">
+                <label for="user-search" style="font-size: 0.95rem; color: var(--ink); opacity: 0.8; margin-bottom: 4px;">Search Buyers & Sellers</label>
+                <input type="text" id="user-search" class="search-box" placeholder="you@example.com / Username" style="margin-bottom: 0;" autocomplete="off" />
+            </div>
             <div class="theme-switch" onclick="toggleTheme()" title="Toggle Dark Mode">
                 <div class="theme-switch-thumb" id="theme-toggle">🌙</div>
             </div>
@@ -165,7 +169,7 @@
         <h3 class="card-title">👥 User Management</h3>
         <p style="color: var(--ink); opacity: 0.75; margin-bottom: 20px;">All registered users in the system</p>
 
-        <table>
+        <table id="user-management-table">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -310,8 +314,24 @@
         if (savedTheme === 'dark') {
             document.getElementById('theme-toggle').innerHTML = '☀️';
         }
+
+        // User search functionality
+        document.getElementById('user-search').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            const rows = document.querySelectorAll('#user-management-table tbody tr');
+            rows.forEach(row => {
+                const username = row.cells[0].textContent.toLowerCase();
+                const email = row.cells[1].textContent.toLowerCase();
+                if (username.includes(searchTerm) || email.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
     });
 </script>
 
 </body>
 </html>
+

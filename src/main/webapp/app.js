@@ -64,25 +64,119 @@ function showPage(name) {
     if (name === 'home') initHome();
 }
 
+// ── HOME PAGE FILTER STATE ──────────────────────────
+let homeFilterType = 'all';
+let homeSearchCity = '';
+
 // ── INIT HOME ──────────────────────────
 function initHome() {
     renderTestimonials();
     renderHomeAgents();
+    homeFilterType = 'all';
+    homeSearchCity = '';
+    renderHomeFeaturedProperties();
 }
 
 function filterHome(btn, filterType) {
     document.querySelectorAll('.filter-bar .filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
+    homeFilterType = filterType;
+    renderHomeFeaturedProperties();
+}
 
-    const cards = document.querySelectorAll('#home-prop-grid .prop-card');
-    cards.forEach(card => {
-        const cardText = card.innerText.toLowerCase();
-        if (filterType === 'all' || cardText.includes(filterType.toLowerCase())) {
-            card.style.display = 'block';
-        } else {
-            card.style.display = 'none';
+function searchHomeByCity(searchTerm, searchType) {
+    homeSearchCity = searchTerm.toLowerCase().trim();
+    homeFilterType = searchType.toLowerCase().trim();
+    renderHomeFeaturedProperties();
+
+    const messageContainer = document.getElementById('search-message-container');
+    if (messageContainer) {
+        if (homeSearchCity === '') {
+            messageContainer.innerHTML = '';
+            return;
         }
+
+        const cityProperties = window.properties.filter(p => p.location.toLowerCase().includes(homeSearchCity));
+        if (cityProperties.length > 0) {
+            const typeProperties = cityProperties.filter(p => homeFilterType === '' || p.type.toLowerCase() === homeFilterType);
+            if (typeProperties.length > 0) {
+                messageContainer.innerHTML = `<div class="search-message" style="color: var(--green); background-color: var(--green-l);">Properties Found</div>`;
+            } else {
+                messageContainer.innerHTML = `<div class="search-message" style="color: var(--amber); background-color: var(--amber-l);">No Properties found with the category of ${searchType}</div>`;
+            }
+        } else {
+            messageContainer.innerHTML = `<div class="search-message" style="color: var(--red); background-color: var(--amber-l);">No Properties found in the city of ${searchTerm}</div>`;
+        }
+    }
+}
+
+function renderHomeFeaturedProperties() {
+    const grid = document.getElementById('home-prop-grid');
+    if (!grid || typeof window.properties === 'undefined') return;
+
+    // Filter properties based on both the type filter and city search
+    let filtered = window.properties.filter(p => {
+        // Combined filter for status (sale/rent) and type (apartment/house)
+        const statusOrType = homeFilterType.toLowerCase();
+        let matchFilter;
+        if (statusOrType === 'all' || statusOrType === '') {
+            matchFilter = true;
+        } else if (statusOrType === 'sale' || statusOrType === 'rent') {
+            // The filter is for status
+            matchFilter = p.status && p.status.toLowerCase().includes(statusOrType);
+        } else {
+            // The filter is for property type
+            matchFilter = p.type && p.type.toLowerCase().includes(statusOrType);
+        }
+
+        // City search filter
+        let matchCity = homeSearchCity === '' || (p.location && p.location.toLowerCase().includes(homeSearchCity));
+
+        return matchFilter && matchCity;
     });
+
+    // Re-render the grid
+    if (filtered.length === 0) {
+        grid.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: var(--ink3); padding: 40px;">No properties match your search.</p>';
+        return;
+    }
+
+    grid.innerHTML = filtered.map(p => {
+        const displayPrice = typeof p.price === 'number' ? p.price.toLocaleString() : p.price;
+        const safeStatus = p.status ? p.status.toLowerCase() : 'sale';
+        const isRent = safeStatus.includes('rent');
+        const tagClass = isRent ? 'tag-rent' : 'tag-sale';
+        const tagText = isRent ? 'For Rent' : 'For Sale';
+
+        return `
+        <div class="prop-card" onclick="openDetail('${p.id}')" style="cursor: pointer;">
+            <div class="prop-img-wrap">
+                <img src="${p.image}" alt="${p.title}"/>
+                <div class="prop-tags">
+                    <span class="prop-tag ${tagClass}">${tagText}</span>
+                </div>
+            </div>
+            <div class="prop-body">
+                <div class="prop-price">$${displayPrice}</div>
+                <div class="prop-name">${p.title}</div>
+                <div class="prop-loc">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    ${p.location}
+                </div>
+                <div class="prop-divider"></div>
+                <div class="prop-meta">
+                    <div class="prop-meta-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 10V4h-5"/><path d="M15 10l-6 6-4-4"/></svg>
+                        ${p.bedrooms} Beds
+                    </div>
+                    <div class="prop-meta-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 10V4h-5"/><path d="M15 10l-6 6-4-4"/></svg>
+                        ${p.bathrooms} Baths
+                    </div>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
 }
 
 function renderTestimonials() {
@@ -192,6 +286,8 @@ function getAgentForSeller(sellerName) {
 let currentListingsPage = 0;
 let itemsPerPage = 10;
 let allFilteredProperties = [];
+let currentSort = 'default';  // 'default'|'price_asc'|'price_desc'|'newest'|'views'
+let currentViewMode = 'grid'; // 'grid'|'list'
 
 function toggleChip(btn, category, value) {
     let siblings = btn.parentElement.querySelectorAll('.filter-chip');
@@ -235,15 +331,24 @@ function applyFilters() {
         let matchType = currentFilters.type === 'all' || (p.type && p.type.toLowerCase() === currentFilters.type.toLowerCase());
         let matchCity = currentFilters.city === 'all' || (p.location && p.location.toLowerCase().includes(currentFilters.city.toLowerCase()));
 
+        // Price Range Filtering
         let matchPrice = true;
         let numPrice = typeof p.price === 'string' ? parseInt(p.price.replace(/[^0-9]/g, ''), 10) : p.price;
         if (currentFilters.minPrice && numPrice < parseInt(currentFilters.minPrice, 10)) matchPrice = false;
         if (currentFilters.maxPrice && numPrice > parseInt(currentFilters.maxPrice, 10)) matchPrice = false;
 
-        return matchStatus && matchType && matchCity && matchPrice;
+        // Bedrooms Filtering
+        let matchBeds = true;
+        if (currentFilters.beds !== 'any') {
+            let minBeds = parseInt(currentFilters.beds, 10);
+            let propBeds = parseInt(p.bedrooms, 10);
+            matchBeds = propBeds >= minBeds;
+        }
+
+        return matchStatus && matchType && matchCity && matchPrice && matchBeds;
     });
 
-    allFilteredProperties = filtered;
+    allFilteredProperties = sortProperties(filtered);
     currentListingsPage = 0;
     renderListings();
 }
@@ -266,32 +371,65 @@ function renderListings() {
     const endIndex = startIndex + itemsPerPage;
     const paginatedList = allFilteredProperties.slice(startIndex, endIndex);
 
-    // Build HTML for current page
+    // Build HTML for current page – supports grid and list view modes
     const html = paginatedList.map(p => {
         const displayPrice = typeof p.price === 'number' ? p.price.toLocaleString() : p.price;
-        const safeStatus = p.status ? p.status.toLowerCase() : 'sale';
+        const safeStatus   = p.status ? p.status.toLowerCase() : 'sale';
+        const isRent       = safeStatus.includes('rent');
+        const realSeller   = (p.seller && p.seller !== "null" && p.seller.trim() !== "") ? p.seller : "Verified Seller";
+        const agent        = getAgentForSeller(realSeller);
+        const typeLabel    = p.type ? p.type.charAt(0).toUpperCase() + p.type.slice(1) : 'Property';
+        const statusTag    = isRent ? 'For Rent' : 'For Sale';
+        const tagClass     = isRent ? 'tag-rent' : 'tag-sale';
+        const rentSuffix   = isRent ? '<span style="font-size:0.58em;font-weight:400;color:var(--ink4)">/mo</span>' : '';
 
-        // Face Router execution
-        const realSeller = (p.seller && p.seller !== "null" && p.seller.trim() !== "") ? p.seller : "Verified Seller";
-        const agent = getAgentForSeller(realSeller);
+        if (currentViewMode === 'list') {
+            // ── LIST ROW ──
+            return `<div class="prop-card prop-card--list" onclick="openDetail('${p.id}')">
+                <div class="plc-img">
+                    <img src="${p.image}" alt="${p.title}">
+                    <span class="prop-tag ${tagClass} plc-tag">${statusTag}</span>
+                </div>
+                <div class="plc-body">
+                    <div class="plc-type">🏠 ${typeLabel}</div>
+                    <div class="plc-title">${p.title}</div>
+                    <div class="plc-loc">📍 ${p.location}</div>
+                    <div class="plc-meta">
+                        <span>🛏️ ${p.bedrooms} Beds</span>
+                        <span>🛁 ${p.bathrooms} Baths</span>
+                        <span>👁️ ${p.views || '—'} Views</span>
+                    </div>
+                </div>
+                <div class="plc-right">
+                    <div class="plc-price">$${displayPrice}${rentSuffix}</div>
+                    <div class="plc-agent">
+                        <img src="${agent.img}" alt="${realSeller}">
+                        <span>${realSeller}</span>
+                    </div>
+                </div>
+            </div>`;
+        }
 
-        return `
-        <div class="prop-card" onclick="openDetail('${p.id}')" style="cursor: pointer;">
+        // ── GRID CARD (unchanged) ──
+        return `<div class="prop-card" onclick="openDetail('${p.id}')" style="cursor:pointer;">
             <div class="prop-img-wrap">
                 <img src="${p.image}" alt="${p.title}">
                 <div class="prop-tags">
-                    <span class="prop-tag ${safeStatus.includes('rent') ? 'tag-rent' : 'tag-sale'}">${safeStatus.includes('rent') ? 'For Rent' : 'For Sale'}</span>
+                    <span class="prop-tag ${tagClass}">${statusTag}</span>
                 </div>
             </div>
             <div class="prop-body">
-                <div class="prop-price">$${displayPrice} ${safeStatus.includes('rent') ? '<span style="font-size:0.6em; color:var(--ink4)">/mo</span>' : ''}</div>
+                <div class="prop-price">$${displayPrice} ${rentSuffix}</div>
                 <div class="prop-name">${p.title}</div>
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                    <span style="font-size:0.78rem;font-weight:600;color:var(--accent);background:var(--accent-l);padding:3px 10px;border-radius:6px;text-transform:capitalize;">🏠 ${typeLabel}</span>
+                </div>
                 <div class="prop-loc">📍 ${p.location}</div>
                 <div class="prop-divider"></div>
                 <div class="prop-meta">
                     <div class="prop-meta-item">🛏️ ${p.bedrooms} Beds</div>
                     <div class="prop-meta-item">🛁 ${p.bathrooms} Baths</div>
-                    <div class="prop-meta-item">👁️ 342 Views</div>
+                    <div class="prop-meta-item">👁️ ${p.views || '—'} Views</div>
                 </div>
                 <div class="prop-agent-row">
                     <div class="prop-agent">
@@ -427,6 +565,19 @@ window.document.addEventListener("DOMContentLoaded", () => {
     const themeBtn = window.document.getElementById('theme-toggle');
     if (themeBtn) {
         themeBtn.onclick = toggleTheme;
+    }
+
+    // Listen for the main hero search form submission
+    const heroSearchForm = document.querySelector('.hero-search-form');
+    if (heroSearchForm) {
+        heroSearchForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Stop the form from reloading the page
+            const locationInput = heroSearchForm.querySelector('input[name="location"]');
+            const typeInput = heroSearchForm.querySelector('select[name="type"]');
+            if (locationInput && typeInput) {
+                searchHomeByCity(locationInput.value, typeInput.value);
+            }
+        });
     }
 });
 
@@ -615,3 +766,34 @@ function openNotifThread(threadId) {
 
 // Run this logic as soon as the page loads
 window.document.addEventListener("DOMContentLoaded", renderNotifications);
+// ── SORT ─────────────────────────────────
+function sortProperties(arr) {
+    if (currentSort === 'default') return arr;
+    return [...arr].sort((a, b) => {
+        const toNum = v => (typeof v === 'string' ? parseInt(v.replace(/[^0-9]/g, ''), 10) : (v || 0));
+        if (currentSort === 'price_asc')  return toNum(a.price) - toNum(b.price);
+        if (currentSort === 'price_desc') return toNum(b.price) - toNum(a.price);
+        if (currentSort === 'newest')     return (parseInt(b.id, 10) || 0) - (parseInt(a.id, 10) || 0);
+        if (currentSort === 'views')      return (parseInt(b.views, 10) || 0) - (parseInt(a.views, 10) || 0);
+        return 0;
+    });
+}
+
+function sortListings(value) {
+    currentSort = value;
+    currentListingsPage = 0;
+    applyFilters();   // re-filter + sort + render
+}
+
+// ── VIEW TOGGLE ──────────────────────────
+function setViewMode(mode) {
+    if (currentViewMode === mode) return;
+    currentViewMode = mode;
+    const grid = document.getElementById('listings-grid');
+    if (grid) grid.classList.toggle('prop-grid--list', mode === 'list');
+    document.querySelectorAll('.view-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', (mode === 'grid' && i === 0) || (mode === 'list' && i === 1));
+    });
+    currentListingsPage = 0;
+    renderListings();
+}

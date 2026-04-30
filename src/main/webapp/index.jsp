@@ -745,6 +745,64 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
 }
 .view-btn.active { background: var(--accent-l); color: var(--accent); border-color: rgba(26,86,219,.25); }
 
+/* ── LIST VIEW LAYOUT ── */
+.prop-grid--list {
+  display: flex; flex-direction: column; gap: 14px;
+}
+.prop-card--list {
+  display: flex; flex-direction: row; align-items: stretch;
+  border-radius: var(--r2); overflow: hidden; cursor: pointer;
+  background: var(--bg); border: 1.5px solid var(--line);
+  transition: all var(--t); animation: cardIn .35s ease both;
+  min-height: 140px;
+}
+.prop-card--list:hover {
+  border-color: transparent; box-shadow: var(--shadow-xl);
+  transform: translateY(-2px);
+}
+.plc-img {
+  position: relative; width: 220px; flex-shrink: 0; overflow: hidden;
+}
+.plc-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+.prop-card--list:hover .plc-img img { transform: scale(1.06); }
+.plc-tag { position: absolute; top: 10px; left: 10px; }
+.plc-body {
+  flex: 1; padding: 18px 20px; display: flex; flex-direction: column;
+  justify-content: center; gap: 6px; min-width: 0;
+}
+.plc-type {
+  font-size: .72rem; font-weight: 700; text-transform: capitalize;
+  color: var(--accent); background: var(--accent-l);
+  padding: 2px 9px; border-radius: 6px; width: fit-content;
+}
+.plc-title {
+  font-size: 1rem; font-weight: 600; color: var(--ink2);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.plc-loc { font-size: .8rem; color: var(--ink4); }
+.plc-meta {
+  display: flex; gap: 14px; font-size: .78rem; color: var(--ink3);
+  flex-wrap: wrap;
+}
+.plc-right {
+  display: flex; flex-direction: column; align-items: flex-end;
+  justify-content: center; gap: 10px;
+  padding: 18px 22px; border-left: 1px solid var(--line); flex-shrink: 0;
+  min-width: 180px;
+}
+.plc-price {
+  font-family: var(--font-serif); font-size: 1.35rem; font-weight: 700;
+  color: var(--ink); white-space: nowrap;
+}
+.plc-agent { display: flex; align-items: center; gap: 7px; }
+.plc-agent img { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; }
+.plc-agent span { font-size: .75rem; font-weight: 500; color: var(--ink3); white-space: nowrap; }
+@media (max-width: 640px) {
+  .prop-card--list { flex-direction: column; }
+  .plc-img { width: 100%; height: 180px; }
+  .plc-right { border-left: none; border-top: 1px solid var(--line); flex-direction: row; justify-content: space-between; align-items: center; min-width: unset; }
+}
+
 /* ── WHY SECTION ── */
 .why-section { background: #0f1117; padding: 96px 40px; }
 .why-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; }
@@ -1023,6 +1081,14 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
   border-top: 1px solid var(--line);
   cursor: default;
 }
+
+.search-message {
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: 500;
+    margin-bottom: 15px;
+    text-align: center;
+}
 </style>
 </head>
 <body>
@@ -1115,6 +1181,7 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
       <h1 class="hero-title">Find Your Perfect<br/><em>Place to Call Home</em></h1>
       <p class="hero-sub">Discover thousands of verified properties across the country. Buy, rent, or sell — we make every step effortless.</p>
 
+      <div id="search-message-container"></div>
       <form action="search" method="get" class="hero-search-form">
           <div class="hero-search-field">
               <label style="font-weight: 600;">Location</label>
@@ -1502,11 +1569,10 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
       <div class="filter-section">
         <div class="filter-section-title">City</div>
         <div class="filter-chips">
-                  <div class="filter-chip active" onclick="toggleChip(this,'city','all')">All Cities</div>
-                  <div class="filter-chip" onclick="toggleChip(this,'city','Colombo')">Colombo</div>
-                  <div class="filter-chip" onclick="toggleChip(this,'city','Kandy')">Kandy</div>
-                  <div class="filter-chip" onclick="toggleChip(this,'city','Galle')">Galle</div>
-                  <div class="filter-chip" onclick="toggleChip(this,'city','Kurunegala')">Kurunegala</div>
+          <div class="filter-chip active" onclick="toggleChip(this,'city','all')">All Cities</div>
+          <c:forEach var="city" items="${cities}">
+            <div class="filter-chip" onclick="toggleChip(this,'city','${city}')">${city}</div>
+          </c:forEach>
         </div>
       </div>
 
@@ -1526,8 +1592,8 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
             <option value="views">Most Viewed</option>
           </select>
           <div class="view-toggle">
-            <div class="view-btn active" title="Grid view">⊞</div>
-            <div class="view-btn" title="List view">☰</div>
+            <div class="view-btn active" title="Grid view" onclick="setViewMode('grid')">⊞</div>
+            <div class="view-btn" title="List view" onclick="setViewMode('list')">☰</div>
           </div>
         </div>
       </div>
@@ -1868,7 +1934,7 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
     if (btn) {
       btn.innerHTML = show
         ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-             <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 0 1 1-4.24-4.24"></path>
+             <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
              <line x1="1" y1="1" x2="23" y2="23"></line>
            </svg>`
         : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1891,6 +1957,16 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
                     openDetail(viewId);
                 }
             }, 300);
+        }
+
+        // Featured Properties City Search
+        const homeCitySearch = document.getElementById('home-city-search');
+        if (homeCitySearch) {
+            homeCitySearch.addEventListener('input', function() {
+                if (typeof searchHomeByCity === 'function') {
+                    searchHomeByCity(this.value);
+                }
+            });
         }
     });
 </script>

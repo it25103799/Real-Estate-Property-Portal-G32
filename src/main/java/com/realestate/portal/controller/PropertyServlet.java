@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
@@ -20,6 +22,7 @@ public class PropertyServlet extends HttpServlet {
 
         // 1. LOAD PROPERTIES
         List<Property> propertyList = new ArrayList<>();
+        Set<String> cities = new TreeSet<>(); // Use TreeSet for alphabetical sorting
         String propPath = getServletContext().getRealPath("/WEB-INF/properties.txt");
         File propFile = new File(propPath);
         if (propFile.exists()) {
@@ -38,6 +41,7 @@ public class PropertyServlet extends HttpServlet {
                             p.setTitle(data[1]);
                             p.setPrice(Double.parseDouble(data[2]));
                             p.setLocation(data[3]);
+                            cities.add(data[3]); // Add city to the set
                             p.setType(data[4]);
                             
                             // Normalize status to "For Rent" or "For Sale"
@@ -108,6 +112,7 @@ public class PropertyServlet extends HttpServlet {
 
         request.setAttribute("propertyList", propertyList);
         request.setAttribute("allReviews", reviewList);
+        request.setAttribute("cities", cities); // Pass the set of cities to the JSP
 
         // 3. LOAD NOTIFICATIONS (inquiry messages -> bell icon)
         HttpSession session = request.getSession(false);

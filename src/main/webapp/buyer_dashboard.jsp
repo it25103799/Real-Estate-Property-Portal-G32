@@ -515,7 +515,7 @@
         try {
             fetch('markInquiryRead', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                headers: { 'Content-Type': 'application/x-form-urlencoded' },
                 body: 'threadId=' + encodeURIComponent(threadId)
             }).catch(() => {});
         } catch (e) {}

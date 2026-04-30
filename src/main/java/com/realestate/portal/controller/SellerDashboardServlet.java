@@ -48,6 +48,9 @@ public class SellerDashboardServlet extends HttpServlet {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(file.getAbsolutePath())), StandardCharsets.UTF_8))) {
                 String line;
                 while ((line = br.readLine()) != null) {
+                    if (line.trim().isEmpty()) {
+                        continue;
+                    }
                     String[] data = line.split(",");
                     if (data.length >= 7 && data[6].equals(loggedUser)) {
                         Property p = null;
@@ -85,6 +88,9 @@ public class SellerDashboardServlet extends HttpServlet {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(revFile.getAbsolutePath())), StandardCharsets.UTF_8))) {
                 String line;
                 while ((line = br.readLine()) != null) {
+                    if (line.trim().isEmpty()) {
+                        continue;
+                    }
                     String[] data = line.split(",");
                     if (data.length == 6 && myPropIds.contains(data[1])) {
                         Review r;
@@ -110,6 +116,9 @@ public class SellerDashboardServlet extends HttpServlet {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(threadsFile.getAbsolutePath())), StandardCharsets.UTF_8))) {
                 String line;
                 while ((line = br.readLine()) != null) {
+                    if (line.trim().isEmpty()) {
+                        continue;
+                    }
                     String[] data = line.split("\t", -1);
                     // threadId, propertyId, propertyTitle, sellerName, buyerAccount, buyerName, buyerEmail, buyerPhone, createdDate, status
                     if (data.length >= 10 && loggedUser.equals(data[3])) {
@@ -132,6 +141,9 @@ public class SellerDashboardServlet extends HttpServlet {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(messagesFile.getAbsolutePath())), StandardCharsets.UTF_8))) {
                 String line;
                 while ((line = br.readLine()) != null) {
+                    if (line.trim().isEmpty()) {
+                        continue;
+                    }
                     String[] data = line.split("\t", -1);
                     // threadId, timestamp, senderRole, senderName, contentB64
                     if (data.length >= 5) {
@@ -142,7 +154,9 @@ public class SellerDashboardServlet extends HttpServlet {
                         try {
                             byte[] decoded = Base64.getDecoder().decode(data[4]);
                             content = new String(decoded, StandardCharsets.UTF_8);
-                        } catch (Exception ignored) {}
+                        } catch (IllegalArgumentException e) {
+                            System.err.println("Skipping malformed Base64 message: " + data[4]);
+                        }
 
                         InquiryMessage msg = new InquiryMessage(data[0], data[1], data[2], data[3], content);
                         t.getMessages().add(msg);
@@ -161,6 +175,9 @@ public class SellerDashboardServlet extends HttpServlet {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(threadsFile.getAbsolutePath())), StandardCharsets.UTF_8))) {
                 String line;
                 while ((line = br.readLine()) != null) {
+                    if (line.trim().isEmpty()) {
+                        continue;
+                    }
                     String[] data = line.split("\t", -1);
                     if (data.length >= 10) threads.put(data[0], data);
                 }
@@ -171,6 +188,9 @@ public class SellerDashboardServlet extends HttpServlet {
                 try (BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(readsFile.getAbsolutePath())), StandardCharsets.UTF_8))) {
                     String line;
                     while ((line = br.readLine()) != null) {
+                        if (line.trim().isEmpty()) {
+                            continue;
+                        }
                         String[] r = line.split("\t", -1);
                         if (r.length >= 3) lastRead.put(r[0] + "|" + r[1], r[2]);
                     }
@@ -180,6 +200,9 @@ public class SellerDashboardServlet extends HttpServlet {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(messagesFile.getAbsolutePath())), StandardCharsets.UTF_8))) {
                 String line;
                 while ((line = br.readLine()) != null) {
+                    if (line.trim().isEmpty()) {
+                        continue;
+                    }
                     String[] msg = line.split("\t", -1);
                     if (msg.length < 5) continue;
                     String[] t = threads.get(msg[0]);
@@ -202,7 +225,11 @@ public class SellerDashboardServlet extends HttpServlet {
                     if (lr != null && ts != null && ts.compareTo(lr) <= 0) continue;
 
                     String content = "";
-                    try { content = new String(Base64.getDecoder().decode(msg[4]), StandardCharsets.UTF_8); } catch (Exception ignored) {}
+                    try {
+                        content = new String(Base64.getDecoder().decode(msg[4]), StandardCharsets.UTF_8);
+                    } catch (IllegalArgumentException e) {
+                        System.err.println("Skipping malformed Base64 message: " + msg[4]);
+                    }
 
                     Map<String, String> n = new HashMap<>();
                     n.put("sender", sender);

@@ -1,4 +1,4 @@
-PROP_1772770669697,Colombo Beach Villa,600000.0,Colombo,Villa,For Sale,De Silva,assets/images/property-types/villa.jpg
+PROP_1772770669697,Colombo Beach Villa,600000.0,Colombo,Villa,For Sale,De Silva,assets/images/property-types/villa.jpg,4,4,
 PROP_1772773352306,Kaduwela Beach view,800000.0,Kaduwela,House,For Rent,De Silva,assets/images/property-types/house.jpg
 PROP_1772777000956,Koswatta new Building,500000,Colombo,Apartment,For Rent,De Silva,assets/images/property-types/apartment.jpg
 PROP_1772947911735,Kadawatha New Apartment,900000,Kadawatha,Apartment,For Rent,De Silva,assets/images/property-types/apartment.jpg
