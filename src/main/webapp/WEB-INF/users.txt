@@ -1,6 +1,6 @@
-De Silva,bhashithanavod600@gmail.com,bashimicroalok1232f@#,SELLER
-Bhashi Navod,bhashithanavod800@gmail.com,bashimicroalok1232f@,BUYER
-Dinesh,dinesh231@gmail.com,bashimicroalok1232f@d,SELLER
-Kavindi,kavii326@gmail.com,bashimicroalok1232f@k,SELLER
-Ravindu Lohan,ravilohan600@gmail.com,ravil432,BUYER
-John Carter,carterjohn241@gmail.com,cartj4231@,ADMIN
+De Silva,bhashithanavod600@gmail.com,0771234567,bashimicroalok1232f@#,SELLER
+Bhashi Navod,bhashithanavod800@gmail.com,0777654321,bashimicroalok1232f@,BUYER
+Dinesh,dinesh231@gmail.com,0712345678,bashimicroalok1232f@d,SELLER
+Kavindi,kavii326@gmail.com,0765432109,bashimicroalok1232f@k,SELLER
+Ravindu Lohan,ravilohan600@gmail.com,0756789012,ravil432,BUYER
+John Carter,carterjohn241@gmail.com,0709876543,cartj4231@,ADMIN

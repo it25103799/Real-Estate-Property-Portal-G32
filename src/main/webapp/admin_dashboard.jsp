@@ -174,6 +174,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Email</th>
+                    <th>Phone Number</th>
                     <th>Role</th>
                     <th>Action</th>
                 </tr>
@@ -185,6 +186,7 @@
                             <tr>
                                 <td><strong>${user.username}</strong></td>
                                 <td>${user.password}</td>
+                                <td>${user.phoneNumber}</td>
                                 <td>
                                     <c:choose>
                                         <c:when test="${user.role eq 'BUYER'}">
@@ -213,7 +215,7 @@
                         </c:forEach>
                     </c:when>
                     <c:otherwise>
-                        <tr><td colspan="4" style="text-align:center; color: var(--ink); opacity: 0.6;">No users found</td></tr>
+                        <tr><td colspan="5" style="text-align:center; color: var(--ink); opacity: 0.6;">No users found</td></tr>
                     </c:otherwise>
                 </c:choose>
             </tbody>
@@ -222,10 +224,18 @@
 
     <!-- PROPERTY MANAGEMENT -->
     <div class="card">
-        <h3 class="card-title">🏘️ Property Management</h3>
-        <p style="color: var(--ink); opacity: 0.75; margin-bottom: 20px;">All properties listed on the platform</p>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div>
+                <h3 class="card-title" style="margin: 0;">🏘️ Property Management</h3>
+                <p style="color: var(--ink); opacity: 0.75; margin: 4px 0 0 0;">All properties listed on the platform</p>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                <label for="property-search" style="font-size: 0.95rem; color: var(--ink); opacity: 0.8; margin-bottom: 4px;">Find the Sellers of Properties</label>
+                <input type="text" id="property-search" class="search-box" placeholder="Enter property name..." autocomplete="off" />
+            </div>
+        </div>
 
-        <table>
+        <table id="property-management-table">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -329,9 +339,23 @@
                 }
             });
         });
+
+        // Property search functionality
+        document.getElementById('property-search').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            const rows = document.querySelectorAll('#property-management-table tbody tr');
+            rows.forEach(row => {
+                const propertyTitle = row.cells[1].textContent.toLowerCase();
+                const sellerName = row.cells[6].textContent.toLowerCase();
+                if (propertyTitle.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
     });
 </script>
 
 </body>
 </html>
-

@@ -43,8 +43,12 @@ public class AdminDashboardServlet extends HttpServlet {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] userDetails = line.split(",");
-                if (userDetails.length == 4) {
-                    User user = new User(userDetails[0], userDetails[1], userDetails[3].trim());
+                if (userDetails.length == 5) {
+                    User user = new User(userDetails[0], userDetails[1], userDetails[2], userDetails[3], userDetails[4].trim());
+                    allUsers.add(user);
+                } else if (userDetails.length == 4) {
+                    // Backwards compatibility for old user records without phone number
+                    User user = new User(userDetails[0], userDetails[1], "", userDetails[2], userDetails[3].trim());
                     allUsers.add(user);
                 }
             }

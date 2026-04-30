@@ -23,6 +23,7 @@ public class RegisterServlet extends HttpServlet {
 
         String fullName = request.getParameter("fullName");
         String email = request.getParameter("email");
+        String phoneNumber = request.getParameter("phoneNumber");
         String password = request.getParameter("password");
         String role = request.getParameter("role");
         String adminKey = request.getParameter("adminKey");
@@ -30,6 +31,7 @@ public class RegisterServlet extends HttpServlet {
         System.out.println("====== NEW REGISTRATION ======");
         System.out.println("Full Name: " + fullName);
         System.out.println("Email: " + email);
+        System.out.println("Phone Number: " + phoneNumber);
         System.out.println("Role: " + role);
 
         // ═════════════════════════════════════════════════════════════
@@ -52,7 +54,7 @@ public class RegisterServlet extends HttpServlet {
             password = adminKey != null ? adminKey : "ADMIN_KEY_PROVIDED";
         }
 
-        String userRecord = fullName + "," + email + "," + password + "," + role + "\n";
+        String userRecord = fullName + "," + email + "," + phoneNumber + "," + password + "," + role + "\n";
 
         String filePath = getServletContext().getRealPath("/WEB-INF/users.txt");
 

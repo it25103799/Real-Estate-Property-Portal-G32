@@ -1266,9 +1266,9 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
         <button class="filter-btn active" onclick="filterHome(this,'all')">All</button>
         <button class="filter-btn" onclick="filterHome(this,'sale')">For Sale</button>
         <button class="filter-btn" onclick="filterHome(this,'rent')">For Rent</button>
-        <button class="filter-btn" onclick="filterHome(this,'apartment')">Apartments</button>
-        <button class="filter-btn" onclick="filterHome(this,'house')">Houses</button>
-        <button class="filter-btn" onclick="filterHome(this,'villa')">Villas</button>
+        <button class="filter-btn" onclick="filterHome(this,'apartment')">Apartment</button>
+        <button class="filter-btn" onclick="filterHome(this,'house')">House</button>
+        <button class="filter-btn" onclick="filterHome(this,'villa')">Villa</button>
       </div>
       <div class="prop-grid" id="home-prop-grid">
           <c:choose>
@@ -1558,7 +1558,7 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
       <div class="filter-section">
         <div class="filter-section-title">Bedrooms</div>
         <div class="filter-beds">
-          <button class="bed-btn active" onclick="setBeds(this,'any')">Any</button>
+          <button class="bed-btn active" onclick="setBeds(this,1)">Any</button>
           <button class="bed-btn" onclick="setBeds(this,1)">1+</button>
           <button class="bed-btn" onclick="setBeds(this,2)">2+</button>
           <button class="bed-btn" onclick="setBeds(this,3)">3+</button>
@@ -1752,8 +1752,8 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
            </p>
 
            <div class="auth-field">
-             <label>Username</label>
-             <input class="auth-input" type="text" name="username" placeholder="you@example.com" required/>
+             <label>Email</label>
+             <input class="auth-input" type="email" name="email" placeholder="you@example.com" required/>
            </div>
 
            <div class="auth-field">
@@ -1819,6 +1819,10 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
              <div class="auth-field">
                <label>Email Address</label>
                <input class="auth-input" type="email" name="email" placeholder="you@example.com" required/>
+             </div>
+             <div class="auth-field">
+               <label>Phone Number</label>
+               <input class="auth-input" type="tel" name="phoneNumber" placeholder="e.g., 0771234567" required/>
              </div>
              <div class="auth-field">
                <label id="passwordLabel">Password</label>

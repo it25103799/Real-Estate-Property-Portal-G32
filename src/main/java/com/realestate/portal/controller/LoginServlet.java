@@ -1,7 +1,7 @@
 package com.realestate.portal.controller;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import com.realestate.portal.model.User;
+import com.realestate.portal.service.LoginService;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,66 +16,30 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String inputEmail = request.getParameter("username");
-        String inputPassword = request.getParameter("password");
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
 
         String filePath = getServletContext().getRealPath("/WEB-INF/users.txt");
+        LoginService loginService = new LoginService(filePath);
+        User user = loginService.authenticate(email, password);
 
-        boolean isValidUser = false;
-        String fullName = "";
-        String role = "";
-
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] userDetails = line.split(",");
-
-                if (userDetails.length == 4) {
-
-                    if (userDetails[1].equals(inputEmail) && userDetails[2].equals(inputPassword)) {
-                        isValidUser = true;
-                        fullName = userDetails[0];
-                        role = userDetails[3].trim();
-                        break;
-                    }
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("Error reading users.txt: " + e.getMessage());
-        }
-
-        if (isValidUser) {
+        if (user != null) {
 
             HttpSession session = request.getSession();
-            session.setAttribute("loggedUser", fullName);
-            session.setAttribute("loggedRole", role);
+            session.setAttribute("loggedUser", user.getUsername());
+            session.setAttribute("loggedRole", user.getRole());
+            session.setAttribute("loggedEmail", user.getEmail());
 
-            // --- NEW LINES ADDED HERE ---
-            session.setAttribute("loggedEmail", inputEmail);
-            session.setAttribute("loggedPassword", inputPassword);
-            // ----------------------------
-
-            // --- THE TRAFFIC COP LOGIC (BUYER, SELLER & ADMIN) ---
-
-            if ("ADMIN".equalsIgnoreCase(role)) {
-                // ✅ ADMINS CAN NOW LOGIN! Redirect to Admin Dashboard
-                System.out.println("🔐 ADMIN LOGIN SUCCESSFUL: " + fullName);
+            if ("ADMIN".equalsIgnoreCase(user.getRole())) {
+                System.out.println("🔐 ADMIN LOGIN SUCCESSFUL: " + user.getUsername());
                 response.sendRedirect("adminDashboard");
-
-            } else if ("SELLER".equalsIgnoreCase(role)) {
-                // Send to the Seller main page (separate from Buyer site)
+            } else if ("SELLER".equalsIgnoreCase(user.getRole())) {
                 response.sendRedirect("sellerHome");
-
-            } else if ("BUYER".equalsIgnoreCase(role)) {
-                // Send to the Servlet Engine, NOT the raw JSP!
-                response.sendRedirect("buyerDashboard");
-
             } else {
-                response.sendRedirect("properties");
+                response.sendRedirect("buyerDashboard");
             }
 
         } else {
-
             request.setAttribute("errorMessage", "Invalid email or password!");
             request.getRequestDispatcher("/index.jsp").forward(request, response);
         }
