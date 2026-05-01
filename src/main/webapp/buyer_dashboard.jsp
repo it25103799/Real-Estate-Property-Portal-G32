@@ -429,8 +429,20 @@
 <script src="app.js"></script>
 
 <script>
+    // Identity bridge for notifications on this page too
     window.currentUser = "${sessionScope.loggedUser}";
     window.currentRole = "${sessionScope.loggedRole}";
+    window.allNotifications = [];
+    <c:forEach items="${allNotifications}" var="n">
+        window.allNotifications.push({
+            sender: "${n.sender}",
+            receiver: "${n.receiver}",
+            message: "${n.content}",
+            property: "${n.propTitle}",
+            type: "${n.type}",
+            threadId: "${n.threadId}"
+        });
+    </c:forEach>
 </script>
 
 <!-- Buyer Inquiry Chat Modal -->
@@ -469,7 +481,7 @@
 
             <div class="chat-msgs" id="bchatMsgs"></div>
 
-            <form class="chat-compose" action="replyInquiry" method="post" onsubmit="return validateBuyerChatSend();">
+            <form class="chat-compose" id="buyerChatForm" action="replyInquiry" method="post">
                 <input type="hidden" name="threadId" id="bchatThreadIdInput">
                 <textarea class="chat-input" name="message" id="bchatInput" placeholder="Type a message..." required></textarea>
                 <button class="chat-send" type="submit">Send</button>
@@ -495,6 +507,7 @@
         const t = window.buyerThreads ? window.buyerThreads[threadId] : null;
         if (!t) return;
 
+        // --- Populate Chat UI ---
         document.getElementById('bchatSellerName').innerText = t.sellerName || '(No seller)';
         document.getElementById('bchatPropTitle').innerText = t.propertyTitle || '(No title)';
         document.getElementById('bchatPropId').innerText = t.propertyId ? ('Property ID: ' + t.propertyId) : '';
@@ -507,18 +520,25 @@
         const container = document.getElementById('bthread-msgs-' + threadId);
         msgs.innerHTML = container ? container.innerHTML : '';
 
+        // --- Show Modal & Focus ---
         document.getElementById('buyerChatOverlay').classList.add('open');
         setTimeout(() => { msgs.scrollTop = msgs.scrollHeight; }, 50);
         setTimeout(() => { document.getElementById('bchatInput').focus(); }, 80);
 
-        // Mark as read so the bell bubble decreases
-        try {
-            fetch('markInquiryRead', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-form-urlencoded' },
-                body: 'threadId=' + encodeURIComponent(threadId)
-            }).catch(() => {});
-        } catch (e) {}
+        // --- Mark as Read & Update UI ---
+        const notifIndex = window.allNotifications.findIndex(n => n.threadId === threadId);
+        if (notifIndex > -1) {
+            window.allNotifications.splice(notifIndex, 1);
+            if (typeof renderNotifications === 'function') {
+                renderNotifications();
+            }
+        }
+
+        fetch('markInquiryRead', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'threadId=' + encodeURIComponent(threadId)
+        }).catch(err => console.error("Failed to mark as read on server:", err));
     }
 
     function closeBuyerChat() {
@@ -530,13 +550,20 @@
         if (event.target && event.target.id === 'buyerChatOverlay') closeBuyerChat();
     }
 
-    function validateBuyerChatSend() {
-        const text = document.getElementById('bchatInput').value;
-        return text && text.trim().length > 0;
-    }
+    document.addEventListener('DOMContentLoaded', () => {
+        const buyerChatForm = document.getElementById('buyerChatForm');
+        if(buyerChatForm) {
+            buyerChatForm.addEventListener('submit', (e) => handleChatSubmit(e, 'BUYER', buyerChatForm));
 
-    // Auto-open from notification bell (buyerDashboard?threadId=...)
-    document.addEventListener("DOMContentLoaded", () => {
+            const chatInput = document.getElementById('bchatInput');
+            chatInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleChatSubmit(new Event('submit', { bubbles: true, cancelable: true }), 'BUYER', buyerChatForm);
+                }
+            });
+        }
+
         const params = new URLSearchParams(window.location.search);
         const threadId = params.get('threadId');
         if (threadId) {

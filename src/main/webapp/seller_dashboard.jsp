@@ -582,7 +582,7 @@
 
             <div class="chat-msgs" id="chatMsgs"></div>
 
-            <form class="chat-compose" action="replyInquiry" method="post" onsubmit="return validateChatSend();">
+            <form class="chat-compose" id="chatForm" action="replyInquiry" method="post">
                 <input type="hidden" name="threadId" id="chatThreadIdInput">
                 <textarea class="chat-input" name="message" id="chatInput" placeholder="Type a reply..." required></textarea>
                 <button class="chat-send" type="submit">Send</button>
@@ -617,35 +617,46 @@
         const t = window.sellerThreads ? window.sellerThreads[threadId] : null;
         if (!t) return;
 
+        // --- Populate Chat UI ---
         document.getElementById('chatBuyerName').innerText = t.buyerName || '(No name)';
         document.getElementById('chatBuyerEmail').innerText = t.buyerEmail || '(No email)';
         document.getElementById('chatBuyerPhone').innerText = t.buyerPhone || '(No phone)';
         document.getElementById('chatPropTitle').innerText = t.propertyTitle || '(No title)';
         document.getElementById('chatPropId').innerText = t.propertyId ? ('Property ID: ' + t.propertyId) : '';
         document.getElementById('chatThreadId').innerText = t.id;
-
         document.getElementById('chatHeaderName').innerText = t.buyerName || 'Buyer';
         document.getElementById('chatHeaderSub').innerText = (t.createdDate ? ('Created: ' + t.createdDate) : 'Inquiry chat');
-
         document.getElementById('chatThreadIdInput').value = t.id;
 
         const msgs = document.getElementById('chatMsgs');
         const container = document.getElementById('thread-msgs-' + t.id);
         msgs.innerHTML = container ? container.innerHTML : '';
 
+        // --- Show Modal & Focus ---
         document.getElementById('chatOverlay').classList.add('open');
         setTimeout(() => { msgs.scrollTop = msgs.scrollHeight; }, 50);
         setTimeout(() => { document.getElementById('chatInput').focus(); }, 80);
 
-        // Mark as read so the bell bubble decreases
-        try {
-            fetch('markInquiryRead', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: 'threadId=' + encodeURIComponent(threadId)
-            }).catch(() => {});
-        } catch (e) {}
+        // --- Mark as Read & Update UI ---
+        // 1. Find the notification in the global array
+        const notifIndex = window.allNotifications.findIndex(n => n.threadId === threadId);
+
+        // 2. If it exists, remove it from the array and re-render the bell
+        if (notifIndex > -1) {
+            window.allNotifications.splice(notifIndex, 1);
+            if (typeof renderNotifications === 'function') {
+                renderNotifications();
+            }
+        }
+
+        // 3. Send the "mark as read" request to the server in the background
+        fetch('markInquiryRead', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'threadId=' + encodeURIComponent(threadId)
+        }).catch(err => console.error("Failed to mark as read on server:", err));
     }
+
 
     function closeChat() {
         document.getElementById('chatOverlay').classList.remove('open');
@@ -656,17 +667,25 @@
         if (event.target && event.target.id === 'chatOverlay') closeChat();
     }
 
-    function validateChatSend() {
-        const text = document.getElementById('chatInput').value;
-        return text && text.trim().length > 0;
-    }
-
-    // Auto-open from notification bell routing (sellerDashboard?threadId=...)
+    // Auto-open from notification bell routing & attach form listener
     document.addEventListener("DOMContentLoaded", () => {
         const params = new URLSearchParams(window.location.search);
         const threadId = params.get('threadId');
         if (threadId) {
             setTimeout(() => openChat(threadId), 150);
+        }
+
+        const chatForm = document.getElementById('chatForm');
+        if (chatForm) {
+            chatForm.addEventListener('submit', (e) => handleChatSubmit(e, 'SELLER', chatForm));
+
+            const chatInput = document.getElementById('chatInput');
+            chatInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleChatSubmit(new Event('submit', { bubbles: true, cancelable: true }), 'SELLER', chatForm);
+                }
+            });
         }
     });
 </script>

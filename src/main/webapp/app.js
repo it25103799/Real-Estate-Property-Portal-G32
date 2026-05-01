@@ -870,3 +870,65 @@ function setViewMode(mode) {
     currentListingsPage = 0;
     renderListings();
 }
+
+// ── UNIVERSAL CHAT SUBMISSION HANDLER ──────────────────
+function handleChatSubmit(event, role, formElement) {
+    event.preventDefault();
+
+    // formElement is passed explicitly when triggered by Enter key (synthetic event has no .target form)
+    const form = formElement || event.target;
+    const messageInput = form.querySelector('.chat-input');
+    const threadIdInput = form.querySelector('input[name="threadId"]');
+    const message = messageInput.value.trim();
+
+    if (!message) return;
+
+    const threadId = threadIdInput.value;
+    const chatMsgs = form.closest('.chat-right').querySelector('.chat-msgs');
+
+    const escapeHTML = (str) => {
+        const p = document.createElement('p');
+        p.appendChild(document.createTextNode(str));
+        return p.innerHTML;
+    };
+
+    const senderName = escapeHTML(window.currentUser || 'You');
+    const safeMessage = escapeHTML(message);
+    const timeString = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    const newBubble = document.createElement('div');
+    newBubble.className = 'bubble bubble-right';
+    newBubble.innerHTML = `
+        <div class="bubble-meta">
+            <strong>${senderName}</strong> · ${timeString}
+        </div>
+        <div style="white-space: pre-wrap;">${safeMessage}</div>
+    `;
+    chatMsgs.appendChild(newBubble);
+    chatMsgs.scrollTop = chatMsgs.scrollHeight;
+
+    messageInput.value = '';
+    messageInput.focus();
+
+    const formData = new URLSearchParams();
+    formData.append('threadId', threadId);
+    formData.append('message', message);
+    formData.append('role', role);
+
+    fetch('replyInquiry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: formData
+    })
+        .then(response => {
+            if (!response.ok) {
+                newBubble.style.opacity = '0.6';
+                newBubble.title = 'Failed to send. Please try again.';
+            }
+        })
+        .catch(error => {
+            console.error('Network error sending message:', error);
+            newBubble.style.opacity = '0.6';
+            newBubble.title = 'Network error. Could not send message.';
+        });
+}
