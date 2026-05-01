@@ -349,8 +349,8 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
 /* ── PROPERTY CARD ── */
 .prop-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
 }
 .prop-card {
   background: var(--bg);
@@ -754,7 +754,7 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
   border-radius: var(--r2); overflow: hidden; cursor: pointer;
   background: var(--bg); border: 1.5px solid var(--line);
   transition: all var(--t); animation: cardIn .35s ease both;
-  min-height: 140px;
+  min-height: 140px; width: 100%; grid-column: 1 / -1;
 }
 .prop-card--list:hover {
   border-color: transparent; box-shadow: var(--shadow-xl);
@@ -802,6 +802,111 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
   .plc-img { width: 100%; height: 180px; }
   .plc-right { border-left: none; border-top: 1px solid var(--line); flex-direction: row; justify-content: space-between; align-items: center; min-width: unset; }
 }
+
+/* ══════════════════════════════════════════════
+   RANDOM MULTI-VIEW CARD STYLES
+   Each property in Browse gets one of 5 layouts
+   ══════════════════════════════════════════════ */
+
+/* ── VIEW: COMPACT (small horizontal pill) ── */
+.prop-card--compact {
+  display: flex; flex-direction: row; align-items: center;
+  border-radius: var(--r2); overflow: hidden; cursor: pointer;
+  background: var(--bg); border: 1.5px solid var(--line);
+  transition: all var(--t); animation: cardIn .35s ease both;
+  min-height: 90px; gap: 0;
+}
+.prop-card--compact:hover { border-color: transparent; box-shadow: var(--shadow-xl); transform: translateY(-2px); }
+.pcc-img { position: relative; width: 110px; flex-shrink: 0; overflow: hidden; align-self: stretch; }
+.pcc-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+.prop-card--compact:hover .pcc-img img { transform: scale(1.08); }
+.pcc-tag { position: absolute; top: 6px; left: 6px; font-size: .65rem !important; padding: 2px 7px !important; }
+.pcc-body { flex: 1; padding: 10px 14px; display: flex; flex-direction: column; justify-content: center; gap: 3px; min-width: 0; }
+.pcc-title { font-size: .88rem; font-weight: 600; color: var(--ink2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pcc-loc { font-size: .72rem; color: var(--ink4); }
+.pcc-specs { display: flex; gap: 8px; font-size: .72rem; color: var(--ink3); margin-top: 2px; }
+.pcc-price { font-size: 1rem; font-weight: 700; color: var(--accent); padding: 10px 16px; border-left: 1px solid var(--line); flex-shrink: 0; white-space: nowrap; display: flex; align-items: center; }
+
+/* ── VIEW: SPOTLIGHT (tall hero card) ── */
+.prop-card--spotlight {
+  position: relative; border-radius: var(--r2); overflow: hidden;
+  cursor: pointer; min-height: 360px; display: flex; flex-direction: column;
+  justify-content: flex-end; animation: cardIn .35s ease both;
+  transition: all var(--t); box-shadow: 0 4px 20px rgba(0,0,0,.08);
+}
+.prop-card--spotlight:hover { transform: translateY(-4px) scale(1.01); box-shadow: 0 16px 50px rgba(0,0,0,.18); }
+.pcs-img { position: absolute; inset: 0; }
+.pcs-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
+.prop-card--spotlight:hover .pcs-img img { transform: scale(1.07); }
+.pcs-gradient { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.85) 0%, rgba(0,0,0,.3) 55%, rgba(0,0,0,.05) 100%); }
+.pcs-body { position: relative; z-index: 2; padding: 22px 20px 18px; color: white; }
+.pcs-tag-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.pcs-type-tag { font-size: .68rem; font-weight: 700; padding: 3px 10px; border-radius: 6px; background: rgba(255,255,255,.18); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,.25); text-transform: capitalize; }
+.pcs-title { font-size: 1.15rem; font-weight: 700; line-height: 1.3; margin-bottom: 6px; text-shadow: 0 1px 4px rgba(0,0,0,.5); }
+.pcs-loc { font-size: .78rem; opacity: .85; margin-bottom: 12px; }
+.pcs-footer { display: flex; justify-content: space-between; align-items: center; }
+.pcs-price { font-size: 1.3rem; font-weight: 800; text-shadow: 0 1px 4px rgba(0,0,0,.4); }
+.pcs-meta { display: flex; gap: 12px; font-size: .75rem; opacity: .85; }
+
+/* ── VIEW: MAGAZINE (wide image left, text right) ── */
+.prop-card--magazine {
+  display: flex; flex-direction: row; border-radius: var(--r2);
+  overflow: hidden; cursor: pointer; background: var(--bg);
+  border: 1.5px solid var(--line); animation: cardIn .35s ease both;
+  transition: all var(--t); min-height: 200px;
+}
+.prop-card--magazine:hover { border-color: transparent; box-shadow: var(--shadow-xl); transform: translateY(-3px); }
+.pcm-img { position: relative; width: 52%; flex-shrink: 0; overflow: hidden; }
+.pcm-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .55s ease; }
+.prop-card--magazine:hover .pcm-img img { transform: scale(1.07); }
+.pcm-badge { position: absolute; bottom: 12px; left: 12px; background: rgba(255,255,255,.92); backdrop-filter: blur(8px); border-radius: 8px; padding: 6px 12px; font-size: .72rem; font-weight: 700; color: var(--ink); }
+.pcm-body { flex: 1; padding: 22px 20px; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; }
+.pcm-category { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 8px; }
+.pcm-title { font-size: 1.08rem; font-weight: 700; color: var(--ink); line-height: 1.4; margin-bottom: 8px; }
+.pcm-desc { font-size: .78rem; color: var(--ink3); line-height: 1.5; flex: 1; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+.pcm-footer { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+.pcm-price { font-size: 1.15rem; font-weight: 800; color: var(--ink); }
+.pcm-agent { display: flex; align-items: center; gap: 7px; }
+.pcm-agent img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+.pcm-agent span { font-size: .72rem; color: var(--ink3); font-weight: 500; }
+
+/* ── VIEW: MINIMAL (text-heavy, no big image) ── */
+.prop-card--minimal {
+  display: flex; flex-direction: row; align-items: center; gap: 16px;
+  border-radius: var(--r2); cursor: pointer; background: var(--bg);
+  border: 1.5px solid var(--line); padding: 16px 20px;
+  animation: cardIn .35s ease both; transition: all var(--t);
+}
+.prop-card--minimal:hover { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,86,219,.08); }
+.pcn-thumb { width: 80px; height: 70px; border-radius: 8px; overflow: hidden; flex-shrink: 0; }
+.pcn-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.pcn-body { flex: 1; min-width: 0; }
+.pcn-title { font-size: .95rem; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; }
+.pcn-meta { font-size: .75rem; color: var(--ink3); display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
+.pcn-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.pcn-tag { font-size: .65rem; font-weight: 600; padding: 2px 8px; border-radius: 12px; background: var(--bg2); color: var(--ink3); border: 1px solid var(--line); }
+.pcn-right { text-align: right; flex-shrink: 0; }
+.pcn-price { font-size: 1.05rem; font-weight: 800; color: var(--ink); white-space: nowrap; }
+.pcn-status { font-size: .7rem; color: var(--ink4); margin-top: 3px; }
+
+/* ── VIEW: POLAROID (square image + bottom info strip) ── */
+.prop-card--polaroid {
+  display: flex; flex-direction: column; border-radius: var(--r2);
+  overflow: hidden; cursor: pointer; background: var(--bg);
+  border: 1.5px solid var(--line); animation: cardIn .35s ease both;
+  transition: all var(--t);
+}
+.prop-card--polaroid:hover { border-color: transparent; box-shadow: var(--shadow-xl); transform: translateY(-4px) rotate(0.5deg); }
+.pcp-img { position: relative; width: 100%; padding-top: 75%; overflow: hidden; }
+.pcp-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .55s ease; }
+.prop-card--polaroid:hover .pcp-img img { transform: scale(1.07); }
+.pcp-tag { position: absolute; top: 10px; right: 10px; }
+.pcp-body { padding: 14px 16px; }
+.pcp-price { font-size: 1.15rem; font-weight: 800; color: var(--ink); margin-bottom: 4px; }
+.pcp-title { font-size: .88rem; font-weight: 600; color: var(--ink2); margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pcp-footer { display: flex; justify-content: space-between; align-items: center; }
+.pcp-loc { font-size: .72rem; color: var(--ink4); }
+.pcp-specs { display: flex; gap: 8px; font-size: .72rem; color: var(--ink3); }
 
 /* ── WHY SECTION ── */
 .why-section { background: #0f1117; padding: 96px 40px; }
@@ -1878,7 +1983,13 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
             location: "${p.location}", type: "${p.type}", status: "${p.status}",
             image: "${p.imageUrl}", seller: "${p.sellerName}",
             bedrooms: "${p.bedrooms}", bathrooms: "${p.bathrooms}",
-            description: "${p.description}"
+            description: "${p.description}",
+            views: (function(id) {
+                // Stable random view count seeded by property id
+                var h = 0, s = String(id);
+                for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) & 0xffffffff;
+                return 50 + (Math.abs(h) % 1951); // range: 50 – 2000
+            })("${p.id}")
         });
     </c:forEach>
 

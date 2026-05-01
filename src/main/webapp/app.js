@@ -289,6 +289,8 @@ let allFilteredProperties = [];
 let currentSort = 'default';  // 'default'|'price_asc'|'price_desc'|'newest'|'views'
 let currentViewMode = 'grid'; // 'grid'|'list'
 
+
+
 function toggleChip(btn, category, value) {
     let siblings = btn.parentElement.querySelectorAll('.filter-chip');
     siblings.forEach(s => s.classList.remove('active'));
@@ -410,7 +412,7 @@ function renderListings() {
             </div>`;
         }
 
-        // ── GRID CARD (unchanged) ──
+        // ── GRID CARD ──
         return `<div class="prop-card" onclick="openDetail('${p.id}')" style="cursor:pointer;">
             <div class="prop-img-wrap">
                 <img src="${p.image}" alt="${p.title}">
