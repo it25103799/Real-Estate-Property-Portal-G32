@@ -29,6 +29,7 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("loggedUser", user.getUsername());
             session.setAttribute("loggedRole", user.getRole());
             session.setAttribute("loggedEmail", user.getEmail());
+            session.setAttribute("loggedPassword", user.getPassword());
 
             if ("ADMIN".equalsIgnoreCase(user.getRole())) {
                 System.out.println("🔐 ADMIN LOGIN SUCCESSFUL: " + user.getUsername());

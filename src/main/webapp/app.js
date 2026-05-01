@@ -45,7 +45,7 @@ const TESTIMONIALS = [
     { name:"Ashan Dias", role:"Renting in Malabe", img:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80", text:"The entire process was transparent, fast and stress-free. Kavindi found us the perfect annex near the campus. Exceptional service from start to finish.", stars:5 }
 ];
 
-let currentFilters = { status: 'all', type: 'all', city: 'all', beds: 'any', minPrice: '', maxPrice: '' };
+let currentFilters = { status: 'all', type: 'all', city: 'all', beds: 'any', priceMin: 0, priceMax: Infinity };
 let savedIds = [];
 
 // ── ROUTER ────────────────────────────
@@ -310,23 +310,91 @@ function setBeds(btn, value) {
 }
 
 function resetFilters() {
-    currentFilters = { status: 'all', type: 'all', city: 'all', beds: 'any', minPrice: '', maxPrice: '' };
+    currentFilters = { status: 'all', type: 'all', city: 'all', beds: 'any', priceMin: 0, priceMax: Infinity };
+    const priceSelect = document.getElementById('priceRangeSelect');
+    if (priceSelect) priceSelect.value = 'all';
     currentListingsPage = 0;  // Reset to first page
     document.querySelectorAll('.filter-chip, .bed-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.filter-chip[onclick*="\'all\'"]').forEach(c => c.classList.add('active'));
     document.querySelectorAll('.bed-btn[onclick*="\'any\'"]').forEach(b => b.classList.add('active'));
-    if(document.getElementById('filterMinPrice')) document.getElementById('filterMinPrice').value = '';
-    if(document.getElementById('filterMaxPrice')) document.getElementById('filterMaxPrice').value = '';
+    applyFilters();
+}
+
+// DYNAMIC PRICE RANGE BUILDER
+// Reads window.properties, finds real min/max prices, and generates
+// smart brackets that always cover every property - including new ones sellers add.
+function buildPriceRangeDropdown() {
+    const select = document.getElementById('priceRangeSelect');
+    if (!select || !window.properties || window.properties.length === 0) return;
+
+    const prices = window.properties.map(p => parseFloat(p.price)).filter(v => !isNaN(v));
+    if (prices.length === 0) return;
+    const realMax = Math.max(...prices);
+
+    // Base breakpoints. If a seller adds a property above the highest break,
+    // a new bracket is auto-generated to cover it.
+    let breaks = [0, 100000, 300000, 600000, 1000000, 3000000];
+
+    // Extend breaks if realMax exceeds current ceiling
+    while (realMax > breaks[breaks.length - 1]) {
+        const last = breaks[breaks.length - 1];
+        const magnitude = Math.pow(10, Math.floor(Math.log10(last)));
+        const next = Math.ceil((last + 1) / magnitude) * magnitude * 3;
+        breaks.push(next);
+    }
+
+    function fmt(n) {
+        if (n >= 1000000) return '$' + (n / 1000000).toLocaleString(undefined, {maximumFractionDigits: 1}) + 'M';
+        if (n >= 1000)    return '$' + Math.round(n / 1000) + 'K';
+        return '$' + n.toLocaleString();
+    }
+
+    // Remember current selection so it survives a rebuild
+    const prevValue = select.value;
+
+    select.innerHTML = '<option value="all">All Prices</option>';
+    for (let i = 0; i < breaks.length - 1; i++) {
+        const lo = breaks[i];
+        const hi = breaks[i + 1];
+        // Only show bracket if at least one property falls in it
+        const hasMatch = prices.some(price => price >= lo && price < hi);
+        if (!hasMatch) continue;
+        const label = lo === 0 ? 'Under ' + fmt(hi) : fmt(lo) + ' - ' + fmt(hi);
+        const opt = document.createElement('option');
+        opt.value = lo + '|' + hi;
+        opt.textContent = label;
+        select.appendChild(opt);
+    }
+    // 'Above X' bracket for anything at or above the last break
+    const topBreak = breaks[breaks.length - 1];
+    const hasAbove = prices.some(price => price >= topBreak);
+    if (hasAbove) {
+        const opt = document.createElement('option');
+        opt.value = topBreak + '|max';
+        opt.textContent = 'Above ' + fmt(topBreak);
+        select.appendChild(opt);
+    }
+
+    // Restore previous selection if it still exists
+    if (prevValue && select.querySelector('option[value="' + prevValue + '"]')) {
+        select.value = prevValue;
+    }
+}
+
+function applyPriceRange(value) {
+    if (value === 'all') {
+        currentFilters.priceMin = 0;
+        currentFilters.priceMax = Infinity;
+    } else {
+        const parts = value.split('|');
+        currentFilters.priceMin = parseFloat(parts[0]);
+        currentFilters.priceMax = parts[1] === 'max' ? Infinity : parseFloat(parts[1]);
+    }
     applyFilters();
 }
 
 function applyFilters() {
     if(typeof window.properties === 'undefined') return;
-
-    const minInput = document.getElementById('filterMinPrice');
-    const maxInput = document.getElementById('filterMaxPrice');
-    if (minInput) currentFilters.minPrice = minInput.value;
-    if (maxInput) currentFilters.maxPrice = maxInput.value;
 
     let filtered = window.properties.filter(p => {
         let matchStatus = currentFilters.status === 'all' || (p.status && p.status.toLowerCase().includes(currentFilters.status.toLowerCase()));
@@ -335,9 +403,11 @@ function applyFilters() {
 
         // Price Range Filtering
         let matchPrice = true;
-        let numPrice = typeof p.price === 'string' ? parseInt(p.price.replace(/[^0-9]/g, ''), 10) : p.price;
-        if (currentFilters.minPrice && numPrice < parseInt(currentFilters.minPrice, 10)) matchPrice = false;
-        if (currentFilters.maxPrice && numPrice > parseInt(currentFilters.maxPrice, 10)) matchPrice = false;
+        let numPrice = typeof p.price === 'string' ? parseFloat(p.price.replace(/[^0-9.]/g, '')) : parseFloat(p.price);
+        if (!isNaN(numPrice)) {
+            if (currentFilters.priceMin > 0 && numPrice < currentFilters.priceMin) matchPrice = false;
+            if (currentFilters.priceMax !== Infinity && numPrice > currentFilters.priceMax) matchPrice = false;
+        }
 
         // Bedrooms Filtering
         let matchBeds = true;
@@ -562,6 +632,7 @@ window.addEventListener('scroll', () => {
 // ── SYSTEM BOOT ─────────────────────────────────
 window.document.addEventListener("DOMContentLoaded", () => {
     initHome();
+    buildPriceRangeDropdown(); // Build price range from real property data
 
     // Force the Dark Mode button to listen for clicks safely!
     const themeBtn = window.document.getElementById('theme-toggle');

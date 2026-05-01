@@ -13,7 +13,7 @@ public class UpdateProfileServlet extends HttpServlet {
         String newName = request.getParameter("newName");
         String newEmail = request.getParameter("newEmail");
         String newPassword = request.getParameter("newPassword");
-        
+
         HttpSession session = request.getSession();
         String currentRole = (String) session.getAttribute("loggedRole");
 
@@ -36,9 +36,11 @@ public class UpdateProfileServlet extends HttpServlet {
                 String[] userData = currentLine.split(",");
 
                 // Check if this line is the user we want to update
-                if (userData.length == 4 && userData[1].equals(oldEmail) && userData[3].equals(currentRole)) {
-                    // Write the updated line instead of the old one
-                    writer.write(newName + "," + newEmail + "," + newPassword + "," + currentRole);
+                if (userData.length >= 4 && userData[1].equals(oldEmail) && userData[userData.length - 1].trim().equals(currentRole)) {
+                    // Preserve phone number (field index 2) if it exists in the stored record
+                    String phone = (userData.length >= 5) ? userData[2] : "";
+                    // Write the updated line instead of the old one (keep 5-field format)
+                    writer.write(newName + "," + newEmail + "," + phone + "," + newPassword + "," + currentRole);
                 } else {
                     // Keep the original line (Sellers and other buyers stay untouched)
                     writer.write(currentLine);

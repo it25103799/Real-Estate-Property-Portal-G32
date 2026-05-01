@@ -8,6 +8,16 @@
         response.sendRedirect("sellerHome");
         return;
     }
+
+    // FIX: If propertyList is null (user hit index.jsp directly instead of /properties servlet),
+    // redirect to /properties which loads all data then forwards back here.
+    // This ensures Featured Properties and Browse page always have data, even when not logged in.
+    if (request.getAttribute("propertyList") == null) {
+        String qs = request.getQueryString();
+        String redirect = request.getContextPath() + "/properties" + (qs != null ? "?" + qs : "");
+        response.sendRedirect(redirect);
+        return;
+    }
 %>
 
 <!DOCTYPE html>
@@ -700,12 +710,20 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
 .filter-section { margin-bottom: 28px; }
 .filter-section-title { font-size: .75rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--ink3); margin-bottom: 12px; }
 .price-range { display: flex; gap: 8px; }
-.price-input {
-  flex:1; background: var(--bg2); border: 1.5px solid transparent;
-  border-radius: var(--r); padding: 9px 12px;
-  font-size: .82rem; color: var(--ink); transition: border-color var(--t);
+.price-dropdown-wrap { position: relative; }
+.price-range-select {
+  width: 100%; box-sizing: border-box;
+  background: var(--bg2); border: 1.5px solid var(--line);
+  border-radius: var(--r); padding: 10px 36px 10px 14px;
+  font-size: .82rem; color: var(--ink); cursor: pointer;
+  appearance: none; -webkit-appearance: none;
+  transition: border-color var(--t), box-shadow var(--t);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236C7B8B' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
 }
-.price-input:focus { border-color: var(--accent); }
+.price-range-select:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px rgba(var(--accent-rgb, 99,102,241),.15); }
+.price-range-select option { background: var(--bg2); color: var(--ink); }
 .filter-chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .filter-chip {
   font-size: .75rem; font-weight: 500; color: var(--ink3);
@@ -1654,9 +1672,10 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
 
       <div class="filter-section">
         <div class="filter-section-title">Price Range</div>
-        <div class="price-range">
-          <input class="price-input" type="number" placeholder="Min $" id="filterMinPrice"/>
-          <input class="price-input" type="number" placeholder="Max $" id="filterMaxPrice"/>
+        <div class="price-dropdown-wrap">
+          <select id="priceRangeSelect" class="price-range-select" onchange="applyPriceRange(this.value)">
+            <option value="all">All Prices</option>
+          </select>
         </div>
       </div>
 

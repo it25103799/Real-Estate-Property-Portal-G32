@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -28,19 +30,23 @@ public class SearchServlet extends HttpServlet {
         String searchType = request.getParameter("type");
 
         List<Property> searchResults = new ArrayList<>();
+        Set<String> cities = new java.util.TreeSet<>();
         String filePath = getServletContext().getRealPath("/WEB-INF/properties.txt");
         File file = new File(filePath);
 
         // 2. Open the database and start filtering
         if (file.exists()) {
-            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
                 String line;
                 while ((line = br.readLine()) != null) {
+                    if (line.trim().isEmpty()) continue;
                     String[] data = line.split(",");
 
-                    if (data.length == 10) {
+                    // Accept any property with at least the 8 required fields
+                    if (data.length >= 8) {
                         String propLocation = data[3];
                         String propType = data[4];
+                        cities.add(propLocation); // Collect all cities for the Browse sidebar
 
                         // 3. THE FILTERING LOGIC
                         boolean matchesLocation = (searchLocation == null || searchLocation.trim().isEmpty())
@@ -50,13 +56,22 @@ public class SearchServlet extends HttpServlet {
                                 || propType.equalsIgnoreCase(searchType);
 
                         if (matchesLocation && matchesType) {
-                            double price = Double.parseDouble(data[2]);
-                            int bedrooms = Integer.parseInt(data[8]);
-                            int bathrooms = Integer.parseInt(data[9]);
-                            String imageUrl = (data[7] == null || data[7].trim().isEmpty()) ? "https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=900&q=80" : data[7];
+                            try {
+                                double price = Double.parseDouble(data[2]);
+                                int bedrooms = (data.length > 8 && data[8] != null && !data[8].trim().isEmpty()) ? Integer.parseInt(data[8].trim()) : 0;
+                                int bathrooms = (data.length > 9 && data[9] != null && !data[9].trim().isEmpty()) ? Integer.parseInt(data[9].trim()) : 0;
+                                String description = (data.length > 10 && data[10] != null && !data[10].trim().isEmpty()) ? data[10] : "";
+                                String imageUrl = (data[7] == null || data[7].trim().isEmpty()) ? "https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=900&q=80" : data[7];
+                                // Normalize status
+                                String status = data[5].trim();
+                                if ("for rent".equalsIgnoreCase(status)) status = "For Rent";
+                                else status = "For Sale";
 
-                            Property p = new Property(data[0], data[1], price, propLocation, propType, data[5], data[6], imageUrl, bedrooms, bathrooms, "");
-                            searchResults.add(p);
+                                Property p = new Property(data[0], data[1], price, propLocation, propType, status, data[6], imageUrl, bedrooms, bathrooms, description);
+                                searchResults.add(p);
+                            } catch (NumberFormatException e) {
+                                System.err.println("SearchServlet: Skipping malformed line: " + line);
+                            }
                         }
                     }
                 }
@@ -67,6 +82,7 @@ public class SearchServlet extends HttpServlet {
 
         // 4. Send the filtered list back to the homepage to display!
         request.setAttribute("propertyList", searchResults);
+        request.setAttribute("cities", cities); // Pass cities so Browse sidebar filters work
 
         // Add a message so the user knows they are looking at search results
         request.setAttribute("searchMessage", "Showing results for your search:");
