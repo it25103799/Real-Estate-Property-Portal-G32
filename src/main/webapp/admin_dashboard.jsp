@@ -52,7 +52,7 @@
         /* ── TABLE ── */
         table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
         th, td { padding: 13px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; }
-        th { font-weight: 600; color: var(--accent); background: var(--bg2); }
+        th { font-weight: 600; color: var(--accent); background: var(--bg2); position: sticky; top: 0; z-index: 3; }
         tr:hover td { background: var(--bg2); }
         .truncate { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
@@ -117,6 +117,12 @@
 
         /* ── REVIEW COMMENT ── */
         .review-comment { max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-style: italic; opacity: 0.8; }
+
+        /* ── PINNED ADMIN ROW ── */
+        tr.admin-row { background: rgba(217, 119, 6, 0.07) !important; position: sticky; top: 0; z-index: 2; }
+        tr.admin-row td { border-bottom: 2px solid var(--amber) !important; font-weight: 600; }
+        [data-theme="dark"] tr.admin-row { background: rgba(217, 119, 6, 0.13) !important; }
+        .pin-icon { font-size: 0.7rem; opacity: 0.7; margin-left: 5px; vertical-align: middle; }
     </style>
 </head>
 <body data-theme="light" id="body-theme">
@@ -210,6 +216,7 @@
                 </div>
             </div>
 
+            <div style="overflow-y: auto; max-height: 520px; border-radius: 8px; border: 1px solid var(--line);">
             <table id="user-management-table">
                 <thead>
                     <tr>
@@ -225,8 +232,8 @@
                     <c:choose>
                         <c:when test="${not empty allUsers}">
                             <c:forEach var="user" items="${allUsers}">
-                                <tr>
-                                    <td><strong>${user.username}</strong></td>
+                                <tr ${user.role eq 'ADMIN' ? 'class="admin-row"' : ''}>
+                                    <td><strong>${user.username}</strong><c:if test="${user.role eq 'ADMIN'}"><span class="pin-icon" title="Pinned — System Administrator">📌</span></c:if></td>
                                     <td>${user.email}</td>
                                     <td>${not empty user.phoneNumber ? user.phoneNumber : '—'}</td>
                                     <td>
@@ -271,6 +278,7 @@
                     </c:choose>
                 </tbody>
             </table>
+            </div><!-- /scroll wrapper -->
         </div>
     </div>
 

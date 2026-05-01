@@ -4,4 +4,4 @@ Dinesh,dinesh231@gmail.com,0712345678,bashimicroalok1232f@d,SELLER
 Kavindi,kavii326@gmail.com,0765432109,bashimicroalok1232f@k,SELLER
 Ravindu Lohan,ravilohan600@gmail.com,0756789012,ravil432,BUYER
 John Carter,carterjohn241@gmail.com,0709876543,cartj4231@,ADMIN
-Ralph Will,willral432@gmail.com,0764352343,ralph534@%,SELLER
+Ralph Will,willral432@gmail.com,0764352343,ralph534@%,BUYER

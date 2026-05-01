@@ -110,6 +110,13 @@ public class AdminDashboardServlet extends HttpServlet {
             }
         }
 
+        // ─── Sort: Admins always first, then Sellers, then Buyers ───
+        allUsers.sort((a, b) -> {
+            int rankA = roleRank(a.getRole());
+            int rankB = roleRank(b.getRole());
+            return Integer.compare(rankA, rankB);
+        });
+
         // ─── Compute statistics ───
         int totalUsers          = allUsers.size();
         int totalBuyers         = (int) allUsers.stream().filter(u -> "BUYER".equalsIgnoreCase(u.getRole())).count();
@@ -137,5 +144,16 @@ public class AdminDashboardServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
+    }
+
+    /** ADMIN = 0 (top), SELLER = 1, BUYER = 2, anything else = 3 */
+    private int roleRank(String role) {
+        if (role == null) return 3;
+        switch (role.toUpperCase()) {
+            case "ADMIN":  return 0;
+            case "SELLER": return 1;
+            case "BUYER":  return 2;
+            default:       return 3;
+        }
     }
 }
