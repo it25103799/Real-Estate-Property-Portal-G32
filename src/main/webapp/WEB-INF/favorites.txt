@@ -12,7 +12,6 @@ Bhashi Navod,699613a8
 Bhashi Navod,c66a23ca
 Bhashi Navod,d4ef95b0
 Bhashi Navod,1bae3ff8
-Bhashi Navod,f62059d5
 Ravindu Lohan,c66a23ca
 Ravindu Lohan,1bae3ff8
 Bhashi Navod,0d3bce27
