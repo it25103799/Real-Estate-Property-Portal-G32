@@ -1,0 +1,29 @@
+# IDE files
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Build output
+target/
+build/
+out/
+
+# Dependency caches
+.m2/
+.gradle/
+
+# Log files
+*.log
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Web application specific
+WEB-INF/classes/
+WEB-INF/lib/
+
+# Secrets
+*.properties
+*.env
