@@ -675,14 +675,15 @@ function renderPropertyReviews(propId) {
                         <strong style="color: var(--ink);">${r.name} ${r.isVerified ? '✅' : ''}</strong>
                         <div style="color: var(--amber); font-size: 0.75rem; margin-top: 2px;">${'★'.repeat(r.rating)}</div>
                     </div>
-                    ${isOwner ? `
-                    <div class="rev-menu-wrap">
-                        <button class="rev-dots-btn" onclick="toggleRevMenu(event, '${r.id}')">⋮</button>
-                        <div id="drop-${r.id}" class="rev-dropdown">
-                            <button class="rev-drop-item" onclick="editReview('${r.id}', '${propId}')">✏️ Update</button>
-                            <button class="rev-drop-item del" onclick="deleteReview('${r.id}', '${propId}')">🗑️ Delete</button>
-                        </div>
-                    </div>` : ''}
+                    ${isOwner ? (
+                '<div class="rev-menu-wrap">' +
+                '<button class="rev-dots-btn" onclick="toggleRevMenu(event, \'' + r.id + '\')">⋮</button>' +
+                '<div id="drop-' + r.id + '" class="rev-dropdown">' +
+                '<button class="rev-drop-item" onclick="editReview(\'' + r.id + '\', \'' + propId + '\')">✏️ Update</button>' +
+                '<button class="rev-drop-item del" onclick="deleteReview(\'' + r.id + '\', \'' + propId + '\')">🗑️ Delete</button>' +
+                '</div>' +
+                '</div>'
+            ) : ''}
                 </div>
                 <div id="comment-container-${r.id}">
                     <p style="color: var(--ink3); margin-top: 10px; font-size: 0.95rem; line-height: 1.5;">${r.comment}</p>
@@ -765,7 +766,7 @@ function renderNotifications() {
     if (badge) {
         if (myMail.length > 0) {
             badge.innerText = myMail.length;
-            badge.style.display = 'block';
+            badge.style.display = 'flex';
         } else {
             badge.style.display = 'none';
         }
@@ -775,24 +776,43 @@ function renderNotifications() {
     const listContainer = document.getElementById('notif-list');
     if (listContainer) {
         if (myMail.length === 0) {
-            listContainer.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--ink4); font-size: 0.85rem;">No new messages</p>';
+            listContainer.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--ink4); font-size: 0.85rem;">No new notifications</p>';
         } else {
-            listContainer.innerHTML = myMail.map(n => `
-                <div class="notif-item" onclick="openNotifThread('${n.threadId || ''}')" style="padding: 12px; border-bottom: 1px solid var(--line2); display: flex; align-items: center; gap: 12px; cursor: pointer;">
-                    <div style="background: var(--accent-l); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
-                        ${n.type === 'INQUIRY' ? '📩' : '💬'}
+            listContainer.innerHTML = myMail.map(n => {
+                const isAnnouncement = n.type === 'ANNOUNCEMENT';
+                const icon = isAnnouncement ? '📢' : (n.type === 'INQUIRY' ? '📩' : '💬');
+
+                // Announcements navigate to the dedicated announcements page
+                // Inquiry replies open the chat thread modal
+                const clickHandler = isAnnouncement
+                    ? "window.location.href='announcements'"
+                    : "openNotifThread('" + (n.threadId || '') + "')";
+
+                const subLine = isAnnouncement
+                    ? `<span style="font-size:0.65rem;color:var(--accent);font-weight:700;margin-top:2px;display:block;">📋 View All Announcements →</span>`
+                    : `<span style="font-size:0.65rem;color:var(--accent);font-weight:600;margin-top:2px;display:block;">Re: ${n.property || ''}</span>`;
+
+                return `
+                <div onclick="${clickHandler}"
+                     style="padding: 12px 16px; border-bottom: 1px solid var(--line);
+                            display: flex; align-items: flex-start; gap: 12px; cursor: pointer;
+                            transition: background 0.15s;"
+                     onmouseover="this.style.background='var(--bg2)'"
+                     onmouseout="this.style.background='transparent'">
+                    <div style="background: var(--accent-l); min-width: 40px; height: 40px; border-radius: 50%;
+                                display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-top: 2px;">
+                        ${icon}
                     </div>
-                    <div style="flex: 1;">
+                    <div style="flex: 1; min-width: 0;">
                         <div style="font-size: 0.85rem; font-weight: 700; color: var(--ink);">${n.sender}</div>
-                        <div style="font-size: 0.75rem; color: var(--ink3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;">
+                        <div style="font-size: 0.78rem; color: var(--ink); opacity: 0.65; white-space: nowrap;
+                                    overflow: hidden; text-overflow: ellipsis; max-width: 230px; margin-top: 2px;">
                             ${n.message}
                         </div>
-                        <div style="font-size: 0.65rem; color: var(--accent); font-weight: 600; margin-top: 2px;">
-                            Re: ${n.property}
-                        </div>
+                        ${subLine}
                     </div>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
         }
     }
 }

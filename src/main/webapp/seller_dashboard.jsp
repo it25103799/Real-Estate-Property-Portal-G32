@@ -176,6 +176,13 @@
                     <div class="theme-switch-thumb" id="theme-toggle">🌙</div>
                 </div>
 
+                <!-- ── ANNOUNCEMENTS BUTTON ── -->
+                <button class="btn" onclick="window.location.href='announcements'"
+                        title="View Official Announcements"
+                        style="background:var(--line); color:var(--ink); display:flex; align-items:center; gap:6px;">
+                    📢 Announcements
+                </button>
+
                 <!-- Bell Notifications (same as homepage) -->
                 <div class="nav-notif" id="bell-container" onclick="toggleNotif(event)" style="position: relative; cursor: pointer; margin-right: 2px; display:flex; align-items:center;">
                     <span class="notif-icon" style="font-size: 1.5rem;">🔔</span>
@@ -489,10 +496,12 @@
         window.allNotifications.push({
             sender: "${n.sender}",
             receiver: "${n.receiver}",
+            title: "${n.title}",
             message: "${n.content}",
             property: "${n.propTitle}",
             type: "${n.type}",
-            threadId: "${n.threadId}"
+            threadId: "${n.threadId}",
+            timestamp: "${n.timestamp}"
         });
     </c:forEach>
 </script>

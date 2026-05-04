@@ -710,6 +710,20 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
 .filter-section { margin-bottom: 28px; }
 .filter-section-title { font-size: .75rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--ink3); margin-bottom: 12px; }
 .price-range { display: flex; gap: 8px; }
+.price-range-input {
+  flex: 1; box-sizing: border-box;
+  background: var(--bg2); border: 1.5px solid var(--line);
+  border-radius: var(--r); padding: 10px 14px;
+  font-size: .82rem; color: var(--ink);
+  transition: border-color var(--t), box-shadow var(--t);
+}
+.price-range-input::placeholder { color: rgba(var(--ink-rgb, 55,65,81),.5); }
+.price-range-input::-webkit-outer-spin-button,
+.price-range-input::-webkit-inner-spin-button {
+  -webkit-appearance: none; margin: 0;
+}
+.price-range-input[type=number] { -moz-appearance: textfield; }
+.price-range-input:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px rgba(var(--accent-rgb, 99,102,241),.15); background: var(--bg); }
 .price-dropdown-wrap { position: relative; }
 .price-range-select {
   width: 100%; box-sizing: border-box;
@@ -1672,10 +1686,9 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
 
       <div class="filter-section">
         <div class="filter-section-title">Price Range</div>
-        <div class="price-dropdown-wrap">
-          <select id="priceRangeSelect" class="price-range-select" onchange="applyPriceRange(this.value)">
-            <option value="all">All Prices</option>
-          </select>
+        <div class="price-range">
+          <input type="number" id="priceMin" class="price-range-input" placeholder="Min $" min="0" step="10000"/>
+          <input type="number" id="priceMax" class="price-range-input" placeholder="Max $" min="0" step="10000"/>
         </div>
       </div>
 

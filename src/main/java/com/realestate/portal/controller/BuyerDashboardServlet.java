@@ -18,6 +18,8 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 
 @WebServlet("/buyerDashboard")
 public class BuyerDashboardServlet extends HttpServlet {
@@ -167,6 +169,60 @@ public class BuyerDashboardServlet extends HttpServlet {
         request.setAttribute("buyerThreads", buyerThreads);
 
         request.setAttribute("savedProperties", savedProperties);
+
+        // ── ANNOUNCEMENTS as Notifications (unread only) ─────────────────
+        List<Map<String, String>> allNotifications = new ArrayList<>();
+        Set<String> readAnnIds = loadReadAnnouncementIds(loggedUser);
+        File annFile = new File(getServletContext().getRealPath("/WEB-INF/announcements.txt"));
+        if (annFile.exists()) {
+            try (BufferedReader br = new BufferedReader(new FileReader(annFile))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    if (line.trim().isEmpty()) continue;
+                    String[] parts = line.split(",", 6);
+                    if (parts.length == 6 && !readAnnIds.contains(parts[0].trim())) {
+                        Map<String, String> n = new HashMap<>();
+                        n.put("sender",    "System Administration");
+                        n.put("receiver",  loggedUser);
+                        n.put("title",     parts[1]);
+                        n.put("content",   parts[2]);
+                        n.put("priority",  parts[3]);
+                        n.put("timestamp", parts[5]);
+                        n.put("type",      "ANNOUNCEMENT");
+                        n.put("threadId",  "");
+                        allNotifications.add(n);
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("Error reading announcements: " + e.getMessage());
+            }
+        }
+        request.setAttribute("allNotifications", allNotifications);
+
         request.getRequestDispatcher("/buyer_dashboard.jsp").forward(request, response);
     }
+
+    // ── Load set of announcement IDs already read by this user ────────
+    private Set<String> loadReadAnnouncementIds(String username) {
+        Set<String> ids = new HashSet<>();
+        try {
+            String path = getServletContext().getRealPath("/WEB-INF/announcement_reads.txt");
+            if (path == null) return ids;
+            File f = new File(path);
+            if (!f.exists()) return ids;
+            try (BufferedReader br = new BufferedReader(new FileReader(f))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] parts = line.split(",", 2);
+                    if (parts.length == 2 && parts[0].trim().equals(username)) {
+                        ids.add(parts[1].trim());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("BuyerDashboardServlet: error reading announcement_reads: " + e.getMessage());
+        }
+        return ids;
+    }
+
 }

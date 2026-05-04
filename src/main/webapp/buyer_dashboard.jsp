@@ -198,6 +198,51 @@
             <div class="theme-switch" onclick="toggleTheme()" title="Toggle Dark Mode">
                 <div class="theme-switch-thumb" id="theme-toggle">🌙</div>
             </div>
+
+            <!-- ── ANNOUNCEMENTS BUTTON ── -->
+            <button class="btn btn-outline" onclick="window.location.href='announcements'"
+                    title="View Official Announcements"
+                    style="display:flex; align-items:center; gap:6px;">
+                📢 Announcements
+            </button>
+
+            <!-- ── NOTIFICATION BELL ── -->
+            <div style="position: relative;">
+                <button onclick="toggleNotif(event)" title="Notifications"
+                        style="background: var(--bg); border: 1.5px solid var(--line); border-radius: 8px;
+                               width: 42px; height: 42px; cursor: pointer; font-size: 1.15rem;
+                               position: relative; display: flex; align-items: center; justify-content: center;
+                               transition: border-color 0.2s;"
+                        onmouseover="this.style.borderColor='var(--accent)'"
+                        onmouseout="this.style.borderColor='var(--line)'">
+                    🔔
+                    <span id="notif-count"
+                          style="position: absolute; top: -6px; right: -6px; background: var(--red);
+                                 color: white; border-radius: 50%; font-size: 0.65rem; font-weight: 700;
+                                 min-width: 18px; height: 18px; display: none; align-items: center;
+                                 justify-content: center; padding: 0 4px; line-height: 1;"></span>
+                </button>
+
+                <!-- Dropdown Panel -->
+                <div id="notif-panel"
+                     style="display: none; position: absolute; right: 0; top: calc(100% + 10px);
+                            width: 340px; background: var(--bg); border: 1px solid var(--line);
+                            border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+                            z-index: 9999; overflow: hidden;"
+                     onclick="event.stopPropagation()">
+
+                    <div style="padding: 14px 18px; border-bottom: 1px solid var(--line);
+                                display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 700; font-size: 0.95rem;">Notifications</span>
+                        <a href="announcements"
+                           style="font-size: 0.78rem; color: var(--accent); font-weight: 600;
+                                  text-decoration: none;">View All Announcements →</a>
+                    </div>
+                    <div id="notif-list" style="max-height: 380px; overflow-y: auto;"></div>
+                </div>
+            </div>
+            <!-- ── END NOTIFICATION BELL ── -->
+
             <button class="btn btn-outline" onclick="window.location.href='properties'">🏠 Browse Properties</button>
             <form action="logout" method="post" style="display:inline;">
                 <button type="submit" class="btn" style="background: var(--red);">Logout</button>
@@ -443,6 +488,14 @@
             threadId: "${n.threadId}"
         });
     </c:forEach>
+
+    console.log("window.allNotifications after JSP population:", window.allNotifications);
+    console.log("Number of notifications:", window.allNotifications.length);
+
+    // Explicitly call renderNotifications after window.allNotifications is populated
+    if (typeof renderNotifications === 'function') {
+        renderNotifications();
+    }
 </script>
 
 <!-- Buyer Inquiry Chat Modal -->
