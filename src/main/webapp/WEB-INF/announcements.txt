@@ -1,1 +1,2 @@
 ANN1777914360728,Scheduled System Maintenance,To ensure the NESTIQ platform continues to provide a smooth experience for all buyers and agents; we will be performing routine server maintenance. The portal will be temporarily offline on Sunday; May 10th; from 02:00 AM to 04:00 AM. We appreciate your patience as we work to maintain Operational Excellence !!,MEDIUM,John Carter,2026-05-04 22:36
+ANN1777925833641,Hey!!,Are you there!!,LOW,John Carter,2026-05-05 01:47

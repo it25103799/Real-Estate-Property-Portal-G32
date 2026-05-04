@@ -200,11 +200,19 @@
             </div>
 
             <!-- ── ANNOUNCEMENTS BUTTON ── -->
-            <button class="btn btn-outline" onclick="window.location.href='announcements'"
-                    title="View Official Announcements"
-                    style="display:flex; align-items:center; gap:6px;">
-                📢 Announcements
-            </button>
+            <div style="position: relative; display: inline-flex;">
+                <button class="btn btn-outline" onclick="window.location.href='announcements'"
+                        title="View Official Announcements"
+                        style="display:flex; align-items:center; gap:6px;">
+                    📢 Announcements
+                </button>
+                <span id="ann-tab-count"
+                      style="position: absolute; top: -6px; right: -6px; background: var(--red);
+                             color: white; border-radius: 50%; font-size: 0.65rem; font-weight: 700;
+                             min-width: 18px; height: 18px; display: none; align-items: center;
+                             justify-content: center; padding: 0 4px; line-height: 1;
+                             pointer-events: none;"></span>
+            </div>
 
             <!-- ── NOTIFICATION BELL ── -->
             <div style="position: relative;">

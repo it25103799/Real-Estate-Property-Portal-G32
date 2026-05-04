@@ -170,8 +170,78 @@ public class BuyerDashboardServlet extends HttpServlet {
 
         request.setAttribute("savedProperties", savedProperties);
 
-        // ── ANNOUNCEMENTS as Notifications (unread only) ─────────────────
+        // ── SELLER MESSAGES as Notifications (unread only) ────────────────
         List<Map<String, String>> allNotifications = new ArrayList<>();
+        File messagesFileNotif = new File(getServletContext().getRealPath("/WEB-INF/inquiry_messages.tsv"));
+        File readsFile         = new File(getServletContext().getRealPath("/WEB-INF/inquiry_reads.tsv"));
+
+        if (threadsFile.exists() && messagesFileNotif.exists()) {
+            // Build a threadId → thread-data map (all threads, not just buyer's)
+            Map<String, String[]> allThreads = new HashMap<>();
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(
+                    Files.newInputStream(Paths.get(threadsFile.getAbsolutePath())), StandardCharsets.UTF_8))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    if (line.trim().isEmpty()) continue;
+                    String[] data = line.split("\t", -1);
+                    if (data.length >= 10) allThreads.put(data[0], data);
+                }
+            } catch (Exception ignored) {}
+
+            // Load last-read timestamps: key = "user|threadId" → timestamp
+            Map<String, String> lastRead = new HashMap<>();
+            if (readsFile.exists()) {
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(
+                        Files.newInputStream(Paths.get(readsFile.getAbsolutePath())), StandardCharsets.UTF_8))) {
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        if (line.trim().isEmpty()) continue;
+                        String[] r = line.split("\t", -1);
+                        if (r.length >= 3) lastRead.put(r[0] + "|" + r[1], r[2]);
+                    }
+                } catch (Exception ignored) {}
+            }
+
+            // Scan messages — only show SELLER-sent messages where buyer is the receiver
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(
+                    Files.newInputStream(Paths.get(messagesFileNotif.getAbsolutePath())), StandardCharsets.UTF_8))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    if (line.trim().isEmpty()) continue;
+                    String[] msg = line.split("\t", -1);
+                    if (msg.length < 5) continue;
+                    String[] t = allThreads.get(msg[0]);
+                    if (t == null) continue;
+
+                    String senderRole = msg[2];
+                    // Only interested in messages sent BY the SELLER to this buyer
+                    if (!"SELLER".equalsIgnoreCase(senderRole)) continue;
+                    String receiver = t[4]; // buyerAccount field
+                    if (!loggedUser.equals(receiver)) continue;
+
+                    // Skip if already read
+                    String ts = msg[1];
+                    String lr = lastRead.get(loggedUser + "|" + msg[0]);
+                    if (lr != null && ts != null && ts.compareTo(lr) <= 0) continue;
+
+                    String content = "";
+                    try {
+                        content = new String(Base64.getDecoder().decode(msg[4]), StandardCharsets.UTF_8);
+                    } catch (Exception ignored) {}
+
+                    Map<String, String> n = new HashMap<>();
+                    n.put("sender",    t[3]);   // sellerName
+                    n.put("receiver",  receiver);
+                    n.put("content",   content);
+                    n.put("propTitle", t[2]);   // propertyTitle
+                    n.put("type",      "CHAT");
+                    n.put("threadId",  t[0]);
+                    allNotifications.add(n);
+                }
+            } catch (Exception ignored) {}
+        }
+
+        // ── ANNOUNCEMENTS as Notifications (unread only) ─────────────────
         Set<String> readAnnIds = loadReadAnnouncementIds(loggedUser);
         File annFile = new File(getServletContext().getRealPath("/WEB-INF/announcements.txt"));
         if (annFile.exists()) {

@@ -761,36 +761,45 @@ function renderNotifications() {
     // 1. Filter: Only show messages where I am the RECEIVER
     const myMail = window.allNotifications.filter(n => n.receiver === window.currentUser);
 
-    // 2. Update the Red Badge
+    // Separate announcements from regular messages
+    const announcementItems = myMail.filter(n => n.type === 'ANNOUNCEMENT');
+    const messageItems      = myMail.filter(n => n.type !== 'ANNOUNCEMENT');
+
+    // Expose unread announcement count for the Announcements tab badge
+    window.unreadAnnouncementCount = announcementItems.length;
+
+    // 2. Update the Bell Badge — counts ONLY regular (non-announcement) messages
     const badge = document.getElementById('notif-count');
     if (badge) {
-        if (myMail.length > 0) {
-            badge.innerText = myMail.length;
+        if (messageItems.length > 0) {
+            badge.innerText = messageItems.length;
             badge.style.display = 'flex';
         } else {
             badge.style.display = 'none';
         }
     }
 
-    // 3. Build the HTML for the list
+    // 2b. Update the Announcements tab badge
+    const annBadge = document.getElementById('ann-tab-count');
+    if (annBadge) {
+        if (announcementItems.length > 0) {
+            annBadge.innerText = announcementItems.length;
+            annBadge.style.display = 'flex';
+        } else {
+            annBadge.style.display = 'none';
+        }
+    }
+
+    // 3. Build the HTML for the dropdown list — announcements are NOT shown here
     const listContainer = document.getElementById('notif-list');
     if (listContainer) {
-        if (myMail.length === 0) {
+        if (messageItems.length === 0) {
             listContainer.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--ink4); font-size: 0.85rem;">No new notifications</p>';
         } else {
-            listContainer.innerHTML = myMail.map(n => {
-                const isAnnouncement = n.type === 'ANNOUNCEMENT';
-                const icon = isAnnouncement ? '📢' : (n.type === 'INQUIRY' ? '📩' : '💬');
-
-                // Announcements navigate to the dedicated announcements page
-                // Inquiry replies open the chat thread modal
-                const clickHandler = isAnnouncement
-                    ? "window.location.href='announcements'"
-                    : "openNotifThread('" + (n.threadId || '') + "')";
-
-                const subLine = isAnnouncement
-                    ? `<span style="font-size:0.65rem;color:var(--accent);font-weight:700;margin-top:2px;display:block;">📋 View All Announcements →</span>`
-                    : `<span style="font-size:0.65rem;color:var(--accent);font-weight:600;margin-top:2px;display:block;">Re: ${n.property || ''}</span>`;
+            listContainer.innerHTML = messageItems.map(n => {
+                const icon = n.type === 'INQUIRY' ? '📩' : '💬';
+                const clickHandler = "openNotifThread('" + (n.threadId || '') + "')";
+                const subLine = `<span style="font-size:0.65rem;color:var(--accent);font-weight:600;margin-top:2px;display:block;">Re: ${n.property || ''}</span>`;
 
                 return `
                 <div onclick="${clickHandler}"
