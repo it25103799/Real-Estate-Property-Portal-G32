@@ -409,6 +409,8 @@
         </div>
     </div>
 
+    <button class="nav-tab" onclick="showPanel('announcements', this)">📢 Announcements</button>
+
     <!-- ═══════════════ PANEL: ANALYTICS ═══════════════ -->
     <div class="panel" id="panel-analytics">
         <div class="charts-grid">
@@ -509,9 +511,224 @@
                     <div style="font-weight: 600; margin-bottom: 4px;">Platform Analytics</div>
                     <div style="font-size: 0.85rem; opacity: 0.6;">Visual charts and live statistics across the entire platform</div>
                 </div>
+                 <div style="padding: 16px; background: var(--bg2); border-radius: var(--r); border: 1px solid var(--line);">
+                        <div style="font-size: 1.5rem; margin-bottom: 8px;">📢</div>
+                        <div style="font-weight: 600; margin-bottom: 4px;">Announcements</div>
+                        <div style="font-size: 0.85rem; opacity: 0.6;">Post; edit; and delete platform-wide notices with priority levels</div>
+                 </div>
             </div>
         </div>
     </div>
+
+    <%-- ════════════════════════ PANEL: ANNOUNCEMENTS ════════════════════════ --%>
+    <div class="panel" id="panel-announcements">
+
+        <%-- ── Section header ── --%>
+        <div class="card" style="margin-bottom: 0; border-bottom: none; border-radius: var(--r) var(--r) 0 0; border-left: 4px solid var(--accent);">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                <div>
+                    <h3 class="card-title" style="margin-bottom:4px;">📢 Announcements</h3>
+                    <p style="margin:0; opacity:0.6; font-size:0.9rem;">Post, edit and remove platform-wide notices visible to all users</p>
+                </div>
+                <button class="btn btn-primary btn-sm"
+                        onclick="document.getElementById('create-ann-modal').style.display='flex'">
+                    + New Announcement
+                </button>
+            </div>
+        </div>
+
+        <%-- ── Announcements table ── --%>
+        <div class="card" style="border-radius: 0 0 var(--r) var(--r); overflow-x:auto;">
+            <table id="announcements-table" style="width:100%; border-collapse:collapse;">
+                <thead>
+                    <tr style="border-bottom: 2px solid var(--line);">
+                        <th style="text-align:left; padding:10px 14px; font-size:0.8rem; opacity:0.6; text-transform:uppercase;">Title</th>
+                        <th style="text-align:left; padding:10px 14px; font-size:0.8rem; opacity:0.6; text-transform:uppercase;">Message</th>
+                        <th style="text-align:left; padding:10px 14px; font-size:0.8rem; opacity:0.6; text-transform:uppercase;">Priority</th>
+                        <th style="text-align:left; padding:10px 14px; font-size:0.8rem; opacity:0.6; text-transform:uppercase;">Posted By</th>
+                        <th style="text-align:left; padding:10px 14px; font-size:0.8rem; opacity:0.6; text-transform:uppercase;">Date</th>
+                        <th style="text-align:center; padding:10px 14px; font-size:0.8rem; opacity:0.6; text-transform:uppercase;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:choose>
+                        <c:when test="${not empty announcements}">
+                            <c:forEach var="ann" items="${announcements}">
+                                <%--
+                                  ann[0]=id, ann[1]=title, ann[2]=message,
+                                  ann[3]=priority, ann[4]=postedBy, ann[5]=timestamp
+                                --%>
+                                <tr style="border-bottom: 1px solid var(--line);">
+                                    <td style="padding:12px 14px; font-weight:600;">${ann[1]}</td>
+                                    <td style="padding:12px 14px; max-width:260px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-style:italic; opacity:0.8;">${ann[2]}</td>
+                                    <td style="padding:12px 14px;">
+                                        <c:choose>
+                                            <c:when test="${ann[3] eq 'HIGH'}">
+                                                <span class="badge" style="background:#fee2e2; color:#b91c1c;">🔴 HIGH</span>
+                                            </c:when>
+                                            <c:when test="${ann[3] eq 'LOW'}">
+                                                <span class="badge" style="background:#dcfce7; color:#15803d;">🟢 LOW</span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="badge" style="background:#fef9c3; color:#92400e;">🟡 MEDIUM</span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td style="padding:12px 14px;">${ann[4]}</td>
+                                    <td style="padding:12px 14px; opacity:0.7; font-size:0.85rem;">${ann[5]}</td>
+                                    <td style="padding:12px 14px; text-align:center;">
+                                        <%-- EDIT button → opens pre-filled modal --%>
+                                        <button class="btn btn-ghost btn-sm"
+                                                onclick="openEditModal('${ann[0]}','${ann[1]}','${ann[2]}','${ann[3]}')">
+                                            ✏️ Edit
+                                        </button>
+                                        <%-- DELETE button --%>
+                                        <form action="adminAnnouncement" method="post" style="display:inline;"
+                                              onsubmit="return confirm('Delete announcement \'${ann[1]}\'? This cannot be undone.');">
+                                            <input type="hidden" name="action"         value="delete"/>
+                                            <input type="hidden" name="announcementId" value="${ann[0]}"/>
+                                            <button type="submit" class="btn btn-danger btn-sm">🗑️ Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <tr>
+                                <td colspan="6" class="empty-state" style="text-align:center; padding:40px; opacity:0.5;">
+                                    No announcements posted yet. Click "+ New Announcement" to start.
+                                </td>
+                            </tr>
+                        </c:otherwise>
+                    </c:choose>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <%-- ════════════════════ END PANEL: ANNOUNCEMENTS ════════════════════ --%>
+
+
+    <%-- ══════════════════════ MODAL: CREATE ANNOUNCEMENT ══════════════════════ --%>
+    <div id="create-ann-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45);
+         z-index:9999; align-items:center; justify-content:center;">
+        <div style="background:var(--bg); border-radius:var(--r); padding:32px; width:100%; max-width:520px;
+                    box-shadow:0 20px 60px rgba(0,0,0,0.25); border:1px solid var(--line);">
+            <h3 style="margin:0 0 20px 0;">📢 New Announcement</h3>
+            <form action="adminAnnouncement" method="post">
+                <input type="hidden" name="action" value="create"/>
+
+                <div style="margin-bottom:16px;">
+                    <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:6px;">Title *</label>
+                    <input type="text" name="announcementTitle" required maxlength="120"
+                           placeholder="e.g. Scheduled Maintenance on 10 May"
+                           style="width:100%; padding:10px 12px; border:1.5px solid var(--line);
+                                  border-radius:8px; background:var(--bg); color:var(--ink);
+                                  font-family:var(--font-sans); font-size:0.9rem; box-sizing:border-box;"/>
+                </div>
+
+                <div style="margin-bottom:16px;">
+                    <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:6px;">Message *</label>
+                    <textarea name="announcementMessage" required rows="4" maxlength="400"
+                              placeholder="Write the announcement body here…"
+                              style="width:100%; padding:10px 12px; border:1.5px solid var(--line);
+                                     border-radius:8px; background:var(--bg); color:var(--ink);
+                                     font-family:var(--font-sans); font-size:0.9rem; resize:vertical;
+                                     box-sizing:border-box;"></textarea>
+                </div>
+
+                <div style="margin-bottom:24px;">
+                    <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:6px;">Priority</label>
+                    <select name="announcementPriority"
+                            style="padding:10px 12px; border:1.5px solid var(--line); border-radius:8px;
+                                   background:var(--bg); color:var(--ink); font-family:var(--font-sans);
+                                   font-size:0.9rem; cursor:pointer;">
+                        <option value="LOW">🟢 Low</option>
+                        <option value="MEDIUM" selected>🟡 Medium</option>
+                        <option value="HIGH">🔴 High</option>
+                    </select>
+                </div>
+
+                <div style="display:flex; gap:10px; justify-content:flex-end;">
+                    <button type="button" class="btn btn-ghost"
+                            onclick="document.getElementById('create-ann-modal').style.display='none'">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary">Post Announcement</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <%-- ══════════════════ END MODAL: CREATE ANNOUNCEMENT ══════════════════ --%>
+
+
+    <%-- ══════════════════════ MODAL: EDIT ANNOUNCEMENT ══════════════════════ --%>
+    <div id="edit-ann-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45);
+         z-index:9999; align-items:center; justify-content:center;">
+        <div style="background:var(--bg); border-radius:var(--r); padding:32px; width:100%; max-width:520px;
+                    box-shadow:0 20px 60px rgba(0,0,0,0.25); border:1px solid var(--line);">
+            <h3 style="margin:0 0 20px 0;">✏️ Edit Announcement</h3>
+            <form action="adminAnnouncement" method="post">
+                <input type="hidden" name="action"         value="update"/>
+                <input type="hidden" name="announcementId" id="edit-ann-id"/>
+
+                <div style="margin-bottom:16px;">
+                    <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:6px;">Title *</label>
+                    <input type="text" name="announcementTitle" id="edit-ann-title" required maxlength="120"
+                           style="width:100%; padding:10px 12px; border:1.5px solid var(--line);
+                                  border-radius:8px; background:var(--bg); color:var(--ink);
+                                  font-family:var(--font-sans); font-size:0.9rem; box-sizing:border-box;"/>
+                </div>
+
+                <div style="margin-bottom:16px;">
+                    <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:6px;">Message *</label>
+                    <textarea name="announcementMessage" id="edit-ann-message" required rows="4" maxlength="400"
+                              style="width:100%; padding:10px 12px; border:1.5px solid var(--line);
+                                     border-radius:8px; background:var(--bg); color:var(--ink);
+                                     font-family:var(--font-sans); font-size:0.9rem; resize:vertical;
+                                     box-sizing:border-box;"></textarea>
+                </div>
+
+                <div style="margin-bottom:24px;">
+                    <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:6px;">Priority</label>
+                    <select name="announcementPriority" id="edit-ann-priority"
+                            style="padding:10px 12px; border:1.5px solid var(--line); border-radius:8px;
+                                   background:var(--bg); color:var(--ink); font-family:var(--font-sans);
+                                   font-size:0.9rem; cursor:pointer;">
+                        <option value="LOW">🟢 Low</option>
+                        <option value="MEDIUM">🟡 Medium</option>
+                        <option value="HIGH">🔴 High</option>
+                    </select>
+                </div>
+
+                <div style="display:flex; gap:10px; justify-content:flex-end;">
+                    <button type="button" class="btn btn-ghost"
+                            onclick="document.getElementById('edit-ann-modal').style.display='none'">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <%-- ══════════════════ END MODAL: EDIT ANNOUNCEMENT ══════════════════ --%>
+
+
+    <%-- ══════════════════ JS: open edit modal with pre-filled data ══════════════════ --%>
+    <script>
+    function openEditModal(id, title, message, priority) {
+        document.getElementById('edit-ann-id').value       = id;
+        document.getElementById('edit-ann-title').value    = title;
+        document.getElementById('edit-ann-message').value  = message;
+        document.getElementById('edit-ann-priority').value = priority;
+        document.getElementById('edit-ann-modal').style.display = 'flex';
+    }
+    // Close modals when clicking the dark overlay
+    ['create-ann-modal','edit-ann-modal'].forEach(function(id) {
+        document.getElementById(id).addEventListener('click', function(e) {
+            if (e.target === this) this.style.display = 'none';
+        });
+    });
+    </script>
 
 </div><!-- /dashboard-container -->
 

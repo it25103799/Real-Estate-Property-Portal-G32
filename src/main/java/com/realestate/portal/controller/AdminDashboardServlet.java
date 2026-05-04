@@ -110,6 +110,24 @@ public class AdminDashboardServlet extends HttpServlet {
             }
         }
 
+        // ─── Load all announcements ───
+        List<String[]> allAnnouncements = new ArrayList<>();
+        String announcementsFilePath = getServletContext().getRealPath("/WEB-INF/announcements.txt");
+        File annFile = new File(announcementsFilePath);
+        if (annFile.exists()) {
+            try (BufferedReader br = new BufferedReader(new FileReader(annFile))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    if (line.trim().isEmpty()) continue;
+                    String[] parts = line.split(",", 6);
+                    if (parts.length == 6) allAnnouncements.add(parts);
+                }
+            } catch (IOException e) {
+                System.out.println("Error reading announcements.txt: " + e.getMessage());
+            }
+        }
+        request.setAttribute("announcements", allAnnouncements);
+
         // ─── Sort: Admins always first, then Sellers, then Buyers ───
         allUsers.sort((a, b) -> {
             int rankA = roleRank(a.getRole());
