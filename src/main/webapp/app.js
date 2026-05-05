@@ -598,6 +598,30 @@ function openDetail(id) {
         if(document.getElementById('inq-prop-id')) document.getElementById('inq-prop-id').value = String(id);
         if(document.getElementById('inq-prop-title')) document.getElementById('inq-prop-title').value = p.title;
         if(document.getElementById('inq-agent-name')) document.getElementById('inq-agent-name').value = realSeller;
+
+        // ── BOOKING FORM LOGIC ──
+        const bookingForm = document.getElementById('booking-form');
+        const isRent = p.status && p.status.toLowerCase().includes('rent');
+
+        if (bookingForm) {
+            if (isRent) {
+                // Show booking form and populate it
+                bookingForm.style.display = 'flex';
+                document.getElementById('book-prop-id').value = String(id);
+                document.getElementById('book-prop-title').value = p.title;
+                document.getElementById('book-seller-name').value = realSeller;
+
+                // Set minimum return date to today + 1 day
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                const dateStr = tomorrow.toISOString().split('T')[0];
+                document.getElementById('book-return-date').min = dateStr;
+                document.getElementById('book-return-date').value = dateStr;
+            } else {
+                // Hide booking form for "For Sale" properties
+                bookingForm.style.display = 'none';
+            }
+        }
     }, 400);
 
     showPage('detail');
@@ -622,6 +646,46 @@ function showToast(icon, msg, isError=false) {
     t.style.background = isError ? '#c53030' : 'var(--ink)';
     t.classList.add('show');
     window.setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── BOOKING FORM VALIDATION ──────────────────────
+function validateBookingForm() {
+    const returnDateInput = document.getElementById('book-return-date');
+    const buyerNameInput = document.getElementById('book-buyer-name');
+    const buyerEmailInput = document.getElementById('book-buyer-email');
+
+    if (!returnDateInput.value) {
+        alert('Please select a return date');
+        return false;
+    }
+
+    if (!buyerNameInput.value.trim()) {
+        alert('Please enter your name');
+        return false;
+    }
+
+    if (!buyerEmailInput.value.trim()) {
+        alert('Please enter your email address');
+        return false;
+    }
+
+    // Check that return date is in the future
+    const selectedDate = new Date(returnDateInput.value);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (selectedDate <= today) {
+        alert('Return date must be in the future');
+        return false;
+    }
+
+    // Check if current user is logged in
+    if (!window.currentUser) {
+        alert('You must be logged in as a BUYER to book a property. Please log in first.');
+        return false;
+    }
+
+    return true;
 }
 
 window.addEventListener('scroll', () => {

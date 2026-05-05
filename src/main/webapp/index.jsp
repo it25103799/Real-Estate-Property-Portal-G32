@@ -1875,6 +1875,27 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
           </div>
         </div>
 
+        <!-- ── BOOKING FORM (For Rent Properties Only) ── -->
+        <form id="booking-form" action="bookProperty" method="post" style="display: none; flex-direction: column; gap: 10px;" onsubmit="return validateBookingForm();">
+            <div style="font-weight: 600; margin-bottom: 5px; color: var(--accent);">📅 Book This Property</div>
+
+            <input type="hidden" name="propertyId" id="book-prop-id">
+            <input type="hidden" name="propertyTitle" id="book-prop-title">
+            <input type="hidden" name="sellerName" id="book-seller-name">
+
+            <input type="text" name="buyerName" id="book-buyer-name" class="contact-form-input" placeholder="Your Full Name" required/>
+            <input type="email" name="buyerEmail" id="book-buyer-email" class="contact-form-input" placeholder="Email Address" required/>
+            <input type="tel" name="buyerPhone" id="book-buyer-phone" class="contact-form-input" placeholder="Phone Number"/>
+
+            <div style="display: flex; flex-direction: column; gap: 5px;">
+                <label style="font-size: 0.75rem; color: var(--ink4); text-transform: uppercase; letter-spacing: 0.5px;">Return Date</label>
+                <input type="date" name="returnDate" id="book-return-date" class="contact-form-input" required/>
+            </div>
+
+            <button type="submit" class="btn-contact" style="margin-top: 10px;">Reserve Now</button>
+        </form>
+
+        <!-- ── INQUIRY FORM (Always Visible) ── -->
         <form action="submitInquiry" method="post" style="display: flex; flex-direction: column; gap: 10px;" onsubmit="return forceDataGrab();">
             <input type="hidden" name="propertyId" id="inq-prop-id">
             <input type="hidden" name="propertyTitle" id="inq-prop-title">
