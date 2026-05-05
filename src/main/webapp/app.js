@@ -46,7 +46,7 @@ const TESTIMONIALS = [
 ];
 
 let currentFilters = { status: 'all', type: 'all', city: 'all', beds: 'any', priceMin: 0, priceMax: Infinity };
-let savedIds = [];
+// Removed: Unused variable savedIds
 
 // ── ROUTER ────────────────────────────
 function showPage(name) {
@@ -96,9 +96,9 @@ function searchHomeByCity(searchTerm, searchType) {
             return;
         }
 
-        const cityProperties = window.properties.filter(p => p.location.toLowerCase().includes(homeSearchCity));
+        const cityProperties = (window.properties || []).filter(p => p.location && p.location.toLowerCase().includes(homeSearchCity));
         if (cityProperties.length > 0) {
-            const typeProperties = cityProperties.filter(p => homeFilterType === '' || p.type.toLowerCase() === homeFilterType);
+            const typeProperties = cityProperties.filter(p => homeFilterType === '' || (p.type && p.type.toLowerCase() === homeFilterType));
             if (typeProperties.length > 0) {
                 messageContainer.innerHTML = `<div class="search-message" style="color: var(--green); background-color: var(--green-l);">Properties Found</div>`;
             } else {
@@ -115,7 +115,7 @@ function renderHomeFeaturedProperties() {
     if (!grid || typeof window.properties === 'undefined') return;
 
     // Filter properties based on both the type filter and city search
-    let filtered = window.properties.filter(p => {
+    let filtered = (window.properties || []).filter(p => {
         // Combined filter for status (sale/rent) and type (apartment/house)
         const statusOrType = homeFilterType.toLowerCase();
         let matchFilter;
@@ -325,15 +325,33 @@ function resetFilters() {
 // smart brackets that always cover every property - including new ones sellers add.
 function buildPriceRangeDropdown() {
     const select = document.getElementById('priceRangeSelect');
-    if (!select || !window.properties || window.properties.length === 0) return;
+    if (!select || !(window.properties && window.properties.length > 0)) return;
 
     const prices = window.properties.map(p => parseFloat(p.price)).filter(v => !isNaN(v));
     if (prices.length === 0) return;
+    
+    const realMin = Math.min(...prices);
     const realMax = Math.max(...prices);
 
-    // Base breakpoints. If a seller adds a property above the highest break,
-    // a new bracket is auto-generated to cover it.
-    let breaks = [0, 100000, 300000, 600000, 1000000, 3000000];
+    // Generate smart breakpoints based on actual property prices
+    let breaks = [];
+    
+    if (realMax <= 100000) {
+        // Low range properties (under $100K)
+        breaks = [0, 10000, 25000, 50000, 100000];
+    } else if (realMax <= 500000) {
+        // Mid range properties ($100K - $500K)
+        breaks = [0, 50000, 100000, 200000, 350000, 500000];
+    } else if (realMax <= 1000000) {
+        // High range properties ($500K - $1M)
+        breaks = [0, 100000, 250000, 500000, 750000, 1000000];
+    } else if (realMax <= 5000000) {
+        // Luxury properties ($1M - $5M)
+        breaks = [0, 250000, 500000, 1000000, 2000000, 3500000, 5000000];
+    } else {
+        // Ultra luxury properties (above $5M)
+        breaks = [0, 500000, 1000000, 2000000, 5000000, 10000000, 20000000];
+    }
 
     // Extend breaks if realMax exceeds current ceiling
     while (realMax > breaks[breaks.length - 1]) {
@@ -341,6 +359,12 @@ function buildPriceRangeDropdown() {
         const magnitude = Math.pow(10, Math.floor(Math.log10(last)));
         const next = Math.ceil((last + 1) / magnitude) * magnitude * 3;
         breaks.push(next);
+    }
+
+    // Ensure realMin is covered by starting from a break below it
+    const minBreak = breaks.find(b => b <= realMin);
+    if (minBreak && minBreak > 0) {
+        breaks.unshift(0);
     }
 
     function fmt(n) {
@@ -353,25 +377,29 @@ function buildPriceRangeDropdown() {
     const prevValue = select.value;
 
     select.innerHTML = '<option value="all">All Prices</option>';
+    
+    // Count properties in each range to show count
     for (let i = 0; i < breaks.length - 1; i++) {
         const lo = breaks[i];
         const hi = breaks[i + 1];
-        // Only show bracket if at least one property falls in it
-        const hasMatch = prices.some(price => price >= lo && price < hi);
-        if (!hasMatch) continue;
+        // Count properties in this range
+        const count = prices.filter(price => price >= lo && price < hi).length;
+        if (count === 0) continue; // Skip empty ranges
+        
         const label = lo === 0 ? 'Under ' + fmt(hi) : fmt(lo) + ' - ' + fmt(hi);
         const opt = document.createElement('option');
         opt.value = lo + '|' + hi;
-        opt.textContent = label;
+        opt.textContent = label + ' (' + count + ' props)';
         select.appendChild(opt);
     }
+    
     // 'Above X' bracket for anything at or above the last break
     const topBreak = breaks[breaks.length - 1];
-    const hasAbove = prices.some(price => price >= topBreak);
-    if (hasAbove) {
+    const aboveCount = prices.filter(price => price >= topBreak).length;
+    if (aboveCount > 0) {
         const opt = document.createElement('option');
         opt.value = topBreak + '|max';
-        opt.textContent = 'Above ' + fmt(topBreak);
+        opt.textContent = 'Above ' + fmt(topBreak) + ' (' + aboveCount + ' props)';
         select.appendChild(opt);
     }
 
@@ -379,7 +407,18 @@ function buildPriceRangeDropdown() {
     if (prevValue && select.querySelector('option[value="' + prevValue + '"]')) {
         select.value = prevValue;
     }
+    
+    console.log('Price range dropdown built with ' + (select.options.length - 1) + ' ranges');
+    console.log('Price range: ' + fmt(realMin) + ' to ' + fmt(realMax));
 }
+
+// Public function to rebuild price ranges (called when new properties are added)
+window.rebuildPriceRanges = function() {
+    if (typeof buildPriceRangeDropdown === 'function') {
+        buildPriceRangeDropdown();
+        console.log('Price ranges rebuilt automatically');
+    }
+};
 
 function applyPriceRange(value) {
     if (value === 'all') {
@@ -396,7 +435,7 @@ function applyPriceRange(value) {
 function applyFilters() {
     if(typeof window.properties === 'undefined') return;
 
-    let filtered = window.properties.filter(p => {
+    let filtered = (window.properties || []).filter(p => {
         let matchStatus = currentFilters.status === 'all' || (p.status && p.status.toLowerCase().includes(currentFilters.status.toLowerCase()));
         let matchType = currentFilters.type === 'all' || (p.type && p.type.toLowerCase() === currentFilters.type.toLowerCase());
         let matchCity = currentFilters.city === 'all' || (p.location && p.location.toLowerCase().includes(currentFilters.city.toLowerCase()));
@@ -521,7 +560,7 @@ function renderListings() {
         grid.innerHTML += html;
     }
 
-    if (countEl) countEl.innerText = allFilteredProperties.length;
+    if (countEl) countEl.innerText = String(allFilteredProperties.length); // Fixed: Explicitly convert to string
 
     // Show/hide Load More button
     if (loadMoreBtn) {
@@ -541,7 +580,7 @@ function loadMoreListings() {
 // ── DETAIL PAGE ENGINE ──────────────────────
 function openDetail(id) {
     if(typeof window.properties === 'undefined') return;
-    const p = window.properties.find(prop => String(prop.id) === String(id));
+    const p = (window.properties || []).find(prop => String(prop.id) === String(id));
     if (!p) { console.error("Property not found!"); return; }
 
     document.getElementById('detail-main-img').src = p.image;
@@ -593,6 +632,7 @@ function openDetail(id) {
 
     document.getElementById('detail-agent-img').src = agent.img;
     if(document.getElementById('detail-agent-name')) document.getElementById('detail-agent-name').innerText = realSeller;
+    if(document.getElementById('detail-agent-title')) document.getElementById('detail-agent-title').innerText = agent.title || "Real Estate Professional";
 
     window.setTimeout(() => {
         if(document.getElementById('inq-prop-id')) document.getElementById('inq-prop-id').value = String(id);
@@ -601,15 +641,30 @@ function openDetail(id) {
 
         // ── BOOKING FORM LOGIC ──
         const bookingForm = document.getElementById('booking-form');
-        const isRent = p.status && p.status.toLowerCase().includes('rent');
+        const isRent = p.status && String(p.status).toLowerCase().includes('rent');
+        const isBuyer = window.currentRole && String(window.currentRole).toUpperCase() === 'BUYER';
+
+        console.log('Property Status:', p.status);
+        console.log('Is Rent:', isRent);
+        console.log('Is Buyer:', isBuyer);
+        console.log('Current Role:', window.currentRole);
 
         if (bookingForm) {
-            if (isRent) {
-                // Show booking form and populate it
+            if (isRent && isBuyer) {
+                // Show booking form for "For Rent" properties AND logged-in BUYER users
                 bookingForm.style.display = 'flex';
+                bookingForm.style.setProperty('display', 'flex', 'important'); // Force override any CSS
                 document.getElementById('book-prop-id').value = String(id);
                 document.getElementById('book-prop-title').value = p.title;
                 document.getElementById('book-seller-name').value = realSeller;
+
+                // Pre-fill with user data if available
+                if (window.currentUser) {
+                    document.getElementById('book-buyer-name').value = window.currentUser;
+                }
+                if (window.currentEmail) { // Added check for window.currentEmail
+                    document.getElementById('book-buyer-email').value = window.currentEmail;
+                }
 
                 // Set minimum return date to today + 1 day
                 const tomorrow = new Date();
@@ -617,9 +672,12 @@ function openDetail(id) {
                 const dateStr = tomorrow.toISOString().split('T')[0];
                 document.getElementById('book-return-date').min = dateStr;
                 document.getElementById('book-return-date').value = dateStr;
+                
+                console.log('✅ Booking form shown for property:', p.title);
             } else {
-                // Hide booking form for "For Sale" properties
+                // Hide booking form for "For Sale" properties or if not a logged-in buyer
                 bookingForm.style.display = 'none';
+                console.log('❌ Booking form hidden - isRent:', isRent, 'isBuyer:', isBuyer);
             }
         }
     }, 400);
@@ -648,45 +706,64 @@ function showToast(icon, msg, isError=false) {
     window.setTimeout(() => t.classList.remove('show'), 3000);
 }
 
-// ── BOOKING FORM VALIDATION ──────────────────────
-function validateBookingForm() {
+// ── BOOKING FORM VALIDATION & SUBMISSION ──────────────────────
+function validateAndSubmitBooking(event) {
+    event.preventDefault();
+
+    // Check if user is logged in as a BUYER
+    const isBuyer = window.currentRole && String(window.currentRole).toUpperCase() === 'BUYER';
+    if (!isBuyer || !window.currentUser || window.currentUser.trim() === "") {
+        alert('❌ You must be logged in as a BUYER to book a property.\n\nPlease log in first.');
+        showPage('login');
+        return false;
+    }
+
     const returnDateInput = document.getElementById('book-return-date');
     const buyerNameInput = document.getElementById('book-buyer-name');
     const buyerEmailInput = document.getElementById('book-buyer-email');
+    const bookingForm = event.target;
 
-    if (!returnDateInput.value) {
-        alert('Please select a return date');
+    // Check return date is selected
+    if (!returnDateInput || !returnDateInput.value) {
+        alert('⚠️ Please select a return date');
         return false;
     }
 
-    if (!buyerNameInput.value.trim()) {
-        alert('Please enter your name');
+    // Check buyer name is filled
+    if (!buyerNameInput || !buyerNameInput.value.trim()) {
+        alert('⚠️ Please enter your full name');
         return false;
     }
 
-    if (!buyerEmailInput.value.trim()) {
-        alert('Please enter your email address');
+    // Check buyer email is filled
+    if (!buyerEmailInput || !buyerEmailInput.value.trim()) {
+        alert('⚠️ Please enter your email address');
+        return false;
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(buyerEmailInput.value)) {
+        alert('⚠️ Please enter a valid email address');
         return false;
     }
 
     // Check that return date is in the future
-    const selectedDate = new Date(returnDateInput.value);
+    const selectedDate = new Date(returnDateInput.value + 'T00:00:00');
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
     if (selectedDate <= today) {
-        alert('Return date must be in the future');
+        alert('⚠️ Return date must be in the future (tomorrow or later)');
         return false;
     }
 
-    // Check if current user is logged in
-    if (!window.currentUser) {
-        alert('You must be logged in as a BUYER to book a property. Please log in first.');
-        return false;
-    }
-
-    return true;
+    // All validations passed - submit the form
+    console.log("✅ Booking form validated. Submitting...");
+    bookingForm.submit();
+    return false;
 }
+
 
 window.addEventListener('scroll', () => {
     const nav = document.getElementById('navbar');
@@ -721,7 +798,7 @@ window.document.addEventListener("DOMContentLoaded", () => {
 // ── REVIEWS ENGINE ────────────────────────────
 function renderPropertyReviews(propId) {
     if (!window.allReviews) return;
-    const filtered = window.allReviews.filter(r => String(r.propId) === String(propId));
+    const filtered = (window.allReviews || []).filter(r => String(r.propId) === String(propId));
     const container = document.getElementById('reviews-container');
     if (!container) return;
 
@@ -823,7 +900,7 @@ function renderNotifications() {
     if (!window.allNotifications || !window.currentUser) return;
 
     // 1. Filter: Only show messages where I am the RECEIVER
-    const myMail = window.allNotifications.filter(n => n.receiver === window.currentUser);
+    const myMail = (window.allNotifications || []).filter(n => n.receiver === window.currentUser);
 
     // Separate announcements from regular messages
     const announcementItems = myMail.filter(n => n.type === 'ANNOUNCEMENT');
@@ -836,7 +913,7 @@ function renderNotifications() {
     const badge = document.getElementById('notif-count');
     if (badge) {
         if (messageItems.length > 0) {
-            badge.innerText = messageItems.length;
+            badge.innerText = String(messageItems.length); // Fixed: Explicitly convert to string
             badge.style.display = 'flex';
         } else {
             badge.style.display = 'none';
@@ -847,7 +924,7 @@ function renderNotifications() {
     const annBadge = document.getElementById('ann-tab-count');
     if (annBadge) {
         if (announcementItems.length > 0) {
-            annBadge.innerText = announcementItems.length;
+            annBadge.innerText = String(announcementItems.length); // Fixed: Explicitly convert to string
             annBadge.style.display = 'flex';
         } else {
             annBadge.style.display = 'none';
@@ -861,7 +938,14 @@ function renderNotifications() {
             listContainer.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--ink4); font-size: 0.85rem;">No new notifications</p>';
         } else {
             listContainer.innerHTML = messageItems.map(n => {
-                const icon = n.type === 'INQUIRY' ? '📩' : '💬';
+                let icon = '💬';
+                if (n.type === 'INQUIRY') {
+                    icon = '📩';
+                } else if (n.type === 'BOOKING_CANCEL') {
+                    icon = '❌';
+                } else if (n.type === 'BOOKING_UPDATE') {
+                    icon = '✏️';
+                }
                 const clickHandler = "openNotifThread('" + (n.threadId || '') + "')";
                 const subLine = `<span style="font-size:0.65rem;color:var(--accent);font-weight:600;margin-top:2px;display:block;">Re: ${n.property || ''}</span>`;
 
@@ -906,6 +990,29 @@ window.addEventListener('click', () => {
 
 function openNotifThread(threadId) {
     if (!threadId) return;
+
+    // Check if this is a booking cancellation or update notification
+    if (threadId.startsWith('BOOKING_CANCEL_') || threadId.startsWith('BOOKING_UPDATE_')) {
+        // Just mark it as read and remove from UI
+        const notifIndex = window.allNotifications ? window.allNotifications.findIndex(n => n.threadId === threadId) : -1;
+        if (notifIndex > -1 && window.allNotifications) {
+            window.allNotifications.splice(notifIndex, 1);
+            if (typeof renderNotifications === 'function') {
+                renderNotifications();
+            }
+        }
+        
+        // Send mark as read request
+        fetch('markInquiryRead', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'threadId=' + encodeURIComponent(threadId)
+        }).catch(err => console.error("Failed to mark notification as read:", err));
+        
+        const panel = document.getElementById('notif-panel');
+        if (panel) panel.style.display = 'none';
+        return;
+    }
 
     // If we are already on a dashboard that can open the modal, open directly.
     if (window.currentRole && String(window.currentRole).toUpperCase() === 'SELLER' && typeof window.openChat === 'function') {

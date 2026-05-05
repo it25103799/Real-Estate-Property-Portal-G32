@@ -28,3 +28,93 @@
   Status        : RESERVED
   Penalty Rate  : $100.00 / overdue day
 
+=========================================================
+  NEW BOOKING — 2026-05-05
+=========================================================
+  Booking ID    : BK_1777989808147
+  Property      : Koswatta new Building  [PROP_1772777000956]
+  Seller        : De Silva
+  Buyer Account : Bhashi Navod
+  Buyer Name    : Bhashi Navod
+  Buyer Email   : bhashithanavod800@gmail.com
+  Buyer Phone   : 0786324531
+  Booked On     : 2026-05-05
+  Return Date   : 2026-05-07
+  Status        : RESERVED
+  Penalty Rate  : $100.00 / overdue day
+
+=========================================================
+  NEW BOOKING — 2026-05-05
+=========================================================
+  Booking ID    : BK_1777990358948
+  Property      : Kaduwela Beach view  [PROP_1772773352306]
+  Seller        : De Silva
+  Buyer Account : Ralph Will
+  Buyer Name    : Ralph Will
+  Buyer Email   : willral432@gmail.com
+  Buyer Phone   : 0786532343
+  Booked On     : 2026-05-05
+  Return Date   : 2026-05-08
+  Status        : RESERVED
+  Penalty Rate  : $100.00 / overdue day
+
+=========================================================
+  NEW BOOKING — 2026-05-05
+=========================================================
+  Booking ID    : BK_1777991269745
+  Property      : Galle New Villa  [699613a8]
+  Seller        : De Silva
+  Buyer Account : Bhashi Navod
+  Buyer Name    : Bhashi Navod
+  Buyer Email   : bhashithanavod800@gmail.com
+  Buyer Phone   : 0786532343
+  Booked On     : 2026-05-05
+  Return Date   : 2026-05-09
+  Status        : RESERVED
+  Penalty Rate  : $100.00 / overdue day
+
+=========================================================
+  NEW BOOKING — 2026-05-05
+=========================================================
+  Booking ID    : BK_1777992314436
+  Property      : Koswatta new Building  [PROP_1772777000956]
+  Seller        : De Silva
+  Buyer Account : Ravindu Lohan
+  Buyer Name    : Ravindu Lohan
+  Buyer Email   : ravilohan600@gmail.com
+  Buyer Phone   : 0786324531
+  Booked On     : 2026-05-05
+  Return Date   : 2026-05-09
+  Status        : RESERVED
+  Penalty Rate  : $100.00 / overdue day
+
+=========================================================
+  NEW BOOKING — 2026-05-05
+=========================================================
+  Booking ID    : BK_1777994453302
+  Property      : Galle New Building  [d4ef95b0]
+  Seller        : De Silva
+  Buyer Account : Bhashi Navod
+  Buyer Name    : Bhashi Navod
+  Buyer Email   : bhashithanavod800@gmail.com
+  Buyer Phone   : 0786324531
+  Booked On     : 2026-05-05
+  Return Date   : 2026-05-10
+  Status        : RESERVED
+  Penalty Rate  : $100.00 / overdue day
+
+=========================================================
+  NEW BOOKING — 2026-05-05
+=========================================================
+  Booking ID    : BK_1777997866782
+  Property      : Baththaramulla pro State  [0d3bce27]
+  Seller        : De Silva
+  Buyer Account : Ralph Will
+  Buyer Name    : Ralph Will
+  Buyer Email   : willral432@gmail.com
+  Buyer Phone   : 0786532343
+  Booked On     : 2026-05-05
+  Return Date   : 2026-05-07
+  Status        : RESERVED
+  Penalty Rate  : $100.00 / overdue day
+

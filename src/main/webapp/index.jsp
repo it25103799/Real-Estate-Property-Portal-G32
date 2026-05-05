@@ -1738,9 +1738,10 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
 
       <div class="filter-section">
         <div class="filter-section-title">Price Range</div>
-        <div class="price-range">
-          <input type="number" id="priceMin" class="price-range-input" placeholder="Min $" min="0" step="10000"/>
-          <input type="number" id="priceMax" class="price-range-input" placeholder="Max $" min="0" step="10000"/>
+        <div class="price-dropdown-wrap">
+          <select id="priceRangeSelect" class="price-range-select" onchange="applyPriceRange(this.value)">
+            <option value="all">All Prices</option>
+          </select>
         </div>
       </div>
 
@@ -1876,23 +1877,24 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
         </div>
 
         <!-- ── BOOKING FORM (For Rent Properties Only) ── -->
-        <form id="booking-form" action="bookProperty" method="post" style="display: none; flex-direction: column; gap: 10px;" onsubmit="return validateBookingForm();">
-            <div style="font-weight: 600; margin-bottom: 5px; color: var(--accent);">📅 Book This Property</div>
+        <form id="booking-form" action="bookProperty" method="post" style="display: none; flex-direction: column; gap: 10px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--line);" onsubmit="return validateAndSubmitBooking(event);">
+            <div style="font-weight: 700; margin-bottom: 10px; color: var(--accent); font-size: 1.05rem;">📅 BOOK THIS PROPERTY</div>
 
             <input type="hidden" name="propertyId" id="book-prop-id">
             <input type="hidden" name="propertyTitle" id="book-prop-title">
             <input type="hidden" name="sellerName" id="book-seller-name">
 
-            <input type="text" name="buyerName" id="book-buyer-name" class="contact-form-input" placeholder="Your Full Name" required/>
-            <input type="email" name="buyerEmail" id="book-buyer-email" class="contact-form-input" placeholder="Email Address" required/>
-            <input type="tel" name="buyerPhone" id="book-buyer-phone" class="contact-form-input" placeholder="Phone Number"/>
+            <input type="text" name="buyerName" id="book-buyer-name" class="contact-form-input" placeholder="Your Full Name" required style="width: 100%;"/>
+            <input type="email" name="buyerEmail" id="book-buyer-email" class="contact-form-input" placeholder="Email Address" required style="width: 100%;"/>
+            <input type="tel" name="buyerPhone" id="book-buyer-phone" class="contact-form-input" placeholder="Phone Number" style="width: 100%;"/>
 
             <div style="display: flex; flex-direction: column; gap: 5px;">
-                <label style="font-size: 0.75rem; color: var(--ink4); text-transform: uppercase; letter-spacing: 0.5px;">Return Date</label>
-                <input type="date" name="returnDate" id="book-return-date" class="contact-form-input" required/>
+                <label style="font-size: 0.75rem; color: var(--ink4); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Return Date *</label>
+                <input type="date" name="returnDate" id="book-return-date" class="contact-form-input" required style="width: 100%;"/>
+                <small style="color: var(--ink4); font-size: 0.8rem;">When will you return the property?</small>
             </div>
 
-            <button type="submit" class="btn-contact" style="margin-top: 10px;">Reserve Now</button>
+            <button type="submit" class="btn-contact" style="margin-top: 15px; width: 100%; background: var(--green); font-weight: 700;">🔖 Reserve Now</button>
         </form>
 
         <!-- ── INQUIRY FORM (Always Visible) ── -->
@@ -2064,6 +2066,7 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
     // 1. Identity Bridge
     window.currentUser = "${sessionScope.loggedUser}";
     window.currentRole = "${sessionScope.loggedRole}";
+    window.currentEmail = "${sessionScope.loggedEmail}";
 
     // Convert Java List to JS Array
     window.allNotifications = [];
@@ -2097,6 +2100,11 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
             })("${p.id}")
         });
     </c:forEach>
+    
+    // Build price range dropdown after properties are loaded
+    if (typeof buildPriceRangeDropdown === 'function') {
+        setTimeout(() => buildPriceRangeDropdown(), 100);
+    }
 
     // 3. Reviews Bridge (Kalhari's Data)
     window.allReviews = [];

@@ -427,6 +427,29 @@
         <div class="card-header">
             <h3 class="card-title">📅 My Bookings</h3>
         </div>
+        
+        <!-- Success/Error Messages -->
+        <c:if test="${param.update == 'success'}">
+            <div style="background: rgba(13,158,110,0.1); border: 1px solid #0d9e6e; color: #0d9e6e; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-weight: 600;">
+                ✅ Booking updated successfully! The seller has been notified.
+            </div>
+        </c:if>
+        <c:if test="${param.update == 'error'}">
+            <div style="background: rgba(224,40,40,0.1); border: 1px solid #e02828; color: #e02828; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-weight: 600;">
+                ❌ Error updating booking. Please try again.
+            </div>
+        </c:if>
+        <c:if test="${param.update == 'notfound'}">
+            <div style="background: rgba(224,40,40,0.1); border: 1px solid #e02828; color: #e02828; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-weight: 600;">
+                ❌ Booking not found or cannot be updated.
+            </div>
+        </c:if>
+        <c:if test="${param.cancel == 'success'}">
+            <div style="background: rgba(13,158,110,0.1); border: 1px solid #0d9e6e; color: #0d9e6e; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-weight: 600;">
+                ✅ Booking cancelled successfully! The seller has been notified.
+            </div>
+        </c:if>
+        
         <table>
             <thead>
                 <tr>
@@ -461,9 +484,6 @@
                                         <c:when test="${bk.status == 'COMPLETED'}">
                                             <span class="status-badge badge-viewed">✅ Completed</span>
                                         </c:when>
-                                        <c:when test="${bk.status == 'CANCELLED'}">
-                                            <span class="status-badge" style="background:rgba(100,100,100,0.12);color:#666;">❌ Cancelled</span>
-                                        </c:when>
                                         <c:otherwise>
                                             <span class="status-badge badge-pending">🔵 Reserved</span>
                                         </c:otherwise>
@@ -480,13 +500,19 @@
                                     </c:choose>
                                 </td>
                                 <td>
-                                    <c:if test="${bk.status != 'COMPLETED' && bk.status != 'CANCELLED'}">
-                                        <form action="cancelBooking" method="post" style="margin:0;" onsubmit="return confirm('Cancel this booking?');">
-                                            <input type="hidden" name="bookingId" value="${bk.bookingId}">
-                                            <button type="submit" class="btn-action" style="color:var(--red);">Cancel</button>
-                                        </form>
+                                    <c:if test="${bk.status != 'COMPLETED'}">
+                                        <div style="display: flex; gap: 8px;">
+                                            <button type="button" class="btn-action" style="color:var(--accent);" 
+                                                    onclick="openEditBookingModal('${bk.bookingId}', '${bk.returnDate}')">
+                                                Edit
+                                            </button>
+                                            <form action="cancelBooking" method="post" style="margin:0;" onsubmit="return confirm('⚠️ Are you sure you want to cancel this booking?\n\nThis will permanently remove the booking from the system and notify the seller.');">
+                                                <input type="hidden" name="bookingId" value="${bk.bookingId}">
+                                                <button type="submit" class="btn-action" style="color:var(--red);">Cancel</button>
+                                            </form>
+                                        </div>
                                     </c:if>
-                                    <c:if test="${bk.status == 'COMPLETED' || bk.status == 'CANCELLED'}">
+                                    <c:if test="${bk.status == 'COMPLETED'}">
                                         <span style="opacity:0.4; font-size:0.85rem;">—</span>
                                     </c:if>
                                 </td>
@@ -743,6 +769,55 @@
         </div>
     </c:forEach>
 </div>
+
+<!-- Edit Booking Modal -->
+<div class="modal-overlay" id="editBookingModal" style="display: none;">
+    <div class="modal-box" style="max-width: 500px;">
+        <span class="close-btn" onclick="closeEditBookingModal()">&times;</span>
+        <h3 class="card-title">✏️ Edit Booking</h3>
+        <p style="color: var(--ink); opacity: 0.7; margin-bottom: 20px;">Update your return date for this booking.</p>
+        
+        <form action="updateBooking" method="post" style="display: flex; flex-direction: column; gap: 16px;">
+            <input type="hidden" name="bookingId" id="edit-booking-id">
+            
+            <div class="form-group">
+                <label style="font-weight: 600;">New Return Date</label>
+                <input type="date" name="returnDate" id="edit-return-date" required style="padding: 10px; border: 1.5px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink);">
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <button type="submit" class="btn" style="flex: 1;">💾 Update Booking</button>
+                <button type="button" class="btn" style="flex: 1; background: var(--line); color: var(--ink);" onclick="closeEditBookingModal()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openEditBookingModal(bookingId, currentReturnDate) {
+        document.getElementById('edit-booking-id').value = bookingId;
+        document.getElementById('edit-return-date').value = currentReturnDate;
+        
+        // Set minimum date to today + 1 day
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const dateStr = tomorrow.toISOString().split('T')[0];
+        document.getElementById('edit-return-date').min = dateStr;
+        
+        document.getElementById('editBookingModal').style.display = 'flex';
+    }
+    
+    function closeEditBookingModal() {
+        document.getElementById('editBookingModal').style.display = 'none';
+    }
+    
+    // Close modal when clicking outside
+    document.getElementById('editBookingModal').addEventListener('click', function(event) {
+        if (event.target === this) {
+            closeEditBookingModal();
+        }
+    });
+</script>
 
 </body>
 </html>

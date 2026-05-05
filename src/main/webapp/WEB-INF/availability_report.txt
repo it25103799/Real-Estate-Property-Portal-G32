@@ -4,10 +4,14 @@
   Date    : 2026-05-05
 =========================================================
   Total Listed   : 12
-  Available      : 12
-  Reserved       : 0
+  Available      : 10
+  Reserved       : 2
 
------ ACTIVE RESERVATIONS (0) -----
+----- ACTIVE RESERVATIONS (2) -----
+  [CANCELLED] Kaduwela Beach view | Buyer: Ralph Will | Return: 2026-05-08
+  [RESERVED] Koswatta new Building | Buyer: Ravindu Lohan | Return: 2026-05-09
 
------ COMPLETED TRANSACTIONS (0) -----
+----- COMPLETED TRANSACTIONS (2) -----
+  Koswatta new Building | Buyer: Bhashi Navod | Booked: 2026-05-05 | Returned: 2026-05-07
+  Galle New Villa | Buyer: Bhashi Navod | Booked: 2026-05-05 | Returned: 2026-05-09
 =========================================================

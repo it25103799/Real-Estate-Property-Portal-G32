@@ -35,10 +35,11 @@
 
         /* The Data Table */
         table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
-        th, td { padding: 14px; border-bottom: 1px solid var(--line); }
+        th, td { padding: 14px; border-bottom: 1px solid var(--line); white-space: nowrap; }
         th { font-weight: 600; color: var(--accent); }
         .btn-edit { background: none; border: 1px solid var(--accent); color: var(--accent); padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
         .btn-edit:hover { background: var(--accent); color: white; }
+        .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
         /* The Edit Modal */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 1000; }
@@ -285,6 +286,7 @@
 
     <div class="card">
         <h3 class="card-title">My Managed Properties</h3>
+        <div class="table-responsive">
         <table>
             <thead>
                 <tr><th>ID</th><th>Title</th><th>Price</th><th>Location</th><th>Type</th><th>Beds</th><th>Baths</th><th>Actions</th></tr>
@@ -318,6 +320,7 @@
                 </c:choose>
             </tbody>
         </table>
+        </div>
     </div>
 
     <div class="card" id="reviews-section">
@@ -410,9 +413,10 @@
     <!-- ── ACTIVE BOOKINGS ──────────────────────────────────────────────── -->
     <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h3 class="card-title" style="margin:0;">📅 Active Bookings</h3>
+            <h3 class="card-title" style="margin:0;"> Active Bookings</h3>
             <span style="font-size:0.85rem; opacity:0.65;">${reservedCount} property(s) currently reserved</span>
         </div>
+        <div class="table-responsive">
         <table>
             <thead>
                 <tr>
@@ -466,10 +470,17 @@
                                     </c:choose>
                                 </td>
                                 <td>
-                                    <form action="completeBooking" method="post" style="margin:0;" onsubmit="return confirm('Mark this booking as completed?');">
-                                        <input type="hidden" name="bookingId" value="${bk.bookingId}">
-                                        <button type="submit" class="btn" style="padding:7px 14px; font-size:0.82rem; background:#0d9e6e;">Complete</button>
-                                    </form>
+                                    <c:choose>
+                                        <c:when test="${bk.status != 'COMPLETED'}">
+                                            <form action="completeBooking" method="post" style="margin:0;" onsubmit="return confirm('Mark this booking as completed?');">
+                                                <input type="hidden" name="bookingId" value="${bk.bookingId}">
+                                                <button type="submit" class="btn" style="padding:7px 14px; font-size:0.82rem; background:#0d9e6e;">Complete</button>
+                                            </form>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span style="opacity:0.4; font-size:0.85rem;">—</span>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </td>
                             </tr>
                         </c:forEach>
@@ -480,6 +491,7 @@
                 </c:choose>
             </tbody>
         </table>
+        </div>
     </div>
 
     <!-- ── COMPLETED BOOKINGS ───────────────────────────────────────────── -->
@@ -488,6 +500,7 @@
             <h3 class="card-title" style="margin:0;">Completed Transactions</h3>
             <span style="font-size:0.85rem; opacity:0.65;">${completedBookings.size()} completed</span>
         </div>
+        <div class="table-responsive">
         <table>
             <thead>
                 <tr>
@@ -525,6 +538,7 @@
                 </c:choose>
             </tbody>
         </table>
+        </div>
     </div>
 
 </div>

@@ -173,6 +173,19 @@ public class SellerDashboardServlet extends HttpServlet {
         // Notifications (unread messages for bell bubble)
         List<Map<String, String>> allNotifications = new ArrayList<>();
         File readsFile = new File(getServletContext().getRealPath("/WEB-INF/inquiry_reads.tsv"));
+        
+        // Load read timestamps for checking notification read status
+        Map<String, String> lastRead = new HashMap<>();
+        if (readsFile.exists()) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(readsFile.getAbsolutePath())), StandardCharsets.UTF_8))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    if (line.trim().isEmpty()) continue;
+                    String[] r = line.split("\t", -1);
+                    if (r.length >= 3) lastRead.put(r[0] + "|" + r[1], r[2]);
+                }
+            } catch (Exception ignored) {}
+        }
         if (threadsFile.exists() && messagesFile.exists()) {
             Map<String, String[]> threads = new HashMap<>();
             try (BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(threadsFile.getAbsolutePath())), StandardCharsets.UTF_8))) {
@@ -185,20 +198,6 @@ public class SellerDashboardServlet extends HttpServlet {
                     if (data.length >= 10) threads.put(data[0], data);
                 }
             } catch (Exception ignored) {}
-
-            Map<String, String> lastRead = new HashMap<>();
-            if (readsFile.exists()) {
-                try (BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(readsFile.getAbsolutePath())), StandardCharsets.UTF_8))) {
-                    String line;
-                    while ((line = br.readLine()) != null) {
-                        if (line.trim().isEmpty()) {
-                            continue;
-                        }
-                        String[] r = line.split("\t", -1);
-                        if (r.length >= 3) lastRead.put(r[0] + "|" + r[1], r[2]);
-                    }
-                } catch (Exception ignored) {}
-            }
 
             try (BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(messagesFile.getAbsolutePath())), StandardCharsets.UTF_8))) {
                 String line;
@@ -299,6 +298,14 @@ public class SellerDashboardServlet extends HttpServlet {
                     } else {
                         activeBookings.add(bk);
                         reservedPropIds.add(d[1]);
+                    }
+                    
+                    // Check for booking update notifications
+                    String updateThreadId = "BOOKING_UPDATE_" + d[0];
+                    String updateLr = lastRead.get(loggedUser + "|" + updateThreadId);
+                    if (updateLr == null && !"COMPLETED".equalsIgnoreCase(d[10]) && !"CANCELLED".equalsIgnoreCase(d[10])) {
+                        // This is an active booking that might have been updated
+                        // We'll check if there's an update notification in the messages file
                     }
                 }
             } catch (Exception e) {
