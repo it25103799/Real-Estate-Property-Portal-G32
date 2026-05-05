@@ -1522,6 +1522,58 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
       <div class="prop-grid" id="home-agents-grid"></div>
     </div>
   </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div>
+          <div class="footer-logo"><span class="dot" style="background:var(--accent)"></span>NESTIQ</div>
+          <p class="footer-desc">Your trusted partner for finding, buying, and selling exceptional properties across the country.</p>
+          <div class="footer-socials">
+            <div class="social-btn">𝕏</div>
+            <div class="social-btn">in</div>
+            <div class="social-btn">f</div>
+            <div class="social-btn">▶</div>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-title">Quick Links</div>
+          <ul class="footer-links">
+            <li><a href="#" onclick="showPage('home')">Home</a></li>
+            <li><a href="#" onclick="showPage('listings')">Browse</a></li>
+            <li><a href="#" onclick="showPage('agents')">Agents</a></li>
+            <li><a href="#" onclick="showPage('about')">About Us</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-col-title">Services</div>
+          <ul class="footer-links">
+            <li><a href="#" onclick="showPage('listings')">Buy Property</a></li>
+            <li><a href="#" onclick="showPage('listings')">Rent Property</a></li>
+            <li><a href="#">Sell Property</a></li>
+            <li><a href="#">Property Valuation</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-col-title">Support</div>
+          <ul class="footer-links">
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">© 2024 Nestiq Real Estate. All rights reserved.</span>
+        <div class="footer-legal">
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+          <a href="#">Cookies</a>
+        </div>
+      </div>
+    </div>
+  </footer>
 </div>
 
 <div class="page" id="page-about">
