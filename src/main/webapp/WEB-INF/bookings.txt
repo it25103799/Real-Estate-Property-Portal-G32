@@ -1,0 +1,2 @@
+# NESTIQ Property Bookings - Format: bookingId|propertyId|propertyTitle|sellerName|buyerUsername|buyerName|buyerEmail|buyerPhone|bookingDate|returnDate|status
+BK_1777837015833|2a2b0008|Kiribathgoda new building|Dinesh|Sadun Priya|Sadun Priya|priya564@gmail.com|0786324531|2026-05-04|2026-05-06|RESERVED

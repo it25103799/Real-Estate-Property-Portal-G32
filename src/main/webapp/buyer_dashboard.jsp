@@ -421,6 +421,87 @@
             </tbody>
         </table>
     </div>
+
+    <!-- ── MY BOOKINGS ─────────────────────────────────────────────────── -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">📅 My Bookings</h3>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Booking ID</th>
+                    <th>Property</th>
+                    <th>Seller</th>
+                    <th>Booked On</th>
+                    <th>Return Date</th>
+                    <th>Status</th>
+                    <th>Penalty Fee</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <c:choose>
+                    <c:when test="${not empty myBookings}">
+                        <c:forEach var="bk" items="${myBookings}">
+                            <tr>
+                                <td style="font-size:0.82rem; opacity:0.75;">${bk.bookingId}</td>
+                                <td>
+                                    <div style="font-weight:600;">${bk.propertyTitle}</div>
+                                    <div style="font-size:0.8rem; opacity:0.65;">ID: ${bk.propertyId}</div>
+                                </td>
+                                <td>${bk.sellerName}</td>
+                                <td>${bk.bookingDate}</td>
+                                <td>${bk.returnDate}</td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${bk.status == 'OVERDUE'}">
+                                            <span class="status-badge" style="background:rgba(224,40,40,0.12);color:var(--red);">⚠️ Overdue</span>
+                                        </c:when>
+                                        <c:when test="${bk.status == 'COMPLETED'}">
+                                            <span class="status-badge badge-viewed">✅ Completed</span>
+                                        </c:when>
+                                        <c:when test="${bk.status == 'CANCELLED'}">
+                                            <span class="status-badge" style="background:rgba(100,100,100,0.12);color:#666;">❌ Cancelled</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span class="status-badge badge-pending">🔵 Reserved</span>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${bk.penaltyFee != '0.00'}">
+                                            <span style="color:var(--red); font-weight:600;">$${bk.penaltyFee}</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span style="opacity:0.5;">—</span>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td>
+                                    <c:if test="${bk.status != 'COMPLETED' && bk.status != 'CANCELLED'}">
+                                        <form action="cancelBooking" method="post" style="margin:0;" onsubmit="return confirm('Cancel this booking?');">
+                                            <input type="hidden" name="bookingId" value="${bk.bookingId}">
+                                            <button type="submit" class="btn-action" style="color:var(--red);">Cancel</button>
+                                        </form>
+                                    </c:if>
+                                    <c:if test="${bk.status == 'COMPLETED' || bk.status == 'CANCELLED'}">
+                                        <span style="opacity:0.4; font-size:0.85rem;">—</span>
+                                    </c:if>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                        <tr><td colspan="8" style="text-align:center; padding:40px; opacity:0.6;">You have no bookings yet.</td></tr>
+                    </c:otherwise>
+                </c:choose>
+            </tbody>
+        </table>
+    </div>
+    <!-- ─────────────────────────────────────────────────────────────────── -->
+
 </div>
 
 <script>

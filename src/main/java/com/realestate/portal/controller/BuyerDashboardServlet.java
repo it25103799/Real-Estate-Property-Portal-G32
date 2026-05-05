@@ -16,10 +16,10 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
 
 @WebServlet("/buyerDashboard")
 public class BuyerDashboardServlet extends HttpServlet {
@@ -81,6 +81,7 @@ public class BuyerDashboardServlet extends HttpServlet {
                 System.err.println("Error reading properties: " + e.getMessage());
             }
         }
+
         // --- INQUIRY THREAD READER ENGINE (new threaded system) ---
         List<Map<String, String>> myInquiries = new ArrayList<>();
         List<InquiryThread> buyerThreads = new ArrayList<>();
@@ -167,6 +168,61 @@ public class BuyerDashboardServlet extends HttpServlet {
 
         request.setAttribute("myInquiries", myInquiries);
         request.setAttribute("buyerThreads", buyerThreads);
+
+        // ─── BOOKINGS MODULE ─────────────────────────────────────────────────────
+        final double PENALTY_PER_DAY = 100.0;
+        java.time.format.DateTimeFormatter dtf = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        java.time.LocalDate today = java.time.LocalDate.now();
+
+        List<Map<String, String>> myBookings = new ArrayList<>();
+
+        String bookingsPath = getServletContext().getRealPath("/WEB-INF/bookings.txt");
+        java.io.File bookingsFile = new java.io.File(bookingsPath);
+
+        if (bookingsFile.exists()) {
+            try (java.io.BufferedReader bkBr = new java.io.BufferedReader(
+                    new java.io.InputStreamReader(
+                            java.nio.file.Files.newInputStream(bookingsFile.toPath()),
+                            java.nio.charset.StandardCharsets.UTF_8))) {
+                String bkLine;
+                while ((bkLine = bkBr.readLine()) != null) {
+                    if (bkLine.trim().isEmpty()) continue;
+                    if (bkLine.trim().startsWith("#")) continue;
+                    String[] d = bkLine.split("\\|", -1);
+                    if (d.length < 11) continue;
+                    if (!loggedUser.equals(d[4])) continue;  // buyerUsername is index 4
+
+                    Map<String, String> bk = new HashMap<>();
+                    bk.put("bookingId",     d[0]);
+                    bk.put("propertyId",    d[1]);
+                    bk.put("propertyTitle", d[2]);
+                    bk.put("sellerName",    d[3]);
+                    bk.put("buyerName",     d[5]);
+                    bk.put("buyerEmail",    d[6]);
+                    bk.put("buyerPhone",    d[7]);
+                    bk.put("bookingDate",   d[8]);
+                    bk.put("returnDate",    d[9]);
+                    bk.put("status",        d[10]);
+
+                    double penalty = 0.0;
+                    try {
+                        java.time.LocalDate returnDate = java.time.LocalDate.parse(d[9], dtf);
+                        if (!"COMPLETED".equalsIgnoreCase(d[10]) && today.isAfter(returnDate)) {
+                            long daysOverdue = java.time.temporal.ChronoUnit.DAYS.between(returnDate, today);
+                            penalty = daysOverdue * PENALTY_PER_DAY;
+                            bk.put("status", "OVERDUE");
+                        }
+                    } catch (Exception ignored) {}
+                    bk.put("penaltyFee", String.format("%.2f", penalty));
+
+                    myBookings.add(bk);
+                }
+            } catch (Exception e) {
+                System.err.println("Error reading bookings: " + e.getMessage());
+            }
+        }
+        request.setAttribute("myBookings", myBookings);
+        // ─────────────────────────────────────────────────────────────────────────
 
         request.setAttribute("savedProperties", savedProperties);
 

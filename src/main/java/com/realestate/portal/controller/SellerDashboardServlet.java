@@ -13,6 +13,9 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -243,6 +246,117 @@ public class SellerDashboardServlet extends HttpServlet {
             } catch (Exception ignored) {}
         }
 
+        // ─── BOOKINGS MODULE ─────────────────────────────────────────────────────
+        final double PENALTY_PER_DAY = 100.0;
+        java.time.format.DateTimeFormatter dtf = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        java.time.LocalDate today = java.time.LocalDate.now();
+
+        List<Map<String, String>> activeBookings    = new ArrayList<>();
+        List<Map<String, String>> completedBookings = new ArrayList<>();
+        Set<String> reservedPropIds = new HashSet<>();
+
+        String bookingsPath = getServletContext().getRealPath("/WEB-INF/bookings.txt");
+        File bookingsFile   = new File(bookingsPath);
+
+        if (bookingsFile.exists()) {
+            try (BufferedReader bkBr = new BufferedReader(
+                    new InputStreamReader(Files.newInputStream(Paths.get(bookingsFile.getAbsolutePath())),
+                            StandardCharsets.UTF_8))) {
+                String bkLine;
+                while ((bkLine = bkBr.readLine()) != null) {
+                    if (bkLine.trim().isEmpty()) continue;
+                    if (bkLine.trim().startsWith("#")) continue;
+                    String[] d = bkLine.split("\\|", -1);
+                    if (d.length < 11) continue;
+                    if (!loggedUser.equals(d[3])) continue;
+
+                    Map<String, String> bk = new HashMap<>();
+                    bk.put("bookingId",     d[0]);
+                    bk.put("propertyId",    d[1]);
+                    bk.put("propertyTitle", d[2]);
+                    bk.put("sellerName",    d[3]);
+                    bk.put("buyerUsername", d[4]);
+                    bk.put("buyerName",     d[5]);
+                    bk.put("buyerEmail",    d[6]);
+                    bk.put("buyerPhone",    d[7]);
+                    bk.put("bookingDate",   d[8]);
+                    bk.put("returnDate",    d[9]);
+                    bk.put("status",        d[10]);
+
+                    double penalty = 0.0;
+                    try {
+                        java.time.LocalDate returnDate = java.time.LocalDate.parse(d[9], dtf);
+                        if (!"COMPLETED".equalsIgnoreCase(d[10]) && today.isAfter(returnDate)) {
+                            long daysOverdue = java.time.temporal.ChronoUnit.DAYS.between(returnDate, today);
+                            penalty = daysOverdue * PENALTY_PER_DAY;
+                            bk.put("status", "OVERDUE");
+                        }
+                    } catch (Exception ignored) {}
+                    bk.put("penaltyFee", String.format("%.2f", penalty));
+
+                    if ("COMPLETED".equalsIgnoreCase(d[10])) {
+                        completedBookings.add(bk);
+                    } else {
+                        activeBookings.add(bk);
+                        reservedPropIds.add(d[1]);
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("Error reading bookings: " + e.getMessage());
+            }
+        }
+
+        int totalProperties = myProperties.size();
+        int reservedCount   = 0;
+        for (Property p : myProperties) {
+            if (reservedPropIds.contains(p.getId())) reservedCount++;
+        }
+        int availableCount = totalProperties - reservedCount;
+
+        // ── Write availability report to disk ─────────────────────────────────
+        String reportPath = getServletContext().getRealPath("/WEB-INF/availability_report.txt");
+        try (java.io.PrintWriter rw = new java.io.PrintWriter(
+                new java.io.OutputStreamWriter(
+                        new java.io.FileOutputStream(reportPath, false),   // overwrite each time
+                        StandardCharsets.UTF_8))) {
+            rw.println("=========================================================");
+            rw.println("  NESTIQ — PROPERTY AVAILABILITY REPORT");
+            rw.println("  Seller  : " + loggedUser);
+            rw.println("  Date    : " + today.format(dtf));
+            rw.println("=========================================================");
+            rw.println("  Total Listed   : " + totalProperties);
+            rw.println("  Available      : " + availableCount);
+            rw.println("  Reserved       : " + reservedCount);
+            rw.println();
+            rw.println("----- ACTIVE RESERVATIONS (" + activeBookings.size() + ") -----");
+            for (java.util.Map<String, String> bk : activeBookings) {
+                rw.println("  [" + bk.get("status") + "] " + bk.get("propertyTitle")
+                        + " | Buyer: " + bk.get("buyerName")
+                        + " | Return: " + bk.get("returnDate")
+                        + (bk.get("penaltyFee").equals("0.00") ? "" : " | Penalty: $" + bk.get("penaltyFee")));
+            }
+            rw.println();
+            rw.println("----- COMPLETED TRANSACTIONS (" + completedBookings.size() + ") -----");
+            for (java.util.Map<String, String> bk : completedBookings) {
+                rw.println("  " + bk.get("propertyTitle")
+                        + " | Buyer: " + bk.get("buyerName")
+                        + " | Booked: " + bk.get("bookingDate")
+                        + " | Returned: " + bk.get("returnDate"));
+            }
+            rw.println("=========================================================");
+        } catch (Exception e) {
+            System.err.println("Could not write availability report: " + e.getMessage());
+        }
+        // ─────────────────────────────────────────────────────────────────────
+
+        request.setAttribute("totalProperties",   totalProperties);
+        request.setAttribute("reservedCount",      reservedCount);
+        request.setAttribute("availableCount",     availableCount);
+        request.setAttribute("activeBookings",     activeBookings);
+        request.setAttribute("completedBookings",  completedBookings);
+        // ─────────────────────────────────────────────────────────────────────────
+
+
         // ── ANNOUNCEMENTS as Notifications (unread only) ─────────────────
         Set<String> readAnnIds = loadReadAnnouncementIds(loggedUser);
         File annFile = new File(getServletContext().getRealPath("/WEB-INF/announcements.txt"));
@@ -280,6 +394,7 @@ public class SellerDashboardServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
     }
+
 
     // ── Load set of announcement IDs already read by this user ────────
     private Set<String> loadReadAnnouncementIds(String username) {

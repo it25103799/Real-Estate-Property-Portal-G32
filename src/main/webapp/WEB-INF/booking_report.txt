@@ -1,0 +1,15 @@
+=========================================================
+  NEW BOOKING — 2026-05-04
+=========================================================
+  Booking ID    : BK_1777837015833
+  Property      : Kiribathgoda new building  [2a2b0008]
+  Seller        : Dinesh
+  Buyer Account : Sadun Priya
+  Buyer Name    : Sadun Priya
+  Buyer Email   : priya564@gmail.com
+  Buyer Phone   : 0786324531
+  Booked On     : 2026-05-04
+  Return Date   : 2026-05-06
+  Status        : RESERVED
+  Penalty Rate  : $100.00 / overdue day
+

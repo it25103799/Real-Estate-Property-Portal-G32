@@ -406,6 +406,127 @@
             </c:choose>
         </div>
     </div>
+
+    <!-- ── ACTIVE BOOKINGS ──────────────────────────────────────────────── -->
+    <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h3 class="card-title" style="margin:0;">📅 Active Bookings</h3>
+            <span style="font-size:0.85rem; opacity:0.65;">${reservedCount} property(s) currently reserved</span>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Booking ID</th>
+                    <th>Property</th>
+                    <th>Buyer</th>
+                    <th>Contact</th>
+                    <th>Booked On</th>
+                    <th>Return Date</th>
+                    <th>Status</th>
+                    <th>Penalty</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <c:choose>
+                    <c:when test="${not empty activeBookings}">
+                        <c:forEach var="bk" items="${activeBookings}">
+                            <tr>
+                                <td style="font-size:0.8rem; opacity:0.7;">${bk.bookingId}</td>
+                                <td>
+                                    <div style="font-weight:600;">${bk.propertyTitle}</div>
+                                    <div style="font-size:0.78rem; opacity:0.6;">ID: ${bk.propertyId}</div>
+                                </td>
+                                <td>
+                                    <div style="font-weight:500;">${bk.buyerName}</div>
+                                    <div style="font-size:0.78rem; opacity:0.65;">${bk.buyerUsername}</div>
+                                </td>
+                                <td>
+                                    <div style="font-size:0.85rem;">${bk.buyerEmail}</div>
+                                    <div style="font-size:0.85rem; opacity:0.7;">${bk.buyerPhone}</div>
+                                </td>
+                                <td>${bk.bookingDate}</td>
+                                <td>${bk.returnDate}</td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${bk.status == 'OVERDUE'}">
+                                            <span class="status-badge" style="background:rgba(224,40,40,0.12);color:#e02828;">&#9888; Overdue</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span class="status-badge" style="background:rgba(26,86,219,0.1);color:var(--accent);">Reserved</span>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${bk.penaltyFee != '0.00'}">
+                                            <span style="color:#e02828; font-weight:600;">$${bk.penaltyFee}</span>
+                                        </c:when>
+                                        <c:otherwise><span style="opacity:0.4;">&#8212;</span></c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td>
+                                    <form action="completeBooking" method="post" style="margin:0;" onsubmit="return confirm('Mark this booking as completed?');">
+                                        <input type="hidden" name="bookingId" value="${bk.bookingId}">
+                                        <button type="submit" class="btn" style="padding:7px 14px; font-size:0.82rem; background:#0d9e6e;">Complete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                        <tr><td colspan="9" style="text-align:center; padding:36px; opacity:0.6;">No active bookings at the moment.</td></tr>
+                    </c:otherwise>
+                </c:choose>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ── COMPLETED BOOKINGS ───────────────────────────────────────────── -->
+    <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h3 class="card-title" style="margin:0;">Completed Transactions</h3>
+            <span style="font-size:0.85rem; opacity:0.65;">${completedBookings.size()} completed</span>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Booking ID</th>
+                    <th>Property</th>
+                    <th>Buyer</th>
+                    <th>Booked On</th>
+                    <th>Returned On</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <c:choose>
+                    <c:when test="${not empty completedBookings}">
+                        <c:forEach var="bk" items="${completedBookings}">
+                            <tr>
+                                <td style="font-size:0.8rem; opacity:0.7;">${bk.bookingId}</td>
+                                <td>
+                                    <div style="font-weight:600;">${bk.propertyTitle}</div>
+                                    <div style="font-size:0.78rem; opacity:0.6;">ID: ${bk.propertyId}</div>
+                                </td>
+                                <td>
+                                    <div style="font-weight:500;">${bk.buyerName}</div>
+                                    <div style="font-size:0.78rem; opacity:0.65;">${bk.buyerEmail}</div>
+                                </td>
+                                <td>${bk.bookingDate}</td>
+                                <td>${bk.returnDate}</td>
+                                <td><span class="status-badge" style="background:rgba(13,158,110,0.1);color:#0d9e6e;">Completed</span></td>
+                            </tr>
+                        </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                        <tr><td colspan="6" style="text-align:center; padding:36px; opacity:0.6;">No completed transactions yet.</td></tr>
+                    </c:otherwise>
+                </c:choose>
+            </tbody>
+        </table>
+    </div>
+
 </div>
 
 <div class="modal-overlay" id="editModal">
