@@ -449,6 +449,39 @@
                 ✅ Booking cancelled successfully! The seller has been notified.
             </div>
         </c:if>
+        <c:if test="${param.booking == 'success'}">
+            <div style="background: rgba(13,158,110,0.1); border: 1px solid #0d9e6e; color: #0d9e6e; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-weight: 600;">
+                ✅ Booking confirmed successfully! The seller has been notified.
+            </div>
+        </c:if>
+        <c:if test="${param.booking == 'duplicate'}">
+            <div style="background: rgba(255,165,0,0.1); border: 1px solid #ffa500; color: #ff8c00; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-weight: 600;">
+                ⚠️ You already have an active booking for this property.
+            </div>
+        </c:if>
+        <c:if test="${param.booking == 'unavailable'}">
+            <div style="background: rgba(224,40,40,0.1); border: 1px solid #e02828; color: #e02828; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-weight: 600;">
+                ❌ This property is currently booked and not available.
+            </div>
+        </c:if>
+        
+        <!-- ENHANCEMENT: Booking Statistics -->
+        <c:if test="${not empty myBookings || not empty bookingHistory}">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px;">
+            <div style="background: rgba(26,86,219,0.08); padding: 16px; border-radius: 8px; text-align: center; border: 1px solid rgba(26,86,219,0.2);">
+                <div style="font-size: 1.8rem; font-weight: 700; color: var(--accent);">${totalBookings}</div>
+                <div style="font-size: 0.82rem; color: var(--ink3); margin-top: 4px;">Total Bookings</div>
+            </div>
+            <div style="background: rgba(13,158,110,0.08); padding: 16px; border-radius: 8px; text-align: center; border: 1px solid rgba(13,158,110,0.2);">
+                <div style="font-size: 1.8rem; font-weight: 700; color: #0d9e6e;">${activeBookings}</div>
+                <div style="font-size: 0.82rem; color: var(--ink3); margin-top: 4px;">Active</div>
+            </div>
+            <div style="background: rgba(100,100,100,0.08); padding: 16px; border-radius: 8px; text-align: center; border: 1px solid rgba(100,100,100,0.2);">
+                <div style="font-size: 1.8rem; font-weight: 700; color: #666;">${completedBookings}</div>
+                <div style="font-size: 0.82rem; color: var(--ink3); margin-top: 4px;">Completed</div>
+            </div>
+        </div>
+        </c:if>
         
         <table>
             <thead>

@@ -118,3 +118,48 @@
   Status        : RESERVED
   Penalty Rate  : $100.00 / overdue day
 
+=========================================================
+  NEW BOOKING — 2026-05-06
+=========================================================
+  Booking ID    : BK_1778047428097
+  Property      : Ambewela coolspot  [4c9fd0b9]
+  Seller        : Kavindi
+  Buyer Account : Bhashi Navod
+  Buyer Name    : Bhashi Navod
+  Buyer Email   : bhashithanavod800@gmail.com
+  Buyer Phone   : 0786532343
+  Booked On     : 2026-05-06
+  Return Date   : 2026-05-08
+  Status        : RESERVED
+  Penalty Rate  : $100.00 / overdue day
+
+=========================================================
+  NEW BOOKING — 2026-05-06
+=========================================================
+  Booking ID    : BK_1778048375722
+  Property      : Ambewela coolspot  [4c9fd0b9]
+  Seller        : Kavindi
+  Buyer Account : Bhashi Navod
+  Buyer Name    : Bhashi Navod
+  Buyer Email   : bhashithanavod800@gmail.com
+  Buyer Phone   : 0786324531
+  Booked On     : 2026-05-06
+  Return Date   : 2026-05-07
+  Status        : RESERVED
+  Penalty Rate  : $100.00 / overdue day
+
+=========================================================
+  NEW BOOKING — 2026-05-06
+=========================================================
+  Booking ID    : BK_1778048554096
+  Property      : Galle New Villa  [699613a8]
+  Seller        : De Silva
+  Buyer Account : Bhashi Navod
+  Buyer Name    : Bhashi Navod
+  Buyer Email   : bhashithanavod800@gmail.com
+  Buyer Phone   : 0786324531
+  Booked On     : 2026-05-06
+  Return Date   : 2026-05-07
+  Status        : RESERVED
+  Penalty Rate  : $100.00 / overdue day
+

@@ -175,6 +175,7 @@ public class BuyerDashboardServlet extends HttpServlet {
         java.time.LocalDate today = java.time.LocalDate.now();
 
         List<Map<String, String>> myBookings = new ArrayList<>();
+        List<Map<String, String>> bookingHistory = new ArrayList<>(); // ENHANCEMENT 3: Booking history
 
         String bookingsPath = getServletContext().getRealPath("/WEB-INF/bookings.txt");
         java.io.File bookingsFile = new java.io.File(bookingsPath);
@@ -216,12 +217,22 @@ public class BuyerDashboardServlet extends HttpServlet {
                     bk.put("penaltyFee", String.format("%.2f", penalty));
 
                     myBookings.add(bk);
+                    
+                    // ENHANCEMENT 3: Add completed bookings to history
+                    if ("COMPLETED".equalsIgnoreCase(d[10])) {
+                        bookingHistory.add(bk);
+                    }
                 }
             } catch (Exception e) {
                 System.err.println("Error reading bookings: " + e.getMessage());
             }
         }
         request.setAttribute("myBookings", myBookings);
+        request.setAttribute("bookingHistory", bookingHistory); // ENHANCEMENT 3
+        // ENHANCEMENT 3: Add booking statistics
+        request.setAttribute("totalBookings", myBookings.size() + bookingHistory.size());
+        request.setAttribute("activeBookings", myBookings.size());
+        request.setAttribute("completedBookings", bookingHistory.size());
         // ─────────────────────────────────────────────────────────────────────────
 
         request.setAttribute("savedProperties", savedProperties);
