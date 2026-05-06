@@ -1,13 +1,19 @@
 =========================================================
   NESTIQ — PROPERTY AVAILABILITY REPORT
-  Seller  : Kavindi
+  Seller  : De Silva
   Date    : 2026-05-06
 =========================================================
-  Total Listed   : 3
-  Available      : 3
-  Reserved       : 0
+  Total Listed   : 11
+  Available      : 10
+  Reserved       : 1
 
------ ACTIVE RESERVATIONS (0) -----
+----- ACTIVE RESERVATIONS (1) -----
+  [RESERVED] Kaduwela Beach view | Buyer: Bhashi Navod | Return: 2026-05-07
 
------ COMPLETED TRANSACTIONS (0) -----
+----- COMPLETED TRANSACTIONS (5) -----
+  Koswatta new Building | Buyer: Bhashi Navod | Booked: 2026-05-05 | Returned: 2026-05-07
+  Kaduwela Beach view | Buyer: Ralph Will | Booked: 2026-05-05 | Returned: 2026-05-08
+  Galle New Villa | Buyer: Bhashi Navod | Booked: 2026-05-05 | Returned: 2026-05-09
+  Koswatta new Building | Buyer: Ravindu Lohan | Booked: 2026-05-05 | Returned: 2026-05-09
+  Kurunegala New Building | Buyer: Tommy Silva | Booked: 2026-05-06 | Returned: 2026-05-12
 =========================================================

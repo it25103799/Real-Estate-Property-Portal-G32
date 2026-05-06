@@ -178,3 +178,18 @@
   Status        : RESERVED
   Penalty Rate  : $95000.00 / overdue day (= daily rental fee)
 
+=========================================================
+  NEW BOOKING — 2026-05-06
+=========================================================
+  Booking ID    : BK_1778086294675
+  Property      : Kurunegala New Building  [PROP_1772952134817]
+  Seller        : De Silva
+  Buyer Account : Tommy Silva
+  Buyer Name    : Tommy Silva
+  Buyer Email   : tommy453@gmail.com
+  Buyer Phone   : 0786547809
+  Booked On     : 2026-05-06
+  Return Date   : 2026-05-12
+  Status        : RESERVED
+  Penalty Rate  : $3500.00 / overdue day (= daily rental fee)
+

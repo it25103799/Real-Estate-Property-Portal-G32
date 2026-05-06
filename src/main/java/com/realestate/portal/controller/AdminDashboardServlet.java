@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import com.realestate.portal.model.Property;
 import com.realestate.portal.model.PublicReview;
+import com.realestate.portal.model.Reservation;
 import com.realestate.portal.model.Review;
 import com.realestate.portal.model.User;
 import com.realestate.portal.model.VerifiedReview;
@@ -128,6 +129,48 @@ public class AdminDashboardServlet extends HttpServlet {
         }
         request.setAttribute("announcements", allAnnouncements);
 
+        // ─── Load all bookings ───
+        List<String[]> allBookings = new ArrayList<>();
+        String bookingsFilePath = getServletContext().getRealPath("/WEB-INF/bookings.txt");
+        File bookingsFile = new File(bookingsFilePath);
+        
+        if (bookingsFile.exists()) {
+            try (BufferedReader br = new BufferedReader(new FileReader(bookingsFile))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    if (line.trim().isEmpty() || line.startsWith("#")) continue;
+                    String[] parts = line.split("\\|");
+                    if (parts.length >= 11) {
+                        allBookings.add(parts);
+                    }
+                }
+            } catch (IOException e) {
+                System.out.println("Error reading bookings.txt: " + e.getMessage());
+            }
+        }
+        request.setAttribute("allBookings", allBookings);
+
+        // ─── Load all sold properties ──
+        List<String[]> allSoldProperties = new ArrayList<>();
+        String soldPropertiesFilePath = getServletContext().getRealPath("/WEB-INF/sold_properties.txt");
+        File soldFile = new File(soldPropertiesFilePath);
+        
+        if (soldFile.exists()) {
+            try (BufferedReader br = new BufferedReader(new FileReader(soldFile))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    if (line.trim().isEmpty() || line.startsWith("#")) continue;
+                    String[] parts = line.split("\\|");
+                    if (parts.length >= 5) {
+                        allSoldProperties.add(parts);
+                    }
+                }
+            } catch (IOException e) {
+                System.out.println("Error reading sold_properties.txt: " + e.getMessage());
+            }
+        }
+        request.setAttribute("allSoldProperties", allSoldProperties);
+
         // ─── Sort: Admins always first, then Sellers, then Buyers ───
         allUsers.sort((a, b) -> {
             int rankA = roleRank(a.getRole());
@@ -135,7 +178,7 @@ public class AdminDashboardServlet extends HttpServlet {
             return Integer.compare(rankA, rankB);
         });
 
-        // ─── Compute statistics ───
+        // ─── Compute statistics ──
         int totalUsers          = allUsers.size();
         int totalBuyers         = (int) allUsers.stream().filter(u -> "BUYER".equalsIgnoreCase(u.getRole())).count();
         int totalSellers        = (int) allUsers.stream().filter(u -> "SELLER".equalsIgnoreCase(u.getRole())).count();
@@ -143,11 +186,29 @@ public class AdminDashboardServlet extends HttpServlet {
         int totalProperties     = allProperties.size();
         double totalPropertyValue = allProperties.stream().mapToDouble(Property::getPrice).sum();
         int totalReviews        = allReviews.size();
+        
+        // Booking statistics
+        int totalBookings       = allBookings.size();
+        int completedBookings   = (int) allBookings.stream().filter(b -> b[10].equals("COMPLETED")).count();
+        int reservedBookings    = (int) allBookings.stream().filter(b -> b[10].equals("RESERVED")).count();
+        
+        // Sold properties count - count from properties.txt where status is "Sold"
+        int totalSoldProperties = (int) allProperties.stream().filter(p -> "Sold".equalsIgnoreCase(p.getStatus())).count();
+        
+        // Calculate total earnings from sold properties across the platform
+        double totalEarnings = 0.0;
+        for (Property prop : allProperties) {
+            if ("Sold".equalsIgnoreCase(prop.getStatus())) {
+                totalEarnings += prop.getPrice();
+            }
+        }
 
         // ─── Set JSP attributes ───
         request.setAttribute("allUsers",           allUsers);
         request.setAttribute("allProperties",      allProperties);
         request.setAttribute("allReviews",         allReviews);
+        request.setAttribute("allBookings",        allBookings);
+        request.setAttribute("allSoldProperties",  allSoldProperties);
         request.setAttribute("totalUsers",         totalUsers);
         request.setAttribute("totalBuyers",        totalBuyers);
         request.setAttribute("totalSellers",       totalSellers);
@@ -155,6 +216,11 @@ public class AdminDashboardServlet extends HttpServlet {
         request.setAttribute("totalProperties",    totalProperties);
         request.setAttribute("totalPropertyValue", totalPropertyValue);
         request.setAttribute("totalReviews",       totalReviews);
+        request.setAttribute("totalBookings",      totalBookings);
+        request.setAttribute("completedBookings",  completedBookings);
+        request.setAttribute("reservedBookings",   reservedBookings);
+        request.setAttribute("totalSoldProperties", totalSoldProperties);
+        request.setAttribute("totalEarnings",      totalEarnings);
 
         request.getRequestDispatcher("/admin_dashboard.jsp").forward(request, response);
     }

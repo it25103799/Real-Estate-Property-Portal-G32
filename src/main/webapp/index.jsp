@@ -2511,8 +2511,25 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
             </c:if>
 
             if (recentlySoldData.length > 0) {
-                // Get the most recent sold property (last in array = most recent)
-                const sp = recentlySoldData[0]; // Already sorted in PropertyServlet
+                // Try to find a valid sold property (exists in current listings)
+                // Start with the most recent, fallback to second most recent if needed
+                let sp = null;
+                for (let i = 0; i < recentlySoldData.length; i++) {
+                    const candidate = recentlySoldData[i];
+                    // Check if this property still exists in the current property list
+                    const exists = properties.some(p => p.id === candidate.propertyId);
+                    if (exists) {
+                        sp = candidate;
+                        break;
+                    }
+                    // If not found, continue to next most recent (fallback logic)
+                }
+                
+                // If no valid property found in the list, use the first one anyway (might have been deleted from properties.txt but still in sold_properties.txt)
+                if (!sp) {
+                    sp = recentlySoldData[0];
+                }
+                
                 const card = document.getElementById('just-sold-card');
                 
                 // Format price

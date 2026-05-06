@@ -353,6 +353,15 @@
                 </div>
             </div>
 
+            <%-- Total Earnings --%>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: rgba(16,185,129,0.12);">💰</div>
+                <div class="stat-info">
+                    <span class="stat-value" style="font-size: 1.4rem;">$<fmt:formatNumber value="${not empty totalEarnings ? totalEarnings : 0}" pattern="#,##0.00"/></span>
+                    <span class="stat-label">Total Earnings</span>
+                </div>
+            </div>
+
         </div>
         <!-- end .seller-stats-panel -->
 

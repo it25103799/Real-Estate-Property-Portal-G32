@@ -359,6 +359,16 @@ public class SellerDashboardServlet extends HttpServlet {
             }
         }
 
+        // Calculate total earnings from sold properties
+        double totalEarnings = 0.0;
+        
+        // Method 1: From properties with "Sold" status in properties.txt
+        for (Property p : myProperties) {
+            if ("Sold".equals(p.getStatus())) {
+                totalEarnings += p.getPrice();
+            }
+        }
+
         // ── Write availability report to disk ─────────────────────────────────
         String reportPath = getServletContext().getRealPath("/WEB-INF/availability_report.txt");
         try (java.io.PrintWriter rw = new java.io.PrintWriter(
@@ -401,6 +411,7 @@ public class SellerDashboardServlet extends HttpServlet {
         request.setAttribute("soldCount",          soldCount);
         request.setAttribute("activeBookings",     activeBookings);
         request.setAttribute("completedBookings",  completedBookings);
+        request.setAttribute("totalEarnings",      totalEarnings);
         // ─────────────────────────────────────────────────────────────────────────
 
 

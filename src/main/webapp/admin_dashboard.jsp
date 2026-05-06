@@ -6,741 +6,1065 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin Dashboard - NESTIQ</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         :root {
-            --bg: #ffffff; --bg2: #f7f8fa; --ink: #0f1117; --line: #e8eaee;
-            --accent: #1a56db; --font-sans: 'Outfit', sans-serif; --r: 10px;
-            --green: #0d9e6e; --red: #e02828; --amber: #d97706; --purple: #7c3aed;
+            --bg: #ffffff; --bg2: #f4f6fb; --bg3: #eef1f8; --ink: #0a0e1a; --line: #e2e6f0;
+            --accent: #2563eb; --accent2: #1d4ed8; --font-sans: 'Outfit', sans-serif;
+            --font-mono: 'DM Mono', monospace; --r: 12px;
+            --green: #059669; --green-bg: #ecfdf5;
+            --red: #dc2626; --red-bg: #fef2f2;
+            --amber: #d97706; --amber-bg: #fffbeb;
+            --purple: #7c3aed; --purple-bg: #f5f3ff;
+            --blue-bg: #eff6ff;
+            --shadow: 0 2px 12px rgba(10,14,26,0.06);
+            --shadow-lg: 0 8px 32px rgba(10,14,26,0.10);
         }
         [data-theme="dark"] {
-            --bg: #0f1117; --bg2: #1a1d27; --ink: #ffffff; --line: #232736;
+            --bg: #0d1117; --bg2: #161b27; --bg3: #1e2436; --ink: #e8ecf4; --line: #252d42;
+            --shadow: 0 2px 12px rgba(0,0,0,0.3);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.4);
+            --blue-bg: rgba(37,99,235,0.12);
+            --green-bg: rgba(5,150,105,0.12);
+            --red-bg: rgba(220,38,38,0.12);
+            --amber-bg: rgba(217,119,6,0.12);
+            --purple-bg: rgba(124,58,237,0.12);
         }
-        * { box-sizing: border-box; }
-        body { font-family: var(--font-sans); background: var(--bg2); color: var(--ink); margin: 0; padding: 40px; transition: background 0.3s, color 0.3s; }
-        .dashboard-container { max-width: 1400px; margin: 0 auto; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* ── HEADER ── */
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; flex-wrap: wrap; gap: 16px; }
-        .header h1 { margin: 0; font-size: 2.2rem; font-weight: 700; }
-        .header-actions { display: flex; gap: 15px; align-items: center; flex-wrap: wrap; }
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg2);
+            color: var(--ink);
+            min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
+        }
 
-        /* ── NAV TABS ── */
-        .nav-tabs { display: flex; gap: 4px; margin-bottom: 32px; background: var(--bg); border: 1px solid var(--line); border-radius: var(--r); padding: 6px; width: fit-content; }
-        .nav-tab { padding: 9px 20px; border-radius: 7px; border: none; background: transparent; color: var(--ink); opacity: 0.6; font-family: var(--font-sans); font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
-        .nav-tab:hover { opacity: 1; background: var(--bg2); }
-        .nav-tab.active { background: var(--accent); color: white; opacity: 1; }
+        /* ══ LAYOUT ══ */
+        .layout { display: flex; min-height: 100vh; }
 
-        /* ── PANELS ── */
+        /* ══ SIDEBAR ══ */
+        .sidebar {
+            width: 260px; min-height: 100vh; background: var(--bg);
+            border-right: 1px solid var(--line);
+            display: flex; flex-direction: column;
+            padding: 0;
+            position: sticky; top: 0; height: 100vh; overflow-y: auto;
+            flex-shrink: 0;
+            transition: background 0.3s;
+        }
+        .sidebar-logo {
+            padding: 28px 24px 20px;
+            border-bottom: 1px solid var(--line);
+        }
+        .sidebar-logo .logo-text {
+            font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; color: var(--accent);
+        }
+        .sidebar-logo .logo-sub {
+            font-size: 0.75rem; opacity: 0.5; margin-top: 2px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .sidebar-nav { padding: 16px 12px; flex: 1; }
+        .sidebar-section-label {
+            font-size: 0.68rem; font-weight: 700; opacity: 0.4; text-transform: uppercase;
+            letter-spacing: 1.2px; padding: 8px 12px 6px;
+        }
+        .nav-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 14px; border-radius: 9px;
+            border: none; background: transparent; color: var(--ink); opacity: 0.65;
+            font-family: var(--font-sans); font-size: 0.9rem; font-weight: 600;
+            cursor: pointer; transition: all 0.18s; width: 100%; text-align: left;
+            margin-bottom: 2px; white-space: nowrap;
+        }
+        .nav-item:hover { opacity: 1; background: var(--bg2); }
+        .nav-item.active { background: var(--blue-bg); color: var(--accent); opacity: 1; }
+        .nav-item .nav-icon { font-size: 1rem; width: 20px; text-align: center; }
+        .nav-item .nav-badge {
+            margin-left: auto; background: var(--accent); color: white;
+            font-size: 0.68rem; font-weight: 700; padding: 2px 7px;
+            border-radius: 99px; font-family: var(--font-mono);
+        }
+        .sidebar-footer {
+            padding: 16px 12px 20px;
+            border-top: 1px solid var(--line);
+        }
+        .admin-badge-pill {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 12px; background: var(--amber-bg);
+            border-radius: 9px; margin-bottom: 10px;
+        }
+        .admin-badge-pill .name { font-size: 0.85rem; font-weight: 700; }
+        .admin-badge-pill .role { font-size: 0.73rem; opacity: 0.6; }
+
+        /* ══ MAIN ══ */
+        .main { flex: 1; overflow: hidden; min-width: 0; }
+        .topbar {
+            background: var(--bg); border-bottom: 1px solid var(--line);
+            padding: 16px 32px; display: flex; align-items: center;
+            justify-content: space-between; gap: 16px; flex-wrap: wrap;
+            position: sticky; top: 0; z-index: 50;
+            transition: background 0.3s;
+        }
+        .topbar-title { font-size: 1.05rem; font-weight: 700; }
+        .topbar-actions { display: flex; gap: 10px; align-items: center; }
+
+        .content { padding: 28px 32px; }
+
+        /* ══ STAT CARDS ══ */
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px; margin-bottom: 28px;
+        }
+        .stat-card {
+            background: var(--bg); border: 1px solid var(--line);
+            border-radius: var(--r); padding: 20px 22px;
+            box-shadow: var(--shadow); transition: all 0.2s; cursor: default;
+            position: relative; overflow: hidden;
+        }
+        .stat-card::before {
+            content: ''; position: absolute; top: 0; left: 0;
+            width: 4px; height: 100%; border-radius: var(--r) 0 0 var(--r);
+        }
+        .stat-card.blue::before  { background: var(--accent); }
+        .stat-card.green::before { background: var(--green); }
+        .stat-card.amber::before { background: var(--amber); }
+        .stat-card.purple::before{ background: var(--purple); }
+        .stat-card.red::before   { background: var(--red); }
+        .stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+        .stat-icon { font-size: 1.3rem; margin-bottom: 10px; }
+        .stat-label { font-size: 0.75rem; opacity: 0.55; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+        .stat-value { font-size: 2rem; font-weight: 800; line-height: 1; letter-spacing: -1px; }
+        .stat-card.blue .stat-value  { color: var(--accent); }
+        .stat-card.green .stat-value { color: var(--green); }
+        .stat-card.amber .stat-value { color: var(--amber); }
+        .stat-card.purple .stat-value{ color: var(--purple); }
+        .stat-card.red .stat-value   { color: var(--red); }
+        .stat-sub { font-size: 0.76rem; opacity: 0.5; margin-top: 6px; }
+
+        /* ══ PANELS ══ */
         .panel { display: none; }
         .panel.active { display: block; }
 
-        /* ── STAT CARDS ── */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 20px; margin-bottom: 40px; }
-        .stat-card { background: var(--bg); border: 1px solid var(--line); border-radius: var(--r); padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,.04); transition: all 0.3s; }
-        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,.08); }
-        .stat-label { font-size: 0.82rem; color: var(--ink); opacity: 0.6; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
-        .stat-value { font-size: 2.4rem; font-weight: 700; color: var(--accent); line-height: 1; }
-        .stat-sub { font-size: 0.8rem; color: var(--ink); opacity: 0.6; margin-top: 8px; }
+        /* ══ CARDS ══ */
+        .card {
+            background: var(--bg); border: 1px solid var(--line);
+            border-radius: var(--r); padding: 24px;
+            margin-bottom: 20px; box-shadow: var(--shadow);
+        }
+        .card-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 12px; }
 
-        /* ── CARDS ── */
-        .card { background: var(--bg); border: 1px solid var(--line); border-radius: var(--r); padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 16px rgba(0,0,0,.04); }
-        .card-title { font-size: 1.15rem; font-weight: 600; margin-bottom: 20px; margin-top: 0; }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
-
-        /* ── TABLE ── */
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
-        th, td { padding: 13px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; }
-        th { font-weight: 600; color: var(--accent); background: var(--bg2); position: sticky; top: 0; z-index: 3; }
+        /* ══ TABLE ══ */
+        .table-wrap { overflow-x: auto; overflow-y: auto; max-height: 500px; border-radius: 8px; border: 1px solid var(--line); }
+        table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+        th { padding: 11px 14px; border-bottom: 2px solid var(--line); font-weight: 700; color: var(--accent); background: var(--bg3); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.4px; position: sticky; top: 0; z-index: 3; white-space: nowrap; }
+        td { padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
         tr:hover td { background: var(--bg2); }
-        .truncate { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .truncate { max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        /* ── BUTTONS ── */
-        .btn { background: var(--accent); color: white; padding: 10px 20px; border: none; border-radius: 6px; font-weight: 600; font-family: var(--font-sans); cursor: pointer; transition: 0.2s; font-size: 0.9rem; }
-        .btn:hover { opacity: 0.88; }
-        .btn-sm { padding: 5px 12px; font-size: 0.82rem; }
-        .btn-danger { background: var(--red); }
-        .btn-danger:hover { background: #c01f1f; }
-        .btn-amber { background: var(--amber); }
-        .btn-amber:hover { background: #b45309; }
-        .btn-green { background: var(--green); }
-        .btn-green:hover { background: #087a55; }
-        .btn-purple { background: var(--purple); }
-        .btn-purple:hover { background: #5b21b6; }
-        .btn-ghost { background: none; border: 1.5px solid var(--line); color: var(--ink); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; font-family: var(--font-sans); }
+        /* ══ BUTTONS ══ */
+        .btn { display: inline-flex; align-items: center; gap: 6px; background: var(--accent); color: white; padding: 9px 18px; border: none; border-radius: 8px; font-weight: 700; font-family: var(--font-sans); cursor: pointer; transition: 0.18s; font-size: 0.875rem; text-decoration: none; }
+        .btn:hover { background: var(--accent2); }
+        .btn-sm { padding: 5px 12px; font-size: 0.8rem; border-radius: 6px; }
+        .btn-danger { background: var(--red); } .btn-danger:hover { background: #b91c1c; }
+        .btn-amber  { background: var(--amber); } .btn-amber:hover  { background: #b45309; }
+        .btn-green  { background: var(--green); } .btn-green:hover  { background: #047857; }
+        .btn-purple { background: var(--purple); } .btn-purple:hover { background: #5b21b6; }
+        .btn-ghost { background: none; border: 1.5px solid var(--line); color: var(--ink); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; font-family: var(--font-sans); font-size: 0.875rem; }
         .btn-ghost:hover { border-color: var(--ink); background: var(--bg2); }
 
-        /* ── BADGES ── */
-        .badge { display: inline-block; padding: 4px 12px; border-radius: 99px; font-size: 0.73rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        .badge-buyer  { background: rgba(26, 86, 219, 0.1);  color: var(--accent); }
-        .badge-seller { background: rgba(13, 158, 110, 0.1); color: var(--green);  }
-        .badge-admin  { background: rgba(217, 119, 6, 0.1);  color: var(--amber);  }
-        .badge-sale   { background: rgba(13, 158, 110, 0.1); color: var(--green);  }
-        .badge-rent   { background: rgba(26, 86, 219, 0.1);  color: var(--accent); }
-        .badge-verified { background: rgba(124, 58, 237, 0.1); color: var(--purple); }
-        .badge-public   { background: rgba(15, 17, 23, 0.08);  color: var(--ink); opacity: 0.7; }
+        /* ══ BADGES ══ */
+        .badge { display: inline-block; padding: 3px 10px; border-radius: 99px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
+        .badge-buyer    { background: var(--blue-bg);   color: var(--accent); }
+        .badge-seller   { background: var(--green-bg);  color: var(--green); }
+        .badge-admin    { background: var(--amber-bg);  color: var(--amber); }
+        .badge-sale     { background: var(--green-bg);  color: var(--green); }
+        .badge-rent     { background: var(--blue-bg);   color: var(--accent); }
+        .badge-verified { background: var(--purple-bg); color: var(--purple); }
+        .badge-public   { background: var(--bg3); color: var(--ink); opacity:0.7; }
+        .badge-completed{ background: var(--green-bg);  color: var(--green); }
+        .badge-reserved { background: var(--blue-bg);   color: var(--accent); }
+        .badge-cancelled{ background: var(--red-bg);    color: var(--red); }
+        .badge-sold     { background: var(--amber-bg);  color: var(--amber); }
 
-        /* ── STAR RATING ── */
+        /* ══ SEARCH ══ */
+        .search-box { padding: 8px 14px; border: 1.5px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); font-family: var(--font-sans); font-size: 0.875rem; min-width: 220px; transition: border-color 0.2s; }
+        .search-box:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+
+        /* ══ THEME SWITCH ══ */
+        .theme-switch { position: relative; width: 50px; height: 28px; background-color: var(--line); border-radius: 30px; cursor: pointer; display: flex; align-items: center; padding: 4px; transition: background-color 0.4s ease; }
+        .theme-switch-thumb { width: 20px; height: 20px; background-color: white; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+        [data-theme="dark"] .theme-switch { background-color: var(--accent); }
+        [data-theme="dark"] .theme-switch-thumb { transform: translateX(22px); }
+
+        /* ══ FLASH ══ */
+        .flash-message { padding: 14px 18px; margin-bottom: 20px; border-radius: var(--r); font-weight: 600; border: 1px solid transparent; display: flex; justify-content: space-between; align-items: center; }
+        .flash-success { background: var(--green-bg); color: var(--green); border-color: var(--green); }
+        .flash-error   { background: var(--red-bg);   color: var(--red);   border-color: var(--red); }
+
+        /* ══ ROLE SELECT ══ */
+        .role-select { padding: 5px 10px; border: 1.5px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); font-family: var(--font-sans); font-size: 0.8rem; cursor: pointer; }
+
+        /* ══ CHARTS ══ */
+        .charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 20px; }
+        .chart-card { background: var(--bg); border: 1px solid var(--line); border-radius: var(--r); padding: 24px; box-shadow: var(--shadow); }
+        .chart-card canvas { max-height: 240px; }
+        .chart-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 6px; }
+
+        /* ══ STARS ══ */
         .stars { color: #f59e0b; letter-spacing: 1px; }
 
-        /* ── SEARCH ── */
-        .search-box { padding: 9px 14px; border: 1.5px solid var(--line); border-radius: var(--r); background: var(--bg); color: var(--ink); font-family: var(--font-sans); font-size: 0.9rem; min-width: 240px; }
-        .search-box:focus { border-color: var(--accent); outline: none; }
+        /* ══ ADMIN ROW ══ */
+        tr.admin-row { background: var(--amber-bg) !important; }
+        tr.admin-row td { border-bottom: 1px solid rgba(217,119,6,0.2) !important; font-weight: 600; }
+        .pin-icon { font-size: 0.65rem; opacity: 0.7; margin-left: 5px; }
 
-        /* ── THEME SWITCH ── */
-        .theme-switch { position: relative; width: 54px; height: 30px; background-color: var(--line); border-radius: 30px; cursor: pointer; display: flex; align-items: center; padding: 4px; transition: background-color 0.4s ease; }
-        .theme-switch-thumb { width: 22px; height: 22px; background-color: white; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
-        [data-theme="dark"] .theme-switch { background-color: var(--accent); }
-        [data-theme="dark"] .theme-switch-thumb { transform: translateX(24px); background-color: var(--bg2); }
+        /* ══ EMPTY STATE ══ */
+        .empty-state { text-align: center; padding: 48px; opacity: 0.4; font-size: 0.9rem; }
 
-        /* ── FLASH ── */
-        .flash-message { padding: 15px 20px; margin-bottom: 24px; border-radius: var(--r); font-weight: 600; border: 1px solid transparent; display: flex; justify-content: space-between; align-items: center; }
-        .flash-success { background: rgba(13, 158, 110, 0.1); color: var(--green); border-color: var(--green); }
-        .flash-error   { background: rgba(224, 40, 40, 0.1);  color: var(--red);   border-color: var(--red);   }
+        /* ══ MODAL ══ */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        .modal-box { background: var(--bg); border-radius: 14px; padding: 32px; width: 100%; max-width: 520px; box-shadow: var(--shadow-lg); border: 1px solid var(--line); }
+        .modal-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; }
+        .form-group { margin-bottom: 16px; }
+        .form-label { display: block; font-size: 0.82rem; font-weight: 700; margin-bottom: 6px; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-input { width: 100%; padding: 10px 12px; border: 1.5px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); font-family: var(--font-sans); font-size: 0.9rem; box-sizing: border-box; transition: border-color 0.2s; }
+        .form-input:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
 
-        /* ── ROLE CHANGE SELECT ── */
-        .role-select { padding: 5px 10px; border: 1.5px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); font-family: var(--font-sans); font-size: 0.82rem; cursor: pointer; }
+        /* ══ INFO GRID ══ */
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
+        .info-block { background: var(--bg2); border-radius: 10px; padding: 16px; border: 1px solid var(--line); }
+        .info-label { font-size: 0.73rem; opacity: 0.5; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; font-weight: 700; }
+        .info-value { font-size: 1rem; font-weight: 700; }
 
-        /* ── CHARTS GRID ── */
-        .charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-bottom: 30px; }
-        .chart-card { background: var(--bg); border: 1px solid var(--line); border-radius: var(--r); padding: 28px; box-shadow: 0 4px 16px rgba(0,0,0,.04); }
-        .chart-card canvas { max-height: 260px; }
+        /* ══ CAPABILITY CARDS ══ */
+        .cap-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+        .cap-card { padding: 16px; background: var(--bg2); border-radius: 10px; border: 1px solid var(--line); }
+        .cap-icon { font-size: 1.4rem; margin-bottom: 8px; }
+        .cap-title { font-weight: 700; margin-bottom: 4px; font-size: 0.9rem; }
+        .cap-desc  { font-size: 0.8rem; opacity: 0.55; }
 
-        /* ── ADMIN INFO ── */
-        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-        .info-label { font-size: 0.82rem; color: var(--ink); opacity: 0.6; text-transform: uppercase; margin-bottom: 6px; }
-        .info-value { font-size: 1.05rem; font-weight: 600; }
+        /* ══ PLATFORM SUMMARY ══ */
+        .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; }
+        .summary-item { background: var(--bg2); border-radius: 10px; padding: 16px; border: 1px solid var(--line); text-align: center; }
+        .summary-num { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px; }
+        .summary-lbl { font-size: 0.75rem; opacity: 0.5; margin-top: 4px; font-weight: 600; text-transform: uppercase; }
 
-        /* ── EMPTY STATE ── */
-        .empty-state { text-align: center; padding: 40px; color: var(--ink); opacity: 0.5; }
+        /* ══ ACTIVITY FEED ══ */
+        .activity-feed { display: flex; flex-direction: column; gap: 0; }
+        .activity-item {
+            display: flex; align-items: flex-start; gap: 14px;
+            padding: 12px 0; border-bottom: 1px solid var(--line); position: relative;
+        }
+        .activity-item:last-child { border-bottom: none; }
+        .activity-dot { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; margin-top: 2px; }
+        .activity-dot.booking  { background: var(--blue-bg);   color: var(--accent); }
+        .activity-dot.sold     { background: var(--amber-bg);  color: var(--amber); }
+        .activity-dot.review   { background: var(--purple-bg); color: var(--purple); }
+        .activity-dot.user     { background: var(--green-bg);  color: var(--green); }
+        .activity-text { font-size: 0.875rem; font-weight: 600; line-height: 1.4; }
+        .activity-time { font-size: 0.75rem; opacity: 0.45; margin-top: 2px; font-family: var(--font-mono); }
 
-        /* ── REVIEW COMMENT ── */
-        .review-comment { max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-style: italic; opacity: 0.8; }
+        /* ══ TOP SELLERS TABLE ══ */
+        .leaderboard { display: flex; flex-direction: column; gap: 8px; }
+        .leaderboard-row { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: var(--bg2); border-radius: 8px; border: 1px solid var(--line); }
+        .leaderboard-rank { font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700; opacity: 0.4; width: 20px; }
+        .leaderboard-name { font-weight: 700; font-size: 0.875rem; flex: 1; }
+        .leaderboard-bar-wrap { flex: 2; background: var(--bg3); border-radius: 4px; height: 6px; overflow: hidden; }
+        .leaderboard-bar { height: 100%; background: var(--accent); border-radius: 4px; transition: width 0.6s ease; }
+        .leaderboard-count { font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700; color: var(--accent); width: 28px; text-align: right; }
 
-        /* ── PINNED ADMIN ROW ── */
-        tr.admin-row { background: rgba(217, 119, 6, 0.07) !important; position: sticky; top: 0; z-index: 2; }
-        tr.admin-row td { border-bottom: 2px solid var(--amber) !important; font-weight: 600; }
-        [data-theme="dark"] tr.admin-row { background: rgba(217, 119, 6, 0.13) !important; }
-        .pin-icon { font-size: 0.7rem; opacity: 0.7; margin-left: 5px; vertical-align: middle; }
+        /* ══ BOOKING DETAIL BADGE ══ */
+        .booking-status { padding: 4px 10px; border-radius: 99px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
+
+        /* ══ RESPONSIVE ══ */
+        @media (max-width: 900px) {
+            .sidebar { display: none; }
+            .content { padding: 20px 16px; }
+            .topbar { padding: 14px 16px; }
+        }
+
+        /* ══ ANIMATIONS ══ */
+        .panel.active { animation: fadeIn 0.2s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ══ SCROLL ══ */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
     </style>
 </head>
 <body data-theme="light" id="body-theme">
 
-<div class="dashboard-container">
+<div class="layout">
 
-    <!-- ═══════════════ HEADER ═══════════════ -->
-    <div class="header">
-        <div>
-            <h1>👑 Admin Control Panel</h1>
-            <p style="margin: 6px 0 0 0; opacity: 0.6;">Manage the entire NESTIQ platform</p>
+    <!-- ══════════════ SIDEBAR ══════════════ -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-text">NESTIQ</div>
+            <div class="logo-sub">Admin Control Panel</div>
         </div>
-        <div class="header-actions">
-            <div class="theme-switch" onclick="toggleTheme()" title="Toggle Dark Mode">
-                <div class="theme-switch-thumb" id="theme-toggle">🌙</div>
+
+        <nav class="sidebar-nav">
+            <div class="sidebar-section-label">Overview</div>
+            <button class="nav-item active" onclick="showPanel('overview', this)">
+                <span class="nav-icon">🏠</span> Dashboard
+            </button>
+
+            <div class="sidebar-section-label" style="margin-top:12px;">Management</div>
+            <button class="nav-item" onclick="showPanel('users', this)">
+                <span class="nav-icon">👥</span> Users
+                <span class="nav-badge" id="badge-users">${totalUsers}</span>
+            </button>
+            <button class="nav-item" onclick="showPanel('properties', this)">
+                <span class="nav-icon">🏘️</span> Properties
+                <span class="nav-badge" id="badge-props">${totalProperties}</span>
+            </button>
+            <button class="nav-item" onclick="showPanel('bookings', this)">
+                <span class="nav-icon">📅</span> Bookings
+                <span class="nav-badge" id="badge-bookings">${totalBookings}</span>
+            </button>
+            <button class="nav-item" onclick="showPanel('sold', this)">
+                <span class="nav-icon">🏆</span> Sold Properties
+                <span class="nav-badge" id="badge-sold">${totalSoldProperties}</span>
+            </button>
+            <button class="nav-item" onclick="showPanel('reviews', this)">
+                <span class="nav-icon">⭐</span> Reviews
+                <span class="nav-badge" id="badge-reviews">${totalReviews}</span>
+            </button>
+            <button class="nav-item" onclick="showPanel('announcements', this)">
+                <span class="nav-icon">📢</span> Announcements
+            </button>
+
+            <div class="sidebar-section-label" style="margin-top:12px;">Insights</div>
+            <button class="nav-item" onclick="showPanel('analytics', this)">
+                <span class="nav-icon">📊</span> Analytics
+            </button>
+
+            <div class="sidebar-section-label" style="margin-top:12px;">Account</div>
+            <button class="nav-item" onclick="showPanel('account', this)">
+                <span class="nav-icon">👑</span> My Account
+            </button>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="admin-badge-pill">
+                <span style="font-size:1.2rem;">👑</span>
+                <div>
+                    <div class="name">${sessionScope.loggedUser}</div>
+                    <div class="role">System Administrator</div>
+                </div>
             </div>
             <form action="logout" method="post" style="margin:0;">
-                <button type="submit" class="btn" style="background: var(--red);">Logout</button>
+                <button type="submit" class="btn btn-danger" style="width:100%; justify-content:center;">Sign Out</button>
             </form>
         </div>
-    </div>
+    </aside>
 
-    <!-- ═══════════════ FLASH ═══════════════ -->
-    <c:if test="${not empty sessionScope.flashMessage}">
-        <div class="flash-message ${sessionScope.flashMessageType == 'success' ? 'flash-success' : 'flash-error'}">
-            <span>${sessionScope.flashMessage}</span>
-        </div>
-        <c:remove var="flashMessage" scope="session"/>
-        <c:remove var="flashMessageType" scope="session"/>
-    </c:if>
+    <!-- ══════════════ MAIN CONTENT ══════════════ -->
+    <div class="main">
 
-    <!-- ═══════════════ STAT CARDS ═══════════════ -->
-    <div class="stats-grid">
-        <div class="stat-card" style="border-left: 4px solid var(--accent);">
-            <div class="stat-label">Total Users</div>
-            <div class="stat-value">${totalUsers}</div>
-            <div class="stat-sub">Across all roles</div>
-        </div>
-        <div class="stat-card" style="border-left: 4px solid #3b82f6;">
-            <div class="stat-label">Buyers</div>
-            <div class="stat-value">${totalBuyers}</div>
-            <div class="stat-sub">Active buyers</div>
-        </div>
-        <div class="stat-card" style="border-left: 4px solid var(--green);">
-            <div class="stat-label">Sellers</div>
-            <div class="stat-value">${totalSellers}</div>
-            <div class="stat-sub">Registered sellers</div>
-        </div>
-        <div class="stat-card" style="border-left: 4px solid var(--amber);">
-            <div class="stat-label">Admins</div>
-            <div class="stat-value">${totalAdmins}</div>
-            <div class="stat-sub">System administrators</div>
-        </div>
-        <div class="stat-card" style="border-left: 4px solid var(--accent);">
-            <div class="stat-label">Total Properties</div>
-            <div class="stat-value">${totalProperties}</div>
-            <div class="stat-sub">Listed on platform</div>
-        </div>
-        <div class="stat-card" style="border-left: 4px solid var(--green);">
-            <div class="stat-label">Total Market Value</div>
-            <div class="stat-value" style="font-size: 1.6rem;">$<fmt:formatNumber value="${totalPropertyValue}" pattern="#,##0"/></div>
-            <div class="stat-sub">Combined listing value</div>
-        </div>
-        <div class="stat-card" style="border-left: 4px solid var(--purple);">
-            <div class="stat-label">Total Reviews</div>
-            <div class="stat-value">${totalReviews}</div>
-            <div class="stat-sub">Platform-wide reviews</div>
-        </div>
-    </div>
-
-    <!-- ═══════════════ NAV TABS ═══════════════ -->
-    <div class="nav-tabs">
-        <button class="nav-tab active" onclick="showPanel('users', this)">👥 Users</button>
-        <button class="nav-tab" onclick="showPanel('properties', this)">🏘️ Properties</button>
-        <button class="nav-tab" onclick="showPanel('reviews', this)">⭐ Reviews</button>
-        <button class="nav-tab" onclick="showPanel('analytics', this)">📊 Analytics</button>
-        <button class="nav-tab" onclick="showPanel('account', this)">👑 My Account</button>
-    </div>
-
-    <!-- ═══════════════ PANEL: USERS ═══════════════ -->
-    <div class="panel active" id="panel-users">
-        <div class="card">
-            <div class="card-header">
-                <div>
-                    <h3 class="card-title" style="margin:0 0 4px 0;">👥 User Management</h3>
-                    <p style="margin:0; opacity:0.6; font-size:0.9rem;">All registered users — search, change roles, or remove accounts</p>
-                </div>
-                <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-                    <input type="text" id="user-search" class="search-box" placeholder="Search by name or email…" autocomplete="off"/>
-                    <button class="btn btn-ghost btn-sm" onclick="exportTableToCSV('user-management-table','users.csv')">⬇ Export CSV</button>
+        <!-- TOPBAR -->
+        <div class="topbar">
+            <div class="topbar-title" id="topbar-title">Dashboard Overview</div>
+            <div class="topbar-actions">
+                <div class="theme-switch" onclick="toggleTheme()" title="Toggle Theme">
+                    <div class="theme-switch-thumb" id="theme-toggle">🌙</div>
                 </div>
             </div>
-
-            <div style="overflow-y: auto; max-height: 520px; border-radius: 8px; border: 1px solid var(--line);">
-            <table id="user-management-table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Role</th>
-                        <th>Change Role</th>
-                        <th>Delete</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:choose>
-                        <c:when test="${not empty allUsers}">
-                            <c:forEach var="user" items="${allUsers}">
-                                <tr ${user.role eq 'ADMIN' ? 'class="admin-row"' : ''}>
-                                    <td><strong>${user.username}</strong><c:if test="${user.role eq 'ADMIN'}"><span class="pin-icon" title="Pinned — System Administrator">📌</span></c:if></td>
-                                    <td>${user.email}</td>
-                                    <td>${not empty user.phoneNumber ? user.phoneNumber : '—'}</td>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${user.role eq 'BUYER'}"><span class="badge badge-buyer">🏠 Buyer</span></c:when>
-                                            <c:when test="${user.role eq 'SELLER'}"><span class="badge badge-seller">💼 Seller</span></c:when>
-                                            <c:when test="${user.role eq 'ADMIN'}"><span class="badge badge-admin">👑 Admin</span></c:when>
-                                        </c:choose>
-                                    </td>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${user.role ne 'ADMIN'}">
-                                                <form action="changeRole" method="post" style="display:inline-flex; gap:6px; align-items:center;">
-                                                    <input type="hidden" name="userEmail" value="${user.email}"/>
-                                                    <select name="newRole" class="role-select">
-                                                        <option value="BUYER"  ${user.role eq 'BUYER'  ? 'selected' : ''}>Buyer</option>
-                                                        <option value="SELLER" ${user.role eq 'SELLER' ? 'selected' : ''}>Seller</option>
-                                                    </select>
-                                                    <button type="submit" class="btn btn-amber btn-sm">Save</button>
-                                                </form>
-                                            </c:when>
-                                            <c:otherwise><span style="opacity:0.4; font-size:0.85rem;">Protected</span></c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${user.role ne 'ADMIN'}">
-                                                <form action="deleteUser" method="post" style="display:inline;" onsubmit="return confirm('Delete ${user.username}? This cannot be undone.');">
-                                                    <input type="hidden" name="userEmail" value="${user.email}"/>
-                                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                                </form>
-                                            </c:when>
-                                            <c:otherwise><span style="color:var(--amber); font-weight:600; font-size:0.85rem;">System User</span></c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                        </c:when>
-                        <c:otherwise>
-                            <tr><td colspan="6" class="empty-state">No users found</td></tr>
-                        </c:otherwise>
-                    </c:choose>
-                </tbody>
-            </table>
-            </div><!-- /scroll wrapper -->
         </div>
-    </div>
 
-    <!-- ═══════════════ PANEL: PROPERTIES ═══════════════ -->
-    <div class="panel" id="panel-properties">
-        <div class="card">
-            <div class="card-header">
-                <div>
-                    <h3 class="card-title" style="margin:0 0 4px 0;">🏘️ Property Management</h3>
-                    <p style="margin:0; opacity:0.6; font-size:0.9rem;">All listings on the platform</p>
-                </div>
-                <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-                    <input type="text" id="property-search" class="search-box" placeholder="Search by title or seller…" autocomplete="off"/>
-                    <button class="btn btn-ghost btn-sm" onclick="exportTableToCSV('property-management-table','properties.csv')">⬇ Export CSV</button>
-                </div>
-            </div>
+        <!-- CONTENT -->
+        <div class="content">
 
-            <table id="property-management-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Title</th>
-                        <th>Price</th>
-                        <th>Location</th>
-                        <th>Type</th>
-                        <th>Status</th>
-                        <th>Seller</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:choose>
-                        <c:when test="${not empty allProperties}">
-                            <c:forEach var="prop" items="${allProperties}">
+            <!-- FLASH MESSAGE -->
+            <c:if test="${not empty sessionScope.flashMessage}">
+                <div class="flash-message ${sessionScope.flashMessageType == 'success' ? 'flash-success' : 'flash-error'}">
+                    <span>${sessionScope.flashMessage}</span>
+                    <button onclick="this.parentElement.remove()" style="background:none;border:none;cursor:pointer;font-size:1.1rem;opacity:0.6;">✕</button>
+                </div>
+                <c:remove var="flashMessage" scope="session"/>
+                <c:remove var="flashMessageType" scope="session"/>
+            </c:if>
+
+            <!-- ══════════ PANEL: OVERVIEW ══════════ -->
+            <div class="panel active" id="panel-overview">
+
+                <!-- STAT CARDS -->
+                <div class="stats-grid">
+                    <div class="stat-card blue">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-label">Total Users</div>
+                        <div class="stat-value">${totalUsers}</div>
+                        <div class="stat-sub">Across all roles</div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="stat-icon">🏘️</div>
+                        <div class="stat-label">Total Properties</div>
+                        <div class="stat-value">${totalProperties}</div>
+                        <div class="stat-sub">Active listings</div>
+                    </div>
+                    <div class="stat-card amber">
+                        <div class="stat-icon">📅</div>
+                        <div class="stat-label">Total Bookings</div>
+                        <div class="stat-value">${totalBookings}</div>
+                        <div class="stat-sub">${reservedBookings} active reservations</div>
+                    </div>
+                    <div class="stat-card purple">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-label">Total Reviews</div>
+                        <div class="stat-value">${totalReviews}</div>
+                        <div class="stat-sub">Platform-wide</div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-label">Completed Bookings</div>
+                        <div class="stat-value">${completedBookings}</div>
+                        <div class="stat-sub">Successfully closed</div>
+                    </div>
+                    <div class="stat-card amber">
+                        <div class="stat-icon">🏆</div>
+                        <div class="stat-label">Sold Properties</div>
+                        <div class="stat-value">${totalSoldProperties}</div>
+                        <div class="stat-sub">Properties with 'Sold' status</div>
+                    </div>
+                    <div class="stat-card blue">
+                        <div class="stat-icon">💼</div>
+                        <div class="stat-label">Market Value</div>
+                        <div class="stat-value" style="font-size:1.3rem;">$<fmt:formatNumber value="${totalPropertyValue}" pattern="#,##0"/></div>
+                        <div class="stat-sub">Combined listings</div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-label">Total Earned</div>
+                        <div class="stat-value" style="font-size:1.3rem;">$<fmt:formatNumber value="${not empty totalEarnings ? totalEarnings : 0}" pattern="#,##0.00"/></div>
+                        <div class="stat-sub">From completed bookings</div>
+                    </div>
+                    <div class="stat-card purple">
+                        <div class="stat-icon">🏷️</div>
+                        <div class="stat-label">Sellers</div>
+                        <div class="stat-value">${totalSellers}</div>
+                        <div class="stat-sub">${totalBuyers} buyers registered</div>
+                    </div>
+                </div>
+
+                <!-- OVERVIEW CHARTS + ACTIVITY -->
+                <div style="display:grid; grid-template-columns: 1fr 340px; gap: 20px;">
+                    <div class="charts-grid" style="margin-bottom:0; grid-template-columns: 1fr 1fr;">
+                        <div class="chart-card">
+                            <div class="chart-title">👤 User Distribution</div>
+                            <canvas id="overviewUserPie"></canvas>
+                        </div>
+                        <div class="chart-card">
+                            <div class="chart-title">📅 Booking Status</div>
+                            <canvas id="overviewBookingStatus"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- RECENT ACTIVITY -->
+                    <div class="card" style="margin-bottom:0;">
+                        <div class="card-title">⚡ Recent Activity</div>
+                        <div class="activity-feed" id="activity-feed">
+                            <!-- populated by JS from table data -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TOP SELLERS -->
+                <div class="card" style="margin-top:20px;">
+                    <div class="card-title">🏅 Top Sellers by Listings</div>
+                    <div class="leaderboard" id="top-sellers-board"></div>
+                </div>
+
+            </div><!-- /panel-overview -->
+
+
+            <!-- ══════════ PANEL: USERS ══════════ -->
+            <div class="panel" id="panel-users">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title" style="margin-bottom:4px;">👥 User Management</div>
+                            <p style="margin:0; opacity:0.55; font-size:0.875rem;">Search, change roles, or remove accounts</p>
+                        </div>
+                        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                            <input type="text" id="user-search" class="search-box" placeholder="Search by name or email…" autocomplete="off"/>
+                            <button class="btn-ghost btn-sm btn" onclick="exportTableToCSV('user-management-table','users.csv')">⬇ Export CSV</button>
+                        </div>
+                    </div>
+                    <div class="table-wrap">
+                        <table id="user-management-table">
+                            <thead>
                                 <tr>
-                                    <td><small style="opacity:0.5;">${prop.id}</small></td>
-                                    <td><strong>${prop.title}</strong></td>
-                                    <td>$<fmt:formatNumber value="${prop.price}" pattern="#,##0"/></td>
-                                    <td>${prop.location}</td>
-                                    <td>${prop.type}</td>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${prop.status eq 'For Sale'}"><span class="badge badge-sale">For Sale</span></c:when>
-                                            <c:otherwise><span class="badge badge-rent">For Rent</span></c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                    <td>${prop.sellerName}</td>
-                                    <td>
-                                        <form action="deleteProperty" method="post" style="display:inline;" onsubmit="return confirm('Delete property &quot;${prop.title}&quot;?');">
-                                            <input type="hidden" name="propertyId" value="${prop.id}"/>
-                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                        </form>
-                                    </td>
+                                    <th>Name</th><th>Email</th><th>Phone</th><th>Role</th><th>Change Role</th><th>Delete</th>
                                 </tr>
-                            </c:forEach>
-                        </c:when>
-                        <c:otherwise>
-                            <tr><td colspan="8" class="empty-state">No properties found</td></tr>
-                        </c:otherwise>
-                    </c:choose>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- ═══════════════ PANEL: REVIEWS ═══════════════ -->
-    <div class="panel" id="panel-reviews">
-        <div class="card">
-            <div class="card-header">
-                <div>
-                    <h3 class="card-title" style="margin:0 0 4px 0;">⭐ Review Management</h3>
-                    <p style="margin:0; opacity:0.6; font-size:0.9rem;">All platform reviews — remove spam or inappropriate content</p>
+                            </thead>
+                            <tbody>
+                                <c:choose>
+                                    <c:when test="${not empty allUsers}">
+                                        <c:forEach var="user" items="${allUsers}">
+                                            <tr ${user.role eq 'ADMIN' ? 'class="admin-row"' : ''}>
+                                                <td><strong>${user.username}</strong><c:if test="${user.role eq 'ADMIN'}"><span class="pin-icon" title="System Administrator">📌</span></c:if></td>
+                                                <td>${user.email}</td>
+                                                <td>${not empty user.phoneNumber ? user.phoneNumber : '—'}</td>
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${user.role eq 'BUYER'}"><span class="badge badge-buyer">🏠 Buyer</span></c:when>
+                                                        <c:when test="${user.role eq 'SELLER'}"><span class="badge badge-seller">💼 Seller</span></c:when>
+                                                        <c:when test="${user.role eq 'ADMIN'}"><span class="badge badge-admin">👑 Admin</span></c:when>
+                                                    </c:choose>
+                                                </td>
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${user.role ne 'ADMIN'}">
+                                                            <form action="changeRole" method="post" style="display:inline-flex; gap:6px; align-items:center;">
+                                                                <input type="hidden" name="userEmail" value="${user.email}"/>
+                                                                <select name="newRole" class="role-select">
+                                                                    <option value="BUYER"  ${user.role eq 'BUYER'  ? 'selected' : ''}>Buyer</option>
+                                                                    <option value="SELLER" ${user.role eq 'SELLER' ? 'selected' : ''}>Seller</option>
+                                                                </select>
+                                                                <button type="submit" class="btn btn-amber btn-sm">Save</button>
+                                                            </form>
+                                                        </c:when>
+                                                        <c:otherwise><span style="opacity:0.4; font-size:0.8rem;">Protected</span></c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${user.role ne 'ADMIN'}">
+                                                            <form action="deleteUser" method="post" style="display:inline;" onsubmit="return confirm('Delete ${user.username}? This cannot be undone.');">
+                                                                <input type="hidden" name="userEmail" value="${user.email}"/>
+                                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                                            </form>
+                                                        </c:when>
+                                                        <c:otherwise><span style="color:var(--amber); font-weight:700; font-size:0.8rem;">System User</span></c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </c:when>
+                                    <c:otherwise><tr><td colspan="6" class="empty-state">No users found</td></tr></c:otherwise>
+                                </c:choose>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-                    <input type="text" id="review-search" class="search-box" placeholder="Search by buyer or property ID…" autocomplete="off"/>
-                    <button class="btn btn-ghost btn-sm" onclick="exportTableToCSV('review-management-table','reviews.csv')">⬇ Export CSV</button>
-                </div>
-            </div>
+            </div><!-- /panel-users -->
 
-            <table id="review-management-table">
-                <thead>
-                    <tr>
-                        <th>Review ID</th>
-                        <th>Property ID</th>
-                        <th>Buyer</th>
-                        <th>Rating</th>
-                        <th>Comment</th>
-                        <th>Type</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:choose>
-                        <c:when test="${not empty allReviews}">
-                            <c:forEach var="rev" items="${allReviews}">
+
+            <!-- ══════════ PANEL: PROPERTIES ══════════ -->
+            <div class="panel" id="panel-properties">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title" style="margin-bottom:4px;">🏘️ Property Management</div>
+                            <p style="margin:0; opacity:0.55; font-size:0.875rem;">All active listings on the platform</p>
+                        </div>
+                        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                            <input type="text" id="property-search" class="search-box" placeholder="Search by title or seller…" autocomplete="off"/>
+                            <button class="btn-ghost btn-sm btn" onclick="exportTableToCSV('property-management-table','properties.csv')">⬇ Export CSV</button>
+                        </div>
+                    </div>
+                    <div class="table-wrap">
+                        <table id="property-management-table">
+                            <thead>
+                                <tr><th>ID</th><th>Title</th><th>Price</th><th>Location</th><th>Type</th><th>Status</th><th>Seller</th><th>Action</th></tr>
+                            </thead>
+                            <tbody>
+                                <c:choose>
+                                    <c:when test="${not empty allProperties}">
+                                        <c:forEach var="prop" items="${allProperties}">
+                                            <tr>
+                                                <td><small style="opacity:0.4; font-family:var(--font-mono);">${prop.id}</small></td>
+                                                <td><strong>${prop.title}</strong></td>
+                                                <td><strong>$<fmt:formatNumber value="${prop.price}" pattern="#,##0"/></strong></td>
+                                                <td>${prop.location}</td>
+                                                <td>${prop.type}</td>
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${prop.status eq 'For Sale'}"><span class="badge badge-sale">For Sale</span></c:when>
+                                                        <c:otherwise><span class="badge badge-rent">For Rent</span></c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                                <td>${prop.sellerName}</td>
+                                                <td>
+                                                    <form action="deleteProperty" method="post" style="display:inline;" onsubmit="return confirm('Delete property &quot;${prop.title}&quot;?');">
+                                                        <input type="hidden" name="propertyId" value="${prop.id}"/>
+                                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </c:when>
+                                    <c:otherwise><tr><td colspan="8" class="empty-state">No properties found</td></tr></c:otherwise>
+                                </c:choose>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div><!-- /panel-properties -->
+
+
+            <!-- ══════════ PANEL: BOOKINGS (NEW) ══════════ -->
+            <div class="panel" id="panel-bookings">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title" style="margin-bottom:4px;">📅 Booking Management</div>
+                            <p style="margin:0; opacity:0.55; font-size:0.875rem;">All property reservations and completed bookings across the platform</p>
+                        </div>
+                        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                            <select id="booking-status-filter" class="role-select" onchange="filterBookingsByStatus(this.value)">
+                                <option value="">All Statuses</option>
+                                <option value="RESERVED">Reserved</option>
+                                <option value="COMPLETED">Completed</option>
+                                <option value="CANCELLED">Cancelled</option>
+                            </select>
+                            <input type="text" id="booking-search" class="search-box" placeholder="Search by buyer, property or seller…" autocomplete="off"/>
+                            <button class="btn-ghost btn-sm btn" onclick="exportTableToCSV('bookings-table','bookings.csv')">⬇ Export CSV</button>
+                        </div>
+                    </div>
+
+                    <!-- Booking Summary Pills -->
+                    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px;">
+                        <div style="display:flex; align-items:center; gap:8px; background:var(--blue-bg); border-radius:8px; padding:8px 14px;">
+                            <span style="font-size:0.8rem; font-weight:700; color:var(--accent);">📅 Total</span>
+                            <span style="font-family:var(--font-mono); font-weight:800; color:var(--accent);">${totalBookings}</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:8px; background:var(--green-bg); border-radius:8px; padding:8px 14px;">
+                            <span style="font-size:0.8rem; font-weight:700; color:var(--green);">✅ Completed</span>
+                            <span style="font-family:var(--font-mono); font-weight:800; color:var(--green);">${completedBookings}</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:8px; background:var(--amber-bg); border-radius:8px; padding:8px 14px;">
+                            <span style="font-size:0.8rem; font-weight:700; color:var(--amber);">🔖 Reserved</span>
+                            <span style="font-family:var(--font-mono); font-weight:800; color:var(--amber);">${reservedBookings}</span>
+                        </div>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table id="bookings-table">
+                            <thead>
                                 <tr>
-                                    <td><small style="opacity:0.5;">${rev.reviewID}</small></td>
-                                    <td><small>${rev.propertyID}</small></td>
-                                    <td><strong>${rev.buyerName}</strong></td>
-                                    <td>
-                                        <span class="stars">
-                                            <c:forEach begin="1" end="${rev.rating}">★</c:forEach><c:forEach begin="${rev.rating + 1}" end="5">☆</c:forEach>
-                                        </span>
-                                        <small style="opacity:0.6;"> ${rev.rating}/5</small>
-                                    </td>
-                                    <td class="review-comment" title="${rev.comment}">${rev.comment}</td>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${rev.verified}"><span class="badge badge-verified">✔ Verified</span></c:when>
-                                            <c:otherwise><span class="badge badge-public">Public</span></c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                    <td>
-                                        <form action="adminDeleteReview" method="post" style="display:inline;" onsubmit="return confirm('Remove this review by ${rev.buyerName}?');">
-                                            <input type="hidden" name="reviewId" value="${rev.reviewID}"/>
-                                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
-                                        </form>
-                                    </td>
+                                    <th>Booking ID</th><th>Property</th><th>Seller</th>
+                                    <th>Buyer</th><th>Buyer Email</th>
+                                    <th>Booked On</th><th>Return Date</th><th>Status</th>
                                 </tr>
-                            </c:forEach>
-                        </c:when>
-                        <c:otherwise>
-                            <tr><td colspan="7" class="empty-state">No reviews found on the platform</td></tr>
-                        </c:otherwise>
-                    </c:choose>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <button class="nav-tab" onclick="showPanel('announcements', this)">📢 Announcements</button>
-
-    <!-- ═══════════════ PANEL: ANALYTICS ═══════════════ -->
-    <div class="panel" id="panel-analytics">
-        <div class="charts-grid">
-            <div class="chart-card">
-                <h3 class="card-title">👤 User Distribution</h3>
-                <canvas id="userPieChart"></canvas>
-            </div>
-            <div class="chart-card">
-                <h3 class="card-title">🏠 Properties by Type</h3>
-                <canvas id="propertyTypeChart"></canvas>
-            </div>
-            <div class="chart-card">
-                <h3 class="card-title">📋 Properties by Status</h3>
-                <canvas id="propertyStatusChart"></canvas>
-            </div>
-            <div class="chart-card">
-                <h3 class="card-title">⭐ Review Ratings Breakdown</h3>
-                <canvas id="ratingsChart"></canvas>
-            </div>
-        </div>
-
-        <!-- Platform Summary -->
-        <div class="card" style="border-left: 4px solid var(--accent);">
-            <h3 class="card-title">📈 Platform Summary</h3>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
-                <div>
-                    <div class="info-label">Avg. Property Price</div>
-                    <div class="info-value" style="color: var(--accent);">
-                        $<fmt:formatNumber value="${totalProperties > 0 ? totalPropertyValue / totalProperties : 0}" pattern="#,##0"/>
+                            </thead>
+                            <tbody>
+                                <c:choose>
+                                    <c:when test="${not empty allBookings}">
+                                        <c:forEach var="booking" items="${allBookings}">
+                                            <tr>
+                                                <td><small style="opacity:0.45; font-family:var(--font-mono);">${booking[0]}</small></td>
+                                                <td>
+                                                    <div style="font-weight:600;">${booking[2]}</div>
+                                                    <small style="opacity:0.45; font-family:var(--font-mono);">${booking[1]}</small>
+                                                </td>
+                                                <td>${booking[3]}</td>
+                                                <td><strong>${booking[5]}</strong></td>
+                                                <td style="font-size:0.82rem; opacity:0.75;">${booking[6]}</td>
+                                                <td style="font-family:var(--font-mono); font-size:0.82rem;">${booking[8]}</td>
+                                                <td style="font-family:var(--font-mono); font-size:0.82rem;">${booking[9]}</td>
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${booking[10] eq 'COMPLETED'}"><span class="badge badge-completed">✅ Completed</span></c:when>
+                                                        <c:when test="${booking[10] eq 'RESERVED'}"><span class="badge badge-reserved">🔖 Reserved</span></c:when>
+                                                        <c:when test="${booking[10] eq 'CANCELLED'}"><span class="badge badge-cancelled">❌ Cancelled</span></c:when>
+                                                        <c:otherwise><span class="badge badge-public">${booking[10]}</span></c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </c:when>
+                                    <c:otherwise><tr><td colspan="8" class="empty-state">No bookings found</td></tr></c:otherwise>
+                                </c:choose>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div>
-                    <div class="info-label">Buyer-to-Seller Ratio</div>
-                    <div class="info-value" style="color: var(--green);">
-                        ${totalSellers > 0 ? totalBuyers / totalSellers : totalBuyers} : 1
+            </div><!-- /panel-bookings -->
+
+
+            <!-- ══════════ PANEL: SOLD PROPERTIES (NEW) ══════════ -->
+            <div class="panel" id="panel-sold">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title" style="margin-bottom:4px;">🏆 Sold Properties</div>
+                            <p style="margin:0; opacity:0.55; font-size:0.875rem;">All properties with 'Sold' status from properties.txt</p>
+                        </div>
+                        <div style="display:flex; gap:8px; align-items:center;">
+                            <input type="text" id="sold-search" class="search-box" placeholder="Search by title or location…" autocomplete="off"/>
+                            <button class="btn-ghost btn-sm btn" onclick="exportTableToCSV('sold-table','sold_properties.csv')">⬇ Export CSV</button>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom:16px;">
+                        <div style="display:inline-flex; align-items:center; gap:8px; background:var(--amber-bg); border-radius:8px; padding:8px 14px;">
+                            <span style="font-size:0.8rem; font-weight:700; color:var(--amber);">🏆 Total Sold</span>
+                            <span style="font-family:var(--font-mono); font-weight:800; color:var(--amber);">${totalSoldProperties}</span>
+                        </div>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table id="sold-table">
+                            <thead>
+                                <tr><th>Property ID</th><th>Title</th><th>Price</th><th>Location</th><th>Type</th><th>Seller</th></tr>
+                            </thead>
+                            <tbody>
+                                <c:choose>
+                                    <c:when test="${not empty allProperties}">
+                                        <c:forEach var="prop" items="${allProperties}">
+                                            <c:if test="${prop.status eq 'Sold'}">
+                                                <tr>
+                                                    <td><small style="opacity:0.45; font-family:var(--font-mono);">${prop.id}</small></td>
+                                                    <td><strong>${prop.title}</strong></td>
+                                                    <td><strong style="color:var(--green);">$<fmt:formatNumber value="${prop.price}" pattern="#,##0"/></strong></td>
+                                                    <td>${prop.location}</td>
+                                                    <td>${prop.type}</td>
+                                                    <td>${prop.sellerName}</td>
+                                                </tr>
+                                            </c:if>
+                                        </c:forEach>
+                                    </c:when>
+                                    <c:otherwise><tr><td colspan="6" class="empty-state">No sold properties found</td></tr></c:otherwise>
+                                </c:choose>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div>
-                    <div class="info-label">Listings per Seller</div>
-                    <div class="info-value" style="color: var(--amber);">
-                        <fmt:formatNumber value="${totalSellers > 0 ? totalProperties / totalSellers : 0}" pattern="#,##0.0"/>
+            </div><!-- /panel-sold -->
+
+
+            <!-- ══════════ PANEL: REVIEWS ══════════ -->
+            <div class="panel" id="panel-reviews">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title" style="margin-bottom:4px;">⭐ Review Management</div>
+                            <p style="margin:0; opacity:0.55; font-size:0.875rem;">Remove spam or inappropriate content platform-wide</p>
+                        </div>
+                        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                            <input type="text" id="review-search" class="search-box" placeholder="Search by buyer or property ID…" autocomplete="off"/>
+                            <button class="btn-ghost btn-sm btn" onclick="exportTableToCSV('review-management-table','reviews.csv')">⬇ Export CSV</button>
+                        </div>
+                    </div>
+                    <div class="table-wrap">
+                        <table id="review-management-table">
+                            <thead>
+                                <tr><th>Review ID</th><th>Property ID</th><th>Buyer</th><th>Rating</th><th>Comment</th><th>Type</th><th>Action</th></tr>
+                            </thead>
+                            <tbody>
+                                <c:choose>
+                                    <c:when test="${not empty allReviews}">
+                                        <c:forEach var="rev" items="${allReviews}">
+                                            <tr>
+                                                <td><small style="opacity:0.4; font-family:var(--font-mono);">${rev.reviewID}</small></td>
+                                                <td><small style="font-family:var(--font-mono);">${rev.propertyID}</small></td>
+                                                <td><strong>${rev.buyerName}</strong></td>
+                                                <td>
+                                                    <span class="stars">
+                                                        <c:forEach begin="1" end="${rev.rating}">★</c:forEach><c:forEach begin="${rev.rating + 1}" end="5">☆</c:forEach>
+                                                    </span>
+                                                    <small style="opacity:0.5;"> ${rev.rating}/5</small>
+                                                </td>
+                                                <td class="truncate" title="${rev.comment}" style="font-style:italic; opacity:0.8;">${rev.comment}</td>
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${rev.verified}"><span class="badge badge-verified">✔ Verified</span></c:when>
+                                                        <c:otherwise><span class="badge badge-public">Public</span></c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                                <td>
+                                                    <form action="adminDeleteReview" method="post" style="display:inline;" onsubmit="return confirm('Remove this review by ${rev.buyerName}?');">
+                                                        <input type="hidden" name="reviewId" value="${rev.reviewID}"/>
+                                                        <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </c:when>
+                                    <c:otherwise><tr><td colspan="7" class="empty-state">No reviews found</td></tr></c:otherwise>
+                                </c:choose>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div>
-                    <div class="info-label">Reviews per Property</div>
-                    <div class="info-value" style="color: var(--purple);">
-                        <fmt:formatNumber value="${totalProperties > 0 ? totalReviews / totalProperties : 0}" pattern="#,##0.0"/>
+            </div><!-- /panel-reviews -->
+
+
+            <!-- ══════════ PANEL: ANNOUNCEMENTS ══════════ -->
+            <div class="panel" id="panel-announcements">
+                <div class="card" style="margin-bottom:0; border-bottom:none; border-radius:var(--r) var(--r) 0 0; border-left:4px solid var(--accent);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                        <div>
+                            <div class="card-title" style="margin-bottom:4px;">📢 Announcements</div>
+                            <p style="margin:0; opacity:0.55; font-size:0.875rem;">Post, edit and remove platform-wide notices visible to all users</p>
+                        </div>
+                        <button class="btn" onclick="document.getElementById('create-ann-modal').style.display='flex'">+ New Announcement</button>
                     </div>
                 </div>
+                <div class="card" style="border-radius:0 0 var(--r) var(--r); overflow-x:auto;">
+                    <table id="announcements-table">
+                        <thead>
+                            <tr><th>Title</th><th>Message</th><th>Priority</th><th>Posted By</th><th>Date</th><th style="text-align:center;">Actions</th></tr>
+                        </thead>
+                        <tbody>
+                            <c:choose>
+                                <c:when test="${not empty announcements}">
+                                    <c:forEach var="ann" items="${announcements}">
+                                        <tr>
+                                            <td style="font-weight:700;">${ann[1]}</td>
+                                            <td class="truncate" style="max-width:260px; font-style:italic; opacity:0.8;">${ann[2]}</td>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${ann[3] eq 'HIGH'}"><span class="badge" style="background:#fee2e2; color:#b91c1c;">🔴 HIGH</span></c:when>
+                                                    <c:when test="${ann[3] eq 'LOW'}"><span class="badge" style="background:#dcfce7; color:#15803d;">🟢 LOW</span></c:when>
+                                                    <c:otherwise><span class="badge" style="background:#fef9c3; color:#92400e;">🟡 MEDIUM</span></c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                            <td>${ann[4]}</td>
+                                            <td style="opacity:0.6; font-size:0.82rem; font-family:var(--font-mono);">${ann[5]}</td>
+                                            <td style="text-align:center; white-space:nowrap;">
+                                                <button class="btn btn-ghost btn-sm" onclick="openEditModal('${ann[0]}','${ann[1]}','${ann[2]}','${ann[3]}')">✏️ Edit</button>
+                                                <form action="adminAnnouncement" method="post" style="display:inline;" onsubmit="return confirm('Delete announcement?');">
+                                                    <input type="hidden" name="action" value="delete"/>
+                                                    <input type="hidden" name="announcementId" value="${ann[0]}"/>
+                                                    <button type="submit" class="btn btn-danger btn-sm">🗑️ Delete</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </c:when>
+                                <c:otherwise>
+                                    <tr><td colspan="6" class="empty-state">No announcements yet. Click "+ New Announcement" to start.</td></tr>
+                                </c:otherwise>
+                            </c:choose>
+                        </tbody>
+                    </table>
+                </div>
+            </div><!-- /panel-announcements -->
+
+
+            <!-- ══════════ PANEL: ANALYTICS (ENHANCED) ══════════ -->
+            <div class="panel" id="panel-analytics">
+
+                <!-- Row 1: 4 charts -->
+                <div class="charts-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+                    <div class="chart-card">
+                        <div class="chart-title">👤 User Distribution</div>
+                        <canvas id="userPieChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-title">🏠 Properties by Type</div>
+                        <canvas id="propertyTypeChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-title">📋 Properties by Status</div>
+                        <canvas id="propertyStatusChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-title">⭐ Review Ratings</div>
+                        <canvas id="ratingsChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Row 2: 2 new charts -->
+                <div class="charts-grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="chart-card">
+                        <div class="chart-title">📅 Booking Status Breakdown</div>
+                        <canvas id="bookingStatusChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-title">💼 Top Sellers by Listings</div>
+                        <canvas id="topSellersChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Platform Summary -->
+                <div class="card" style="border-left:4px solid var(--accent);">
+                    <div class="card-title">📈 Platform Summary</div>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <div class="summary-num" style="color:var(--accent);">$<fmt:formatNumber value="${totalProperties > 0 && (totalProperties - totalSoldProperties) > 0 ? totalPropertyValue / (totalProperties - totalSoldProperties) : 0}" pattern="#,##0"/></div>
+                            <div class="summary-lbl">Avg. Active Property Price</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-num" style="color:var(--green);">${totalSellers > 0 ? totalBuyers / totalSellers : totalBuyers} : 1</div>
+                            <div class="summary-lbl">Buyer-to-Seller Ratio</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-num" style="color:var(--amber);"><fmt:formatNumber value="${totalSellers > 0 ? totalProperties / totalSellers : 0}" pattern="#,##0.0"/></div>
+                            <div class="summary-lbl">Listings per Seller</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-num" style="color:var(--purple);"><fmt:formatNumber value="${totalProperties > 0 ? totalReviews / totalProperties : 0}" pattern="#,##0.0"/></div>
+                            <div class="summary-lbl">Reviews per Property</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-num" style="color:var(--green);">${completedBookings}</div>
+                            <div class="summary-lbl">Completed Bookings</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-num" style="color:var(--amber);">${totalSoldProperties}</div>
+                            <div class="summary-lbl">Properties Sold</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-num" style="color:var(--green); font-size:1.1rem;">$<fmt:formatNumber value="${not empty totalEarnings ? totalEarnings : 0}" pattern="#,##0.00"/></div>
+                            <div class="summary-lbl">Total Earned</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /panel-analytics -->
+
+
+            <!-- ══════════ PANEL: MY ACCOUNT ══════════ -->
+            <div class="panel" id="panel-account">
+                <div class="card" style="border-left:4px solid var(--amber); margin-bottom:20px;">
+                    <div class="card-title">👑 Admin Information</div>
+                    <div class="info-grid">
+                        <div class="info-block">
+                            <div class="info-label">Admin Name</div>
+                            <div class="info-value">${sessionScope.loggedUser}</div>
+                        </div>
+                        <div class="info-block">
+                            <div class="info-label">Email Address</div>
+                            <div class="info-value">${sessionScope.loggedEmail}</div>
+                        </div>
+                        <div class="info-block">
+                            <div class="info-label">Role</div>
+                            <div class="info-value"><span class="badge badge-admin">👑 System Administrator</span></div>
+                        </div>
+                        <div class="info-block">
+                            <div class="info-label">Session Status</div>
+                            <div class="info-value" style="color:var(--green);">● Active</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">🔐 Admin Capabilities</div>
+                    <div class="cap-grid">
+                        <div class="cap-card">
+                            <div class="cap-icon">👥</div>
+                            <div class="cap-title">User Management</div>
+                            <div class="cap-desc">View, search, change roles, and delete any non-admin user</div>
+                        </div>
+                        <div class="cap-card">
+                            <div class="cap-icon">🏘️</div>
+                            <div class="cap-title">Property Control</div>
+                            <div class="cap-desc">Remove any listing from the platform regardless of seller</div>
+                        </div>
+                        <div class="cap-card">
+                            <div class="cap-icon">📅</div>
+                            <div class="cap-title">Booking Overview</div>
+                            <div class="cap-desc">Monitor all reservations and completed bookings platform-wide</div>
+                        </div>
+                        <div class="cap-card">
+                            <div class="cap-icon">🏆</div>
+                            <div class="cap-title">Sold Property Tracker</div>
+                            <div class="cap-desc">Full history of all sold properties with timestamps</div>
+                        </div>
+                        <div class="cap-card">
+                            <div class="cap-icon">⭐</div>
+                            <div class="cap-title">Review Moderation</div>
+                            <div class="cap-desc">Remove spam or inappropriate reviews platform-wide</div>
+                        </div>
+                        <div class="cap-card">
+                            <div class="cap-icon">📢</div>
+                            <div class="cap-title">Announcements</div>
+                            <div class="cap-desc">Post, edit and delete platform-wide notices with priority levels</div>
+                        </div>
+                        <div class="cap-card">
+                            <div class="cap-icon">📊</div>
+                            <div class="cap-title">Platform Analytics</div>
+                            <div class="cap-desc">Visual charts and live statistics across the entire platform</div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /panel-account -->
+
+        </div><!-- /content -->
+    </div><!-- /main -->
+</div><!-- /layout -->
+
+
+<!-- ══════════ MODAL: CREATE ANNOUNCEMENT ══════════ -->
+<div id="create-ann-modal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-title">📢 New Announcement</div>
+        <form action="adminAnnouncement" method="post">
+            <input type="hidden" name="action" value="create"/>
+            <div class="form-group">
+                <label class="form-label">Title *</label>
+                <input type="text" name="announcementTitle" required maxlength="120" class="form-input" placeholder="e.g. Scheduled Maintenance on 10 May"/>
             </div>
-        </div>
-    </div>
-
-    <!-- ═══════════════ PANEL: MY ACCOUNT ═══════════════ -->
-    <div class="panel" id="panel-account">
-        <div class="card" style="border-left: 4px solid var(--amber);">
-            <h3 class="card-title">👑 Admin Information</h3>
-            <div class="info-grid">
-                <div>
-                    <div class="info-label">Admin Name</div>
-                    <div class="info-value">${sessionScope.loggedUser}</div>
-                </div>
-                <div>
-                    <div class="info-label">Email Address</div>
-                    <div class="info-value">${sessionScope.loggedEmail}</div>
-                </div>
-                <div>
-                    <div class="info-label">Role</div>
-                    <div class="info-value"><span class="badge badge-admin">👑 System Administrator</span></div>
-                </div>
-                <div>
-                    <div class="info-label">Session Status</div>
-                    <div class="info-value" style="color: var(--green);">● Active</div>
-                </div>
+            <div class="form-group">
+                <label class="form-label">Message *</label>
+                <textarea name="announcementMessage" required rows="4" maxlength="400" class="form-input" style="resize:vertical;" placeholder="Write the announcement body here…"></textarea>
             </div>
-        </div>
-
-        <div class="card">
-            <h3 class="card-title">🔐 Admin Capabilities</h3>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
-                <div style="padding: 16px; background: var(--bg2); border-radius: var(--r); border: 1px solid var(--line);">
-                    <div style="font-size: 1.5rem; margin-bottom: 8px;">👥</div>
-                    <div style="font-weight: 600; margin-bottom: 4px;">User Management</div>
-                    <div style="font-size: 0.85rem; opacity: 0.6;">View, search, change roles, and delete any non-admin user</div>
-                </div>
-                <div style="padding: 16px; background: var(--bg2); border-radius: var(--r); border: 1px solid var(--line);">
-                    <div style="font-size: 1.5rem; margin-bottom: 8px;">🏘️</div>
-                    <div style="font-weight: 600; margin-bottom: 4px;">Property Control</div>
-                    <div style="font-size: 0.85rem; opacity: 0.6;">Remove any listing from the platform regardless of seller</div>
-                </div>
-                <div style="padding: 16px; background: var(--bg2); border-radius: var(--r); border: 1px solid var(--line);">
-                    <div style="font-size: 1.5rem; margin-bottom: 8px;">⭐</div>
-                    <div style="font-weight: 600; margin-bottom: 4px;">Review Moderation</div>
-                    <div style="font-size: 0.85rem; opacity: 0.6;">Remove spam or inappropriate reviews platform-wide</div>
-                </div>
-                <div style="padding: 16px; background: var(--bg2); border-radius: var(--r); border: 1px solid var(--line);">
-                    <div style="font-size: 1.5rem; margin-bottom: 8px;">📊</div>
-                    <div style="font-weight: 600; margin-bottom: 4px;">Platform Analytics</div>
-                    <div style="font-size: 0.85rem; opacity: 0.6;">Visual charts and live statistics across the entire platform</div>
-                </div>
-                 <div style="padding: 16px; background: var(--bg2); border-radius: var(--r); border: 1px solid var(--line);">
-                        <div style="font-size: 1.5rem; margin-bottom: 8px;">📢</div>
-                        <div style="font-weight: 600; margin-bottom: 4px;">Announcements</div>
-                        <div style="font-size: 0.85rem; opacity: 0.6;">Post; edit; and delete platform-wide notices with priority levels</div>
-                 </div>
+            <div class="form-group">
+                <label class="form-label">Priority</label>
+                <select name="announcementPriority" class="form-input">
+                    <option value="LOW">🟢 Low</option>
+                    <option value="MEDIUM" selected>🟡 Medium</option>
+                    <option value="HIGH">🔴 High</option>
+                </select>
             </div>
-        </div>
-    </div>
-
-    <%-- ════════════════════════ PANEL: ANNOUNCEMENTS ════════════════════════ --%>
-    <div class="panel" id="panel-announcements">
-
-        <%-- ── Section header ── --%>
-        <div class="card" style="margin-bottom: 0; border-bottom: none; border-radius: var(--r) var(--r) 0 0; border-left: 4px solid var(--accent);">
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-                <div>
-                    <h3 class="card-title" style="margin-bottom:4px;">📢 Announcements</h3>
-                    <p style="margin:0; opacity:0.6; font-size:0.9rem;">Post, edit and remove platform-wide notices visible to all users</p>
-                </div>
-                <button class="btn btn-primary btn-sm"
-                        onclick="document.getElementById('create-ann-modal').style.display='flex'">
-                    + New Announcement
-                </button>
+            <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:8px;">
+                <button type="button" class="btn-ghost btn" onclick="document.getElementById('create-ann-modal').style.display='none'">Cancel</button>
+                <button type="submit" class="btn">Post Announcement</button>
             </div>
-        </div>
-
-        <%-- ── Announcements table ── --%>
-        <div class="card" style="border-radius: 0 0 var(--r) var(--r); overflow-x:auto;">
-            <table id="announcements-table" style="width:100%; border-collapse:collapse;">
-                <thead>
-                    <tr style="border-bottom: 2px solid var(--line);">
-                        <th style="text-align:left; padding:10px 14px; font-size:0.8rem; opacity:0.6; text-transform:uppercase;">Title</th>
-                        <th style="text-align:left; padding:10px 14px; font-size:0.8rem; opacity:0.6; text-transform:uppercase;">Message</th>
-                        <th style="text-align:left; padding:10px 14px; font-size:0.8rem; opacity:0.6; text-transform:uppercase;">Priority</th>
-                        <th style="text-align:left; padding:10px 14px; font-size:0.8rem; opacity:0.6; text-transform:uppercase;">Posted By</th>
-                        <th style="text-align:left; padding:10px 14px; font-size:0.8rem; opacity:0.6; text-transform:uppercase;">Date</th>
-                        <th style="text-align:center; padding:10px 14px; font-size:0.8rem; opacity:0.6; text-transform:uppercase;">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:choose>
-                        <c:when test="${not empty announcements}">
-                            <c:forEach var="ann" items="${announcements}">
-                                <%--
-                                  ann[0]=id, ann[1]=title, ann[2]=message,
-                                  ann[3]=priority, ann[4]=postedBy, ann[5]=timestamp
-                                --%>
-                                <tr style="border-bottom: 1px solid var(--line);">
-                                    <td style="padding:12px 14px; font-weight:600;">${ann[1]}</td>
-                                    <td style="padding:12px 14px; max-width:260px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-style:italic; opacity:0.8;">${ann[2]}</td>
-                                    <td style="padding:12px 14px;">
-                                        <c:choose>
-                                            <c:when test="${ann[3] eq 'HIGH'}">
-                                                <span class="badge" style="background:#fee2e2; color:#b91c1c;">🔴 HIGH</span>
-                                            </c:when>
-                                            <c:when test="${ann[3] eq 'LOW'}">
-                                                <span class="badge" style="background:#dcfce7; color:#15803d;">🟢 LOW</span>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <span class="badge" style="background:#fef9c3; color:#92400e;">🟡 MEDIUM</span>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                    <td style="padding:12px 14px;">${ann[4]}</td>
-                                    <td style="padding:12px 14px; opacity:0.7; font-size:0.85rem;">${ann[5]}</td>
-                                    <td style="padding:12px 14px; text-align:center;">
-                                        <%-- EDIT button → opens pre-filled modal --%>
-                                        <button class="btn btn-ghost btn-sm"
-                                                onclick="openEditModal('${ann[0]}','${ann[1]}','${ann[2]}','${ann[3]}')">
-                                            ✏️ Edit
-                                        </button>
-                                        <%-- DELETE button --%>
-                                        <form action="adminAnnouncement" method="post" style="display:inline;"
-                                              onsubmit="return confirm('Delete announcement \'${ann[1]}\'? This cannot be undone.');">
-                                            <input type="hidden" name="action"         value="delete"/>
-                                            <input type="hidden" name="announcementId" value="${ann[0]}"/>
-                                            <button type="submit" class="btn btn-danger btn-sm">🗑️ Delete</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                        </c:when>
-                        <c:otherwise>
-                            <tr>
-                                <td colspan="6" class="empty-state" style="text-align:center; padding:40px; opacity:0.5;">
-                                    No announcements posted yet. Click "+ New Announcement" to start.
-                                </td>
-                            </tr>
-                        </c:otherwise>
-                    </c:choose>
-                </tbody>
-            </table>
-        </div>
+        </form>
     </div>
-    <%-- ════════════════════ END PANEL: ANNOUNCEMENTS ════════════════════ --%>
+</div>
 
-
-    <%-- ══════════════════════ MODAL: CREATE ANNOUNCEMENT ══════════════════════ --%>
-    <div id="create-ann-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45);
-         z-index:9999; align-items:center; justify-content:center;">
-        <div style="background:var(--bg); border-radius:var(--r); padding:32px; width:100%; max-width:520px;
-                    box-shadow:0 20px 60px rgba(0,0,0,0.25); border:1px solid var(--line);">
-            <h3 style="margin:0 0 20px 0;">📢 New Announcement</h3>
-            <form action="adminAnnouncement" method="post">
-                <input type="hidden" name="action" value="create"/>
-
-                <div style="margin-bottom:16px;">
-                    <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:6px;">Title *</label>
-                    <input type="text" name="announcementTitle" required maxlength="120"
-                           placeholder="e.g. Scheduled Maintenance on 10 May"
-                           style="width:100%; padding:10px 12px; border:1.5px solid var(--line);
-                                  border-radius:8px; background:var(--bg); color:var(--ink);
-                                  font-family:var(--font-sans); font-size:0.9rem; box-sizing:border-box;"/>
-                </div>
-
-                <div style="margin-bottom:16px;">
-                    <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:6px;">Message *</label>
-                    <textarea name="announcementMessage" required rows="4" maxlength="400"
-                              placeholder="Write the announcement body here…"
-                              style="width:100%; padding:10px 12px; border:1.5px solid var(--line);
-                                     border-radius:8px; background:var(--bg); color:var(--ink);
-                                     font-family:var(--font-sans); font-size:0.9rem; resize:vertical;
-                                     box-sizing:border-box;"></textarea>
-                </div>
-
-                <div style="margin-bottom:24px;">
-                    <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:6px;">Priority</label>
-                    <select name="announcementPriority"
-                            style="padding:10px 12px; border:1.5px solid var(--line); border-radius:8px;
-                                   background:var(--bg); color:var(--ink); font-family:var(--font-sans);
-                                   font-size:0.9rem; cursor:pointer;">
-                        <option value="LOW">🟢 Low</option>
-                        <option value="MEDIUM" selected>🟡 Medium</option>
-                        <option value="HIGH">🔴 High</option>
-                    </select>
-                </div>
-
-                <div style="display:flex; gap:10px; justify-content:flex-end;">
-                    <button type="button" class="btn btn-ghost"
-                            onclick="document.getElementById('create-ann-modal').style.display='none'">
-                        Cancel
-                    </button>
-                    <button type="submit" class="btn btn-primary">Post Announcement</button>
-                </div>
-            </form>
-        </div>
+<!-- ══════════ MODAL: EDIT ANNOUNCEMENT ══════════ -->
+<div id="edit-ann-modal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-title">✏️ Edit Announcement</div>
+        <form action="adminAnnouncement" method="post">
+            <input type="hidden" name="action" value="update"/>
+            <input type="hidden" name="announcementId" id="edit-ann-id"/>
+            <div class="form-group">
+                <label class="form-label">Title *</label>
+                <input type="text" name="announcementTitle" id="edit-ann-title" required maxlength="120" class="form-input"/>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Message *</label>
+                <textarea name="announcementMessage" id="edit-ann-message" required rows="4" maxlength="400" class="form-input" style="resize:vertical;"></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Priority</label>
+                <select name="announcementPriority" id="edit-ann-priority" class="form-input">
+                    <option value="LOW">🟢 Low</option>
+                    <option value="MEDIUM">🟡 Medium</option>
+                    <option value="HIGH">🔴 High</option>
+                </select>
+            </div>
+            <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:8px;">
+                <button type="button" class="btn-ghost btn" onclick="document.getElementById('edit-ann-modal').style.display='none'">Cancel</button>
+                <button type="submit" class="btn">Save Changes</button>
+            </div>
+        </form>
     </div>
-    <%-- ══════════════════ END MODAL: CREATE ANNOUNCEMENT ══════════════════ --%>
+</div>
 
 
-    <%-- ══════════════════════ MODAL: EDIT ANNOUNCEMENT ══════════════════════ --%>
-    <div id="edit-ann-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45);
-         z-index:9999; align-items:center; justify-content:center;">
-        <div style="background:var(--bg); border-radius:var(--r); padding:32px; width:100%; max-width:520px;
-                    box-shadow:0 20px 60px rgba(0,0,0,0.25); border:1px solid var(--line);">
-            <h3 style="margin:0 0 20px 0;">✏️ Edit Announcement</h3>
-            <form action="adminAnnouncement" method="post">
-                <input type="hidden" name="action"         value="update"/>
-                <input type="hidden" name="announcementId" id="edit-ann-id"/>
-
-                <div style="margin-bottom:16px;">
-                    <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:6px;">Title *</label>
-                    <input type="text" name="announcementTitle" id="edit-ann-title" required maxlength="120"
-                           style="width:100%; padding:10px 12px; border:1.5px solid var(--line);
-                                  border-radius:8px; background:var(--bg); color:var(--ink);
-                                  font-family:var(--font-sans); font-size:0.9rem; box-sizing:border-box;"/>
-                </div>
-
-                <div style="margin-bottom:16px;">
-                    <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:6px;">Message *</label>
-                    <textarea name="announcementMessage" id="edit-ann-message" required rows="4" maxlength="400"
-                              style="width:100%; padding:10px 12px; border:1.5px solid var(--line);
-                                     border-radius:8px; background:var(--bg); color:var(--ink);
-                                     font-family:var(--font-sans); font-size:0.9rem; resize:vertical;
-                                     box-sizing:border-box;"></textarea>
-                </div>
-
-                <div style="margin-bottom:24px;">
-                    <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:6px;">Priority</label>
-                    <select name="announcementPriority" id="edit-ann-priority"
-                            style="padding:10px 12px; border:1.5px solid var(--line); border-radius:8px;
-                                   background:var(--bg); color:var(--ink); font-family:var(--font-sans);
-                                   font-size:0.9rem; cursor:pointer;">
-                        <option value="LOW">🟢 Low</option>
-                        <option value="MEDIUM">🟡 Medium</option>
-                        <option value="HIGH">🔴 High</option>
-                    </select>
-                </div>
-
-                <div style="display:flex; gap:10px; justify-content:flex-end;">
-                    <button type="button" class="btn btn-ghost"
-                            onclick="document.getElementById('edit-ann-modal').style.display='none'">
-                        Cancel
-                    </button>
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    <%-- ══════════════════ END MODAL: EDIT ANNOUNCEMENT ══════════════════ --%>
-
-
-    <%-- ══════════════════ JS: open edit modal with pre-filled data ══════════════════ --%>
-    <script>
-    function openEditModal(id, title, message, priority) {
-        document.getElementById('edit-ann-id').value       = id;
-        document.getElementById('edit-ann-title').value    = title;
-        document.getElementById('edit-ann-message').value  = message;
-        document.getElementById('edit-ann-priority').value = priority;
-        document.getElementById('edit-ann-modal').style.display = 'flex';
-    }
-    // Close modals when clicking the dark overlay
-    ['create-ann-modal','edit-ann-modal'].forEach(function(id) {
-        document.getElementById(id).addEventListener('click', function(e) {
-            if (e.target === this) this.style.display = 'none';
-        });
-    });
-    </script>
-
-</div><!-- /dashboard-container -->
-
-<!-- ═══════════════ HIDDEN DATA FOR CHARTS (JSP → JS) ═══════════════ -->
+<!-- ══ HIDDEN DATA FOR CHARTS ══ -->
 <div id="chart-data"
      data-buyers="${totalBuyers}"
      data-sellers="${totalSellers}"
      data-admins="${totalAdmins}"
      data-total-reviews="${totalReviews}"
-     style="display:none;">
-    <%-- property type counts are computed in JS from table DOM --%>
-</div>
+     data-total-bookings="${totalBookings}"
+     data-completed="${completedBookings}"
+     data-reserved="${reservedBookings}"
+     style="display:none;"></div>
+
 
 <script>
 /* ─── THEME ─── */
@@ -748,42 +1072,73 @@ function toggleTheme() {
     const body = document.getElementById('body-theme');
     const isDark = body.getAttribute('data-theme') === 'dark';
     body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+    localStorage.setItem('nestiq-theme', isDark ? 'light' : 'dark');
     document.getElementById('theme-toggle').innerHTML = isDark ? '🌙' : '☀️';
     rebuildCharts();
 }
 
-/* ─── TAB NAVIGATION ─── */
+/* ─── PANEL NAVIGATION ─── */
+const panelTitles = {
+    overview: 'Dashboard Overview',
+    users: 'User Management',
+    properties: 'Property Management',
+    bookings: 'Booking Management',
+    sold: 'Sold Properties',
+    reviews: 'Review Management',
+    announcements: 'Announcements',
+    analytics: 'Analytics & Insights',
+    account: 'My Account'
+};
+
 function showPanel(name, btn) {
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(t => t.classList.remove('active'));
     document.getElementById('panel-' + name).classList.add('active');
-    btn.classList.add('active');
-    if (name === 'analytics') setTimeout(buildCharts, 80);
+    if (btn) btn.classList.add('active');
+    document.getElementById('topbar-title').textContent = panelTitles[name] || name;
+    if (name === 'analytics' || name === 'overview') setTimeout(buildCharts, 80);
+    if (name === 'overview') { buildActivityFeed(); buildTopSellers(); }
 }
 
-/* ─── LIVE SEARCH (users) ─── */
+/* ─── LIVE SEARCH ─── */
 document.addEventListener('DOMContentLoaded', function () {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    document.getElementById('body-theme').setAttribute('data-theme', savedTheme);
-    document.getElementById('theme-toggle').innerHTML = savedTheme === 'dark' ? '☀️' : '🌙';
+    // Restore theme
+    const saved = localStorage.getItem('nestiq-theme') || 'light';
+    document.getElementById('body-theme').setAttribute('data-theme', saved);
+    document.getElementById('theme-toggle').innerHTML = saved === 'dark' ? '☀️' : '🌙';
 
-    document.getElementById('user-search').addEventListener('input', function () {
-        filterTable('user-management-table', this.value, [0, 1]);
+    const searches = [
+        { id: 'user-search',     table: 'user-management-table',    cols: [0,1] },
+        { id: 'property-search', table: 'property-management-table', cols: [1,6] },
+        { id: 'booking-search',  table: 'bookings-table',            cols: [1,2,3,4] },
+        { id: 'sold-search',     table: 'sold-table',                cols: [1,3] },
+        { id: 'review-search',   table: 'review-management-table',   cols: [1,2] },
+    ];
+    searches.forEach(s => {
+        const el = document.getElementById(s.id);
+        if (el) el.addEventListener('input', function() { filterTable(s.table, this.value, s.cols); });
     });
-    document.getElementById('property-search').addEventListener('input', function () {
-        filterTable('property-management-table', this.value, [1, 6]);
-    });
-    document.getElementById('review-search').addEventListener('input', function () {
-        filterTable('review-management-table', this.value, [1, 2]);
-    });
+
+    buildActivityFeed();
+    buildTopSellers();
+    setTimeout(buildCharts, 100);
 });
 
 function filterTable(tableId, term, cols) {
     const t = term.toLowerCase().trim();
     document.querySelectorAll('#' + tableId + ' tbody tr').forEach(row => {
-        const match = cols.some(c => row.cells[c] && row.cells[c].textContent.toLowerCase().includes(t));
-        row.style.display = (!t || match) ? '' : 'none';
+        if (!row.cells || row.cells.length < 2) return;
+        const match = !t || cols.some(c => row.cells[c] && row.cells[c].textContent.toLowerCase().includes(t));
+        row.style.display = match ? '' : 'none';
+    });
+}
+
+/* ─── BOOKING STATUS FILTER ─── */
+function filterBookingsByStatus(status) {
+    document.querySelectorAll('#bookings-table tbody tr').forEach(row => {
+        if (!row.cells || row.cells.length < 8) return;
+        const s = row.cells[7].textContent.trim().toUpperCase();
+        row.style.display = (!status || s.includes(status)) ? '' : 'none';
     });
 }
 
@@ -794,17 +1149,78 @@ function exportTableToCSV(tableId, filename) {
     rows.forEach(row => {
         const cols = [];
         row.querySelectorAll('th, td').forEach(cell => {
-            // skip the last column (action buttons)
             let text = cell.textContent.trim().replace(/\s+/g, ' ');
             cols.push('"' + text.replace(/"/g, '""') + '"');
         });
-        csv.push(cols.slice(0, -1).join(',')); // drop Actions column
+        csv.push(cols.slice(0, -1).join(','));
     });
     const blob = new Blob([csv.join('\n')], { type: 'text/csv' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = filename;
     a.click();
+}
+
+/* ─── ACTIVITY FEED ─── */
+function buildActivityFeed() {
+    const feed = document.getElementById('activity-feed');
+    if (!feed) return;
+    const activities = [];
+
+    // From bookings table
+    document.querySelectorAll('#bookings-table tbody tr').forEach(row => {
+        if (!row.cells || row.cells.length < 8) return;
+        const status = row.cells[7].textContent.trim();
+        const property = row.cells[1].querySelector('div') ? row.cells[1].querySelector('div').textContent.trim() : row.cells[1].textContent.trim();
+        const buyer = row.cells[4].textContent.trim();
+        const date = row.cells[5].textContent.trim();
+        activities.push({ type: 'booking', icon: '📅', text: buyer + ' booked "' + property + '"', time: date, cls: 'booking' });
+    });
+
+    // From sold table
+    document.querySelectorAll('#sold-table tbody tr').forEach(row => {
+        if (!row.cells || row.cells.length < 6) return;
+        const title = row.cells[1].textContent.trim();
+        activities.push({ type: 'sold', icon: '🏆', text: '"' + title + '" marked as sold', time: 'Recently', cls: 'sold' });
+    });
+
+    // Sort by time descending (simple string sort works for ISO dates)
+    activities.sort((a, b) => b.time.localeCompare(a.time));
+
+    const recent = activities.slice(0, 8);
+    if (recent.length === 0) {
+        feed.innerHTML = '<div style="opacity:0.4; text-align:center; padding:24px;">No recent activity</div>';
+        return;
+    }
+    feed.innerHTML = recent.map(a =>
+        '<div class="activity-item">' +
+        '<div class="activity-dot ' + a.cls + '">' + a.icon + '</div>' +
+        '<div><div class="activity-text">' + a.text + '</div><div class="activity-time">' + a.time + '</div></div>' +
+        '</div>'
+    ).join('');
+}
+
+/* ─── TOP SELLERS ─── */
+function buildTopSellers() {
+    const board = document.getElementById('top-sellers-board');
+    if (!board) return;
+    const counts = {};
+    document.querySelectorAll('#property-management-table tbody tr').forEach(row => {
+        if (!row.cells || row.cells.length < 8) return;
+        const seller = row.cells[6].textContent.trim();
+        if (seller) counts[seller] = (counts[seller] || 0) + 1;
+    });
+    const sorted = Object.entries(counts).sort((a,b) => b[1]-a[1]).slice(0,6);
+    if (sorted.length === 0) { board.innerHTML = '<div style="opacity:0.4; text-align:center; padding:24px;">No seller data available</div>'; return; }
+    const max = sorted[0][1];
+    board.innerHTML = sorted.map(([name,cnt], i) =>
+        '<div class="leaderboard-row">' +
+        '<div class="leaderboard-rank">' + (i+1) + '</div>' +
+        '<div class="leaderboard-name">' + name + '</div>' +
+        '<div class="leaderboard-bar-wrap"><div class="leaderboard-bar" style="width:' + Math.round(cnt/max*100) + '%;"></div></div>' +
+        '<div class="leaderboard-count">' + cnt + '</div>' +
+        '</div>'
+    ).join('');
 }
 
 /* ─── CHARTS ─── */
@@ -818,16 +1234,19 @@ function rebuildCharts() {
 
 function buildCharts() {
     const isDark = document.getElementById('body-theme').getAttribute('data-theme') === 'dark';
-    const textColor = isDark ? '#ffffff' : '#0f1117';
-    const gridColor = isDark ? '#232736' : '#e8eaee';
-
+    const textColor = isDark ? '#e8ecf4' : '#0a0e1a';
+    const gridColor = isDark ? '#252d42' : '#e2e6f0';
     const d = document.getElementById('chart-data');
-    const buyers  = parseInt(d.dataset.buyers)  || 0;
-    const sellers = parseInt(d.dataset.sellers) || 0;
-    const admins  = parseInt(d.dataset.admins)  || 0;
 
-    // ── Count property types from table ──
-    const typeCounts = {};
+    const buyers    = parseInt(d.dataset.buyers)    || 0;
+    const sellers   = parseInt(d.dataset.sellers)   || 0;
+    const admins    = parseInt(d.dataset.admins)    || 0;
+    const completed = parseInt(d.dataset.completed) || 0;
+    const reserved  = parseInt(d.dataset.reserved)  || 0;
+    const cancelled = (parseInt(d.dataset.totalBookings) || 0) - completed - reserved;
+
+    // Compute from tables
+    const typeCounts   = {};
     const statusCounts = { 'For Sale': 0, 'For Rent': 0 };
     document.querySelectorAll('#property-management-table tbody tr').forEach(row => {
         if (row.cells.length < 7) return;
@@ -837,80 +1256,64 @@ function buildCharts() {
         if (status.includes('Sale')) statusCounts['For Sale']++;
         else statusCounts['For Rent']++;
     });
-
-    // ── Count ratings from review table ──
-    const ratingCounts = { '1★': 0, '2★': 0, '3★': 0, '4★': 0, '5★': 0 };
+    const sellerCounts = {};
+    document.querySelectorAll('#property-management-table tbody tr').forEach(row => {
+        if (row.cells.length < 8) return;
+        const s = row.cells[6].textContent.trim();
+        if (s) sellerCounts[s] = (sellerCounts[s] || 0) + 1;
+    });
+    const ratingCounts = {'1★':0,'2★':0,'3★':0,'4★':0,'5★':0};
     document.querySelectorAll('#review-management-table tbody tr').forEach(row => {
         if (row.cells.length < 4) return;
-        const ratingText = row.cells[3].textContent.trim();
-        const match = ratingText.match(/(\d)\/5/);
-        if (match) ratingCounts[match[1] + '★']++;
+        const m = row.cells[3].textContent.trim().match(/(\d)\/5/);
+        if (m) ratingCounts[m[1]+'★']++;
     });
 
-    const defaults = { responsive: true, maintainAspectRatio: true };
+    const top5sellers = Object.entries(sellerCounts).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    const opts = { responsive:true, maintainAspectRatio:true };
+    const legendOpts = { labels: { color: textColor, font: { family: 'Outfit', size: 12 }, padding: 14 } };
+    const scaleOpts = (axis) => ({ ticks: { color:textColor, font:{family:'Outfit'} }, grid: { color:gridColor } });
 
-    // 1. User Pie
-    if (!chartInstances.userPie) {
-        chartInstances.userPie = new Chart(document.getElementById('userPieChart'), {
-            type: 'doughnut',
-            data: {
-                labels: ['Buyers', 'Sellers', 'Admins'],
-                datasets: [{ data: [buyers, sellers, admins], backgroundColor: ['#1a56db', '#0d9e6e', '#d97706'], borderWidth: 0 }]
-            },
-            options: { ...defaults, plugins: { legend: { labels: { color: textColor, font: { family: 'Outfit', size: 13 } } } } }
-        });
-    }
+    const make = (id, config) => {
+        if (!chartInstances[id]) {
+            const el = document.getElementById(id);
+            if (el) chartInstances[id] = new Chart(el, config);
+        }
+    };
 
-    // 2. Property Type Bar
-    if (!chartInstances.propType) {
-        chartInstances.propType = new Chart(document.getElementById('propertyTypeChart'), {
-            type: 'bar',
-            data: {
-                labels: Object.keys(typeCounts),
-                datasets: [{ label: 'Properties', data: Object.values(typeCounts), backgroundColor: '#1a56db', borderRadius: 6 }]
-            },
-            options: {
-                ...defaults,
-                plugins: { legend: { display: false } },
-                scales: {
-                    x: { ticks: { color: textColor, font: { family: 'Outfit' } }, grid: { color: gridColor } },
-                    y: { ticks: { color: textColor, font: { family: 'Outfit' }, stepSize: 1 }, grid: { color: gridColor } }
-                }
-            }
-        });
-    }
+    // 1 User pie
+    make('userPieChart', { type:'doughnut', data: { labels:['Buyers','Sellers','Admins'], datasets:[{data:[buyers,sellers,admins], backgroundColor:['#2563eb','#059669','#d97706'], borderWidth:0}] }, options:{...opts, cutout:'60%', plugins:{legend:legendOpts}} });
+    make('overviewUserPie', { type:'doughnut', data:{ labels:['Buyers','Sellers','Admins'], datasets:[{data:[buyers,sellers,admins], backgroundColor:['#2563eb','#059669','#d97706'], borderWidth:0}] }, options:{...opts, cutout:'60%', plugins:{legend:legendOpts}} });
 
-    // 3. Status Pie
-    if (!chartInstances.status) {
-        chartInstances.status = new Chart(document.getElementById('propertyStatusChart'), {
-            type: 'doughnut',
-            data: {
-                labels: Object.keys(statusCounts),
-                datasets: [{ data: Object.values(statusCounts), backgroundColor: ['#0d9e6e', '#1a56db'], borderWidth: 0 }]
-            },
-            options: { ...defaults, plugins: { legend: { labels: { color: textColor, font: { family: 'Outfit', size: 13 } } } } }
-        });
-    }
+    // 2 Property type bar
+    make('propertyTypeChart', { type:'bar', data:{ labels:Object.keys(typeCounts), datasets:[{label:'Properties', data:Object.values(typeCounts), backgroundColor:'#2563eb', borderRadius:6}] }, options:{...opts, plugins:{legend:{display:false}}, scales:{x:scaleOpts(),y:{...scaleOpts(), ticks:{...scaleOpts().ticks, stepSize:1}}}} });
 
-    // 4. Ratings Bar
-    if (!chartInstances.ratings) {
-        chartInstances.ratings = new Chart(document.getElementById('ratingsChart'), {
-            type: 'bar',
-            data: {
-                labels: Object.keys(ratingCounts),
-                datasets: [{ label: 'Reviews', data: Object.values(ratingCounts), backgroundColor: '#f59e0b', borderRadius: 6 }]
-            },
-            options: {
-                ...defaults,
-                plugins: { legend: { display: false } },
-                scales: {
-                    x: { ticks: { color: textColor, font: { family: 'Outfit' } }, grid: { color: gridColor } },
-                    y: { ticks: { color: textColor, font: { family: 'Outfit' }, stepSize: 1 }, grid: { color: gridColor } }
-                }
-            }
-        });
-    }
+    // 3 Property status pie
+    make('propertyStatusChart', { type:'doughnut', data:{ labels:Object.keys(statusCounts), datasets:[{data:Object.values(statusCounts), backgroundColor:['#059669','#2563eb'], borderWidth:0}] }, options:{...opts, cutout:'60%', plugins:{legend:legendOpts}} });
+
+    // 4 Ratings bar
+    make('ratingsChart', { type:'bar', data:{ labels:Object.keys(ratingCounts), datasets:[{label:'Reviews', data:Object.values(ratingCounts), backgroundColor:'#f59e0b', borderRadius:6}] }, options:{...opts, plugins:{legend:{display:false}}, scales:{x:scaleOpts(),y:{...scaleOpts(), ticks:{...scaleOpts().ticks, stepSize:1}}}} });
+
+    // 5 Booking status doughnut (new)
+    make('bookingStatusChart', { type:'doughnut', data:{ labels:['Completed','Reserved','Cancelled'], datasets:[{data:[completed, reserved, Math.max(0,cancelled)], backgroundColor:['#059669','#2563eb','#dc2626'], borderWidth:0}] }, options:{...opts, cutout:'60%', plugins:{legend:legendOpts}} });
+    make('overviewBookingStatus', { type:'doughnut', data:{ labels:['Completed','Reserved','Cancelled'], datasets:[{data:[completed, reserved, Math.max(0,cancelled)], backgroundColor:['#059669','#2563eb','#dc2626'], borderWidth:0}] }, options:{...opts, cutout:'60%', plugins:{legend:legendOpts}} });
+
+    // 6 Top sellers bar (new)
+    make('topSellersChart', { type:'bar', data:{ labels:top5sellers.map(x=>x[0]), datasets:[{label:'Listings', data:top5sellers.map(x=>x[1]), backgroundColor:['#2563eb','#059669','#d97706','#7c3aed','#dc2626'], borderRadius:6}] }, options:{...opts, indexAxis:'y', plugins:{legend:{display:false}}, scales:{x:{...scaleOpts(), ticks:{...scaleOpts().ticks, stepSize:1}}, y:scaleOpts()}} });
 }
+
+/* ─── MODAL HELPERS ─── */
+function openEditModal(id, title, message, priority) {
+    document.getElementById('edit-ann-id').value       = id;
+    document.getElementById('edit-ann-title').value    = title;
+    document.getElementById('edit-ann-message').value  = message;
+    document.getElementById('edit-ann-priority').value = priority;
+    document.getElementById('edit-ann-modal').style.display = 'flex';
+}
+['create-ann-modal','edit-ann-modal'].forEach(function(id) {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('click', function(e) { if (e.target === this) this.style.display = 'none'; });
+});
 </script>
 
 </body>
