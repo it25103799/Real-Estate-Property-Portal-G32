@@ -173,7 +173,7 @@ public class SellerDashboardServlet extends HttpServlet {
         // Notifications (unread messages for bell bubble)
         List<Map<String, String>> allNotifications = new ArrayList<>();
         File readsFile = new File(getServletContext().getRealPath("/WEB-INF/inquiry_reads.tsv"));
-        
+
         // Load read timestamps for checking notification read status
         Map<String, String> lastRead = new HashMap<>();
         if (readsFile.exists()) {
@@ -246,9 +246,27 @@ public class SellerDashboardServlet extends HttpServlet {
         }
 
         // ─── BOOKINGS MODULE ─────────────────────────────────────────────────────
-        final double PENALTY_PER_DAY = 100.0;
         java.time.format.DateTimeFormatter dtf = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd");
         java.time.LocalDate today = java.time.LocalDate.now();
+
+        // Build a map of propertyId -> dailyPrice from properties.txt
+        java.util.Map<String, Double> propertyPriceMap = new java.util.HashMap<>();
+        File propFileForPenalty = new File(getServletContext().getRealPath("/WEB-INF/properties.txt"));
+        if (propFileForPenalty.exists()) {
+            try (BufferedReader pr = new BufferedReader(
+                    new InputStreamReader(Files.newInputStream(Paths.get(propFileForPenalty.getAbsolutePath())),
+                            StandardCharsets.UTF_8))) {
+                String pl;
+                while ((pl = pr.readLine()) != null) {
+                    if (pl.trim().isEmpty() || pl.trim().startsWith("#")) continue;
+                    String[] pd = pl.split(",", -1);
+                    if (pd.length >= 3) {
+                        try { propertyPriceMap.put(pd[0].trim(), Double.parseDouble(pd[2].trim())); }
+                        catch (NumberFormatException ignored) {}
+                    }
+                }
+            } catch (Exception ignored) {}
+        }
 
         List<Map<String, String>> activeBookings    = new ArrayList<>();
         List<Map<String, String>> completedBookings = new ArrayList<>();
@@ -282,13 +300,18 @@ public class SellerDashboardServlet extends HttpServlet {
                     bk.put("returnDate",    d[9]);
                     bk.put("status",        d[10]);
 
+                    // Use the property's own daily price as the penalty rate
+                    double dailyRate = propertyPriceMap.getOrDefault(d[1].trim(), 100.0);
+                    bk.put("dailyRate", String.format("%.2f", dailyRate));
+
                     double penalty = 0.0;
                     try {
                         java.time.LocalDate returnDate = java.time.LocalDate.parse(d[9], dtf);
                         if (!"COMPLETED".equalsIgnoreCase(d[10]) && today.isAfter(returnDate)) {
                             long daysOverdue = java.time.temporal.ChronoUnit.DAYS.between(returnDate, today);
-                            penalty = daysOverdue * PENALTY_PER_DAY;
+                            penalty = daysOverdue * dailyRate;
                             bk.put("status", "OVERDUE");
+                            bk.put("daysOverdue", String.valueOf(daysOverdue));
                         }
                     } catch (Exception ignored) {}
                     bk.put("penaltyFee", String.format("%.2f", penalty));
@@ -299,7 +322,7 @@ public class SellerDashboardServlet extends HttpServlet {
                         activeBookings.add(bk);
                         reservedPropIds.add(d[1]);
                     }
-                    
+
                     // Check for booking update notifications
                     String updateThreadId = "BOOKING_UPDATE_" + d[0];
                     String updateLr = lastRead.get(loggedUser + "|" + updateThreadId);

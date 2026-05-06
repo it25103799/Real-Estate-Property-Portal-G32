@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -58,6 +59,64 @@
             margin-bottom: 30px;
             color: var(--ink); /* Automatically shifts text color */
             max-width: 400px;
+        }
+
+        /* ── SELLER STATS ROW (profile + stats side-by-side) ── */
+        .seller-top-row {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            margin-bottom: 0;
+            flex-wrap: wrap;
+        }
+        .seller-top-row .profile-section {
+            margin-bottom: 30px;
+            flex-shrink: 0;
+        }
+        .seller-stats-panel {
+            flex: 1;
+            min-width: 220px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: var(--bg);
+            border: 1px solid var(--line);
+            border-radius: var(--r);
+            box-shadow: 0 4px 16px rgba(0,0,0,.04);
+            padding: 18px 22px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .stat-icon {
+            font-size: 1.6rem;
+            flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .stat-icon.total   { background: rgba(26,86,219,0.10); }
+        .stat-icon.booked  { background: rgba(245,158,11,0.12); }
+        .stat-icon.done    { background: rgba(13,158,110,0.12); }
+        .stat-info { display: flex; flex-direction: column; gap: 2px; }
+        .stat-value {
+            font-size: 1.7rem;
+            font-weight: 700;
+            line-height: 1;
+            color: var(--ink);
+        }
+        .stat-label {
+            font-size: 0.78rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.55;
         }
 
         .profile-header {
@@ -212,6 +271,9 @@
             </div>
     </div>
 
+    <!-- ── SELLER TOP ROW: Personal Info + Stats Cards ── -->
+    <div class="seller-top-row">
+
     <div class="profile-section">
         <div class="profile-header">
             <h3>Personal Information</h3>
@@ -258,8 +320,43 @@
                     </form>
         </div>
     </div>
+    <!-- end .profile-section -->
 
-    <div class="card">
+        <!-- ── STATS PANEL ── -->
+        <div class="seller-stats-panel">
+
+            <%-- Total Properties --%>
+            <div class="stat-card">
+                <div class="stat-icon total">🏠</div>
+                <div class="stat-info">
+                    <span class="stat-value">${not empty myProperties ? myProperties.size() : 0}</span>
+                    <span class="stat-label">Total Properties</span>
+                </div>
+            </div>
+
+            <%-- Booked / Active --%>
+            <div class="stat-card">
+                <div class="stat-icon booked">📋</div>
+                <div class="stat-info">
+                    <span class="stat-value">${not empty activeBookings ? activeBookings.size() : 0}</span>
+                    <span class="stat-label">Booked / Active</span>
+                </div>
+            </div>
+
+            <%-- Sold / Completed --%>
+            <div class="stat-card">
+                <div class="stat-icon done">✅</div>
+                <div class="stat-info">
+                    <span class="stat-value">${not empty completedBookings ? completedBookings.size() : 0}</span>
+                    <span class="stat-label">Sold / Completed</span>
+                </div>
+            </div>
+
+        </div>
+        <!-- end .seller-stats-panel -->
+
+    </div>
+    <!-- end .seller-top-row -->
         <h3 class="card-title">List a New Property</h3>
         <p style="color: #0d9e6e; font-weight: bold;">${successMessage}</p>
         <form action="addProperty" method="post" class="form-grid">
@@ -464,9 +561,17 @@
                                 <td>
                                     <c:choose>
                                         <c:when test="${bk.penaltyFee != '0.00'}">
-                                            <span style="color:#e02828; font-weight:600;">$${bk.penaltyFee}</span>
+                                            <div style="color:#e02828; font-weight:700;">$<fmt:formatNumber value="${bk.penaltyFee}" pattern="#,##0.00" /></div>
+                                            <c:if test="${not empty bk.daysOverdue}">
+                                                <div style="font-size:0.72rem;color:#e02828;margin-top:2px;">${bk.daysOverdue} × $<fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" />/day</div>
+                                            </c:if>
                                         </c:when>
-                                        <c:otherwise><span style="opacity:0.4;">&#8212;</span></c:otherwise>
+                                        <c:otherwise>
+                                            <div style="opacity:0.4;">&#8212;</div>
+                                            <c:if test="${not empty bk.dailyRate}">
+                                                <div style="font-size:0.72rem;opacity:0.55;margin-top:2px;">Rate: $<fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" />/day</div>
+                                            </c:if>
+                                        </c:otherwise>
                                     </c:choose>
                                 </td>
                                 <td>
@@ -677,7 +782,7 @@
 
         if (statusSelect && priceLabel) {
             if (statusSelect.value === 'For Rent') {
-                priceLabel.innerText = 'Monthly Price ($)';
+                priceLabel.innerText = 'Daily Price ($)';
             } else {
                 priceLabel.innerText = 'Price ($)';
             }

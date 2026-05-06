@@ -147,6 +147,7 @@ function renderHomeFeaturedProperties() {
         const isRent = safeStatus.includes('rent');
         const tagClass = isRent ? 'tag-rent' : 'tag-sale';
         const tagText = isRent ? 'For Rent' : 'For Sale';
+        const rentSuffixSimple = isRent ? '<span style="font-size:0.58em;font-weight:400;color:var(--ink3)">/day</span>' : '';
 
         return `
         <div class="prop-card" onclick="openDetail('${p.id}')" style="cursor: pointer;">
@@ -157,7 +158,7 @@ function renderHomeFeaturedProperties() {
                 </div>
             </div>
             <div class="prop-body">
-                <div class="prop-price">$${displayPrice}</div>
+                <div class="prop-price">$${displayPrice} ${rentSuffixSimple}</div>
                 <div class="prop-name">${p.title}</div>
                 <div class="prop-loc">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -329,13 +330,13 @@ function buildPriceRangeDropdown() {
 
     const prices = window.properties.map(p => parseFloat(p.price)).filter(v => !isNaN(v));
     if (prices.length === 0) return;
-    
+
     const realMin = Math.min(...prices);
     const realMax = Math.max(...prices);
 
     // Generate smart breakpoints based on actual property prices
     let breaks = [];
-    
+
     if (realMax <= 100000) {
         // Low range properties (under $100K)
         breaks = [0, 10000, 25000, 50000, 100000];
@@ -377,7 +378,7 @@ function buildPriceRangeDropdown() {
     const prevValue = select.value;
 
     select.innerHTML = '<option value="all">All Prices</option>';
-    
+
     // Count properties in each range to show count
     for (let i = 0; i < breaks.length - 1; i++) {
         const lo = breaks[i];
@@ -385,14 +386,14 @@ function buildPriceRangeDropdown() {
         // Count properties in this range
         const count = prices.filter(price => price >= lo && price < hi).length;
         if (count === 0) continue; // Skip empty ranges
-        
+
         const label = lo === 0 ? 'Under ' + fmt(hi) : fmt(lo) + ' - ' + fmt(hi);
         const opt = document.createElement('option');
         opt.value = lo + '|' + hi;
         opt.textContent = label + ' (' + count + ' props)';
         select.appendChild(opt);
     }
-    
+
     // 'Above X' bracket for anything at or above the last break
     const topBreak = breaks[breaks.length - 1];
     const aboveCount = prices.filter(price => price >= topBreak).length;
@@ -407,7 +408,7 @@ function buildPriceRangeDropdown() {
     if (prevValue && select.querySelector('option[value="' + prevValue + '"]')) {
         select.value = prevValue;
     }
-    
+
     console.log('Price range dropdown built with ' + (select.options.length - 1) + ' ranges');
     console.log('Price range: ' + fmt(realMin) + ' to ' + fmt(realMax));
 }
@@ -492,7 +493,7 @@ function renderListings() {
         const typeLabel    = p.type ? p.type.charAt(0).toUpperCase() + p.type.slice(1) : 'Property';
         const statusTag    = isRent ? 'For Rent' : 'For Sale';
         const tagClass     = isRent ? 'tag-rent' : 'tag-sale';
-        const rentSuffix   = isRent ? '<span style="font-size:0.58em;font-weight:400;color:var(--ink4)">/mo</span>' : '';
+        const rentSuffix   = isRent ? '<span style="font-size:0.58em;font-weight:400;color:var(--ink4)">/day</span>' : '';
 
         if (currentViewMode === 'list') {
             // ── LIST ROW ──
@@ -588,7 +589,10 @@ function openDetail(id) {
     document.getElementById('detail-address-text').innerText = p.location;
 
     const displayPrice = typeof p.price === 'number' ? p.price.toLocaleString() : p.price;
-    document.getElementById('detail-price').innerText = "$" + displayPrice;
+    const isRentDetail = p.status && String(p.status).toLowerCase().includes('rent');
+    document.getElementById('detail-price').innerHTML = "$" + displayPrice + (isRentDetail ? ' <span style="font-size:0.55em;font-weight:400;color:var(--ink4)">/day</span>' : '');
+    const priceLabelEl = document.getElementById('detail-price-label');
+    if (priceLabelEl) priceLabelEl.innerText = isRentDetail ? 'Daily Rental Price' : 'Listing Price';
 
     const favInput = document.getElementById('fav-property-id');
     if (favInput) favInput.value = String(id);
@@ -657,6 +661,27 @@ function openDetail(id) {
                 document.getElementById('book-prop-id').value = String(id);
                 document.getElementById('book-prop-title').value = p.title;
                 document.getElementById('book-seller-name').value = realSeller;
+                // Pass the property's daily price so the servlet can use it as penalty rate
+                const bookPropPriceEl = document.getElementById('book-prop-price');
+                if (bookPropPriceEl) bookPropPriceEl.value = typeof p.price === 'number' ? p.price : (parseFloat(p.price) || 0);
+
+                // Inject penalty warning notice (only once)
+                if (!document.getElementById('penalty-warning-notice')) {
+                    const priceFormatted = typeof p.price === 'number'
+                        ? p.price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})
+                        : parseFloat(p.price).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                    const notice = document.createElement('div');
+                    notice.id = 'penalty-warning-notice';
+                    notice.innerHTML = `⚠️ <strong>Penalty Notice:</strong> If the rental amount is not settled before the <em>Return Date</em>, a penalty of <strong>$${priceFormatted}/day</strong> will be charged automatically. This amount increases every day until full payment is received.`;
+                    notice.style.cssText = 'background:rgba(224,40,40,0.08);border:1px solid rgba(224,40,40,0.3);border-radius:8px;padding:12px 14px;font-size:0.82rem;color:#c0392b;line-height:1.5;margin-top:4px;';
+                    bookingForm.appendChild(notice);
+                } else {
+                    // Update price if notice already exists (different property opened)
+                    const priceFormatted = typeof p.price === 'number'
+                        ? p.price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})
+                        : parseFloat(p.price).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                    document.getElementById('penalty-warning-notice').innerHTML = `⚠️ <strong>Penalty Notice:</strong> If the rental amount is not settled before the <em>Return Date</em>, a penalty of <strong>$${priceFormatted}/day</strong> will be charged automatically. This amount increases every day until full payment is received.`;
+                }
 
                 // Pre-fill with user data if available
                 if (window.currentUser) {
@@ -672,7 +697,7 @@ function openDetail(id) {
                 const dateStr = tomorrow.toISOString().split('T')[0];
                 document.getElementById('book-return-date').min = dateStr;
                 document.getElementById('book-return-date').value = dateStr;
-                
+
                 console.log('✅ Booking form shown for property:', p.title);
             } else {
                 // Hide booking form for "For Sale" properties or if not a logged-in buyer
@@ -1001,14 +1026,14 @@ function openNotifThread(threadId) {
                 renderNotifications();
             }
         }
-        
+
         // Send mark as read request
         fetch('markInquiryRead', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: 'threadId=' + encodeURIComponent(threadId)
         }).catch(err => console.error("Failed to mark notification as read:", err));
-        
+
         const panel = document.getElementById('notif-panel');
         if (panel) panel.style.display = 'none';
         return;

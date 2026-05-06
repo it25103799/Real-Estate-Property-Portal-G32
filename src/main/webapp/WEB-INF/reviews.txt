@@ -10,3 +10,7 @@ REV1776012871403,c66a23ca,Ravindu Lohan,5,This is great..!!,PUBLIC
 REV1776013549396,1bae3ff8,Bhashi Navod,5,මේක නියමයි..!!❤️,PUBLIC
 REV1776860764415,d4ef95b0,Bhashi Navod,5,This is best!!,PUBLIC
 
+
+REV1778053503141,2a2b0008,Bhashi Navod,5,Highly Recomended !!
+,PUBLIC
+REV1778053551760,2a2b0008,Bhashi Navod,4,Great!!,PUBLIC

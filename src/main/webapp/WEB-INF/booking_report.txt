@@ -163,3 +163,18 @@
   Status        : RESERVED
   Penalty Rate  : $100.00 / overdue day
 
+=========================================================
+  NEW BOOKING — 2026-05-06
+=========================================================
+  Booking ID    : BK_1778053250090
+  Property      : Hegalla beach Villa  [0a22dc7a]
+  Seller        : Dinesh
+  Buyer Account : Bhashi Navod
+  Buyer Name    : Bhashi Navod
+  Buyer Email   : bhashithanavod800@gmail.com
+  Buyer Phone   : 0786324531
+  Booked On     : 2026-05-06
+  Return Date   : 2026-05-07
+  Status        : RESERVED
+  Penalty Rate  : $95000.00 / overdue day (= daily rental fee)
+

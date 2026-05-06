@@ -350,7 +350,7 @@
                                     </div>
                                 </td>
                                 <td>📍 ${p.location}</td>
-                                <td style="font-weight: 600; color: var(--accent);">$<fmt:formatNumber value="${p.price}" pattern="#,##0.00" /></td>
+                                <td style="font-weight: 600; color: var(--accent);">$<fmt:formatNumber value="${p.price}" pattern="#,##0.00" /><c:if test="${p.status == 'For Rent'}"><span style="font-size:0.75em; font-weight:400; opacity:0.65;">/day</span></c:if></td>
                                 <td>${p.type}</td>
                                 <td>${p.bedrooms}</td>
                                 <td>${p.bathrooms}</td>
@@ -427,7 +427,7 @@
         <div class="card-header">
             <h3 class="card-title">📅 My Bookings</h3>
         </div>
-        
+
         <!-- Success/Error Messages -->
         <c:if test="${param.update == 'success'}">
             <div style="background: rgba(13,158,110,0.1); border: 1px solid #0d9e6e; color: #0d9e6e; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-weight: 600;">
@@ -464,7 +464,7 @@
                 ❌ This property is currently booked and not available.
             </div>
         </c:if>
-        
+
         <!-- ENHANCEMENT: Booking Statistics -->
         <c:if test="${not empty myBookings || not empty bookingHistory}">
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px;">
@@ -482,7 +482,29 @@
             </div>
         </div>
         </c:if>
-        
+
+        <%-- ── OVERDUE GLOBAL WARNING BANNER ── --%>
+        <c:forEach var="bk" items="${myBookings}">
+            <c:if test="${bk.status == 'OVERDUE'}">
+                <div style="background:rgba(224,40,40,0.08);border:1.5px solid rgba(224,40,40,0.35);border-radius:10px;padding:14px 18px;margin-bottom:18px;display:flex;align-items:flex-start;gap:12px;">
+                    <span style="font-size:1.4rem;flex-shrink:0;">⚠️</span>
+                    <div>
+                        <div style="font-weight:700;color:var(--red);font-size:0.95rem;margin-bottom:4px;">Overdue Penalty Active — "${bk.propertyTitle}"</div>
+                        <div style="font-size:0.83rem;color:var(--ink);line-height:1.6;">
+                            Your return date of <strong>${bk.returnDate}</strong> has passed.
+                            A penalty of <strong>$<fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" /> per day</strong>
+                            (equal to the property's daily rental rate) is being charged for each overdue day.
+                            <c:if test="${not empty bk.daysOverdue}">
+                                You are currently <strong>${bk.daysOverdue} day(s) overdue</strong>.
+                            </c:if>
+                            Total penalty so far: <strong style="color:var(--red);">$<fmt:formatNumber value="${bk.penaltyFee}" pattern="#,##0.00" /></strong>.
+                            Please contact the seller <strong>${bk.sellerName}</strong> immediately to settle the outstanding amount.
+                        </div>
+                    </div>
+                </div>
+            </c:if>
+        </c:forEach>
+
         <table>
             <thead>
                 <tr>
@@ -492,6 +514,7 @@
                     <th>Booked On</th>
                     <th>Return Date</th>
                     <th>Status</th>
+                    <th>Daily Rate</th>
                     <th>Penalty Fee</th>
                     <th>Actions</th>
                 </tr>
@@ -500,7 +523,7 @@
                 <c:choose>
                     <c:when test="${not empty myBookings}">
                         <c:forEach var="bk" items="${myBookings}">
-                            <tr>
+                            <tr style="${bk.status == 'OVERDUE' ? 'background:rgba(224,40,40,0.04);' : ''}">
                                 <td style="font-size:0.82rem; opacity:0.75;">${bk.bookingId}</td>
                                 <td>
                                     <div style="font-weight:600;">${bk.propertyTitle}</div>
@@ -508,7 +531,14 @@
                                 </td>
                                 <td>${bk.sellerName}</td>
                                 <td>${bk.bookingDate}</td>
-                                <td>${bk.returnDate}</td>
+                                <td>
+                                    <div>${bk.returnDate}</div>
+                                    <c:if test="${bk.status == 'OVERDUE'}">
+                                        <div style="font-size:0.75rem;color:var(--red);font-weight:600;margin-top:2px;">
+                                            ⏰ ${bk.daysOverdue} day(s) overdue
+                                        </div>
+                                    </c:if>
+                                </td>
                                 <td>
                                     <c:choose>
                                         <c:when test="${bk.status == 'OVERDUE'}">
@@ -524,8 +554,24 @@
                                 </td>
                                 <td>
                                     <c:choose>
+                                        <c:when test="${bk.status == 'COMPLETED'}">
+                                            <span style="opacity:0.4;">—</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <div style="font-weight:600;color:var(--accent);">
+                                                $<fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" />/day
+                                            </div>
+                                            <div style="font-size:0.72rem;opacity:0.6;margin-top:1px;">penalty rate</div>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td>
+                                    <c:choose>
                                         <c:when test="${bk.penaltyFee != '0.00'}">
-                                            <span style="color:var(--red); font-weight:600;">$${bk.penaltyFee}</span>
+                                            <div style="color:var(--red); font-weight:700;">$<fmt:formatNumber value="${bk.penaltyFee}" pattern="#,##0.00" /></div>
+                                            <c:if test="${not empty bk.daysOverdue}">
+                                                <div style="font-size:0.72rem;color:var(--red);margin-top:2px;">${bk.daysOverdue} × $<fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" /></div>
+                                            </c:if>
                                         </c:when>
                                         <c:otherwise>
                                             <span style="opacity:0.5;">—</span>
@@ -535,7 +581,7 @@
                                 <td>
                                     <c:if test="${bk.status != 'COMPLETED'}">
                                         <div style="display: flex; gap: 8px;">
-                                            <button type="button" class="btn-action" style="color:var(--accent);" 
+                                            <button type="button" class="btn-action" style="color:var(--accent);"
                                                     onclick="openEditBookingModal('${bk.bookingId}', '${bk.returnDate}')">
                                                 Edit
                                             </button>
@@ -809,15 +855,15 @@
         <span class="close-btn" onclick="closeEditBookingModal()">&times;</span>
         <h3 class="card-title">✏️ Edit Booking</h3>
         <p style="color: var(--ink); opacity: 0.7; margin-bottom: 20px;">Update your return date for this booking.</p>
-        
+
         <form action="updateBooking" method="post" style="display: flex; flex-direction: column; gap: 16px;">
             <input type="hidden" name="bookingId" id="edit-booking-id">
-            
+
             <div class="form-group">
                 <label style="font-weight: 600;">New Return Date</label>
                 <input type="date" name="returnDate" id="edit-return-date" required style="padding: 10px; border: 1.5px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink);">
             </div>
-            
+
             <div style="display: flex; gap: 10px; margin-top: 10px;">
                 <button type="submit" class="btn" style="flex: 1;">💾 Update Booking</button>
                 <button type="button" class="btn" style="flex: 1; background: var(--line); color: var(--ink);" onclick="closeEditBookingModal()">Cancel</button>
@@ -830,20 +876,20 @@
     function openEditBookingModal(bookingId, currentReturnDate) {
         document.getElementById('edit-booking-id').value = bookingId;
         document.getElementById('edit-return-date').value = currentReturnDate;
-        
+
         // Set minimum date to today + 1 day
         const tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
         const dateStr = tomorrow.toISOString().split('T')[0];
         document.getElementById('edit-return-date').min = dateStr;
-        
+
         document.getElementById('editBookingModal').style.display = 'flex';
     }
-    
+
     function closeEditBookingModal() {
         document.getElementById('editBookingModal').style.display = 'none';
     }
-    
+
     // Close modal when clicking outside
     document.getElementById('editBookingModal').addEventListener('click', function(event) {
         if (event.target === this) {

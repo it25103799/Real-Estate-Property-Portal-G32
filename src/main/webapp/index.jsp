@@ -1426,7 +1426,7 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
                               </div>
                           </div>
                           <div class="prop-body">
-                              <div class="prop-price">$<fmt:formatNumber value="${p.price}" pattern="#,##0.00" /></div>
+                              <div class="prop-price">$<fmt:formatNumber value="${p.price}" pattern="#,##0.00" /><c:if test="${p.status.trim() == 'For Rent'}"><span style="font-size:0.58em;font-weight:400;color:var(--ink3)">/day</span></c:if></div>
                               <div class="prop-name">${p.title}</div>
                               <div class="prop-loc">
                                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -1883,6 +1883,7 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
             <input type="hidden" name="propertyId" id="book-prop-id">
             <input type="hidden" name="propertyTitle" id="book-prop-title">
             <input type="hidden" name="sellerName" id="book-seller-name">
+            <input type="hidden" name="propertyPrice" id="book-prop-price">
 
             <input type="text" name="buyerName" id="book-buyer-name" class="contact-form-input" placeholder="Your Full Name" required style="width: 100%;"/>
             <input type="email" name="buyerEmail" id="book-buyer-email" class="contact-form-input" placeholder="Email Address" required style="width: 100%;"/>
@@ -2100,7 +2101,7 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
             })("${p.id}")
         });
     </c:forEach>
-    
+
     // Build price range dropdown after properties are loaded
     if (typeof buildPriceRangeDropdown === 'function') {
         setTimeout(() => buildPriceRangeDropdown(), 100);

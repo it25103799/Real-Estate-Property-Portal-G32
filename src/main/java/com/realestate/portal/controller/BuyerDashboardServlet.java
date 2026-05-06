@@ -170,9 +170,28 @@ public class BuyerDashboardServlet extends HttpServlet {
         request.setAttribute("buyerThreads", buyerThreads);
 
         // ─── BOOKINGS MODULE ─────────────────────────────────────────────────────
-        final double PENALTY_PER_DAY = 100.0;
         java.time.format.DateTimeFormatter dtf = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd");
         java.time.LocalDate today = java.time.LocalDate.now();
+
+        // Build a map of propertyId -> dailyPrice from properties.txt
+        java.util.Map<String, Double> propertyPriceMap = new java.util.HashMap<>();
+        File propFilePath = new File(getServletContext().getRealPath("/WEB-INF/properties.txt"));
+        if (propFilePath.exists()) {
+            try (java.io.BufferedReader pr = new java.io.BufferedReader(
+                    new java.io.InputStreamReader(
+                            java.nio.file.Files.newInputStream(propFilePath.toPath()),
+                            java.nio.charset.StandardCharsets.UTF_8))) {
+                String pl;
+                while ((pl = pr.readLine()) != null) {
+                    if (pl.trim().isEmpty() || pl.trim().startsWith("#")) continue;
+                    String[] pd = pl.split(",", -1);
+                    if (pd.length >= 3) {
+                        try { propertyPriceMap.put(pd[0].trim(), Double.parseDouble(pd[2].trim())); }
+                        catch (NumberFormatException ignored) {}
+                    }
+                }
+            } catch (Exception ignored) {}
+        }
 
         List<Map<String, String>> myBookings = new ArrayList<>();
         List<Map<String, String>> bookingHistory = new ArrayList<>(); // ENHANCEMENT 3: Booking history
@@ -205,19 +224,24 @@ public class BuyerDashboardServlet extends HttpServlet {
                     bk.put("returnDate",    d[9]);
                     bk.put("status",        d[10]);
 
+                    // Use the property's own daily price as the penalty rate
+                    double dailyRate = propertyPriceMap.getOrDefault(d[1].trim(), 100.0);
+                    bk.put("dailyRate", String.format("%.2f", dailyRate));
+
                     double penalty = 0.0;
                     try {
                         java.time.LocalDate returnDate = java.time.LocalDate.parse(d[9], dtf);
                         if (!"COMPLETED".equalsIgnoreCase(d[10]) && today.isAfter(returnDate)) {
                             long daysOverdue = java.time.temporal.ChronoUnit.DAYS.between(returnDate, today);
-                            penalty = daysOverdue * PENALTY_PER_DAY;
+                            penalty = daysOverdue * dailyRate;
                             bk.put("status", "OVERDUE");
+                            bk.put("daysOverdue", String.valueOf(daysOverdue));
                         }
                     } catch (Exception ignored) {}
                     bk.put("penaltyFee", String.format("%.2f", penalty));
 
                     myBookings.add(bk);
-                    
+
                     // ENHANCEMENT 3: Add completed bookings to history
                     if ("COMPLETED".equalsIgnoreCase(d[10])) {
                         bookingHistory.add(bk);
