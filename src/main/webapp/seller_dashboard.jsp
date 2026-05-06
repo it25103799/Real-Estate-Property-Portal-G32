@@ -40,6 +40,7 @@
         th { font-weight: 600; color: var(--accent); }
         .btn-edit { background: none; border: 1px solid var(--accent); color: var(--accent); padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
         .btn-edit:hover { background: var(--accent); color: white; }
+        .badge-sold { display: inline-block; background: rgba(13,158,110,0.12); color: #0d9e6e; border: 1px solid rgba(13,158,110,0.35); padding: 4px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; white-space: nowrap; }
         .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
         /* The Edit Modal */
@@ -400,7 +401,7 @@
                                 <td>${p.type}</td>
                                 <td>${p.bedrooms}</td>
                                 <td>${p.bathrooms}</td>
-                                <td style="display: flex; gap: 8px;">
+                                <td style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
                                    <button class="btn-edit" onclick="openEditModal('${p.id}', '${p.title}', '${p.price}', '${p.location}', '${p.type}', '${p.status}', '${p.bedrooms}', '${p.bathrooms}', '${p.description}')">✏️ Edit</button>
 
                                    <form action="deleteProperty" method="post" style="margin: 0;" onsubmit="return confirm('Are you absolutely sure you want to delete this property? This cannot be undone!');">
@@ -614,7 +615,8 @@
                     <th>Buyer</th>
                     <th>Booked On</th>
                     <th>Returned On</th>
-                    <th>Status</th>
+                    <th>Booking Status</th>
+                    <th>Property Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -634,11 +636,24 @@
                                 <td>${bk.bookingDate}</td>
                                 <td>${bk.returnDate}</td>
                                 <td><span class="status-badge" style="background:rgba(13,158,110,0.1);color:#0d9e6e;">Completed</span></td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${bk.propertyStatus == 'Sold'}">
+                                            <span class="badge-sold">✅ Sold</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <form action="markAsSold" method="post" style="margin:0;" onsubmit="return confirm('Mark &quot;${bk.propertyTitle}&quot; as Sold? This will update the property status to Sold and display it in red color on the Browse tab.');">
+                                                <input type="hidden" name="propertyId" value="${bk.propertyId}">
+                                                <button type="submit" class="btn-edit" style="color: #0d9e6e; border-color: #0d9e6e; font-size: 0.78rem; padding: 6px 10px;">🏷️ Mark as Sold</button>
+                                            </form>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
                             </tr>
                         </c:forEach>
                     </c:when>
                     <c:otherwise>
-                        <tr><td colspan="6" style="text-align:center; padding:36px; opacity:0.6;">No completed transactions yet.</td></tr>
+                        <tr><td colspan="8" style="text-align:center; padding:36px; opacity:0.6;">No completed transactions yet.</td></tr>
                     </c:otherwise>
                 </c:choose>
             </tbody>

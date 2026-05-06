@@ -302,6 +302,16 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
 @keyframes floatCard { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 .hcf-1 { bottom: 120px; left: 24px; min-width: 220px; }
 .hcf-2 { top: 100px; right: 24px; min-width: 180px; animation-delay: 1.5s; }
+.hcf-3 { bottom: 32px; right: 24px; min-width: 220px; animation-delay: 3s; display: none; }
+.badge-red { background: rgba(224,40,40,.12); color: #e02828; }
+.hcf-sold-thumb { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; flex-shrink: 0; border: 2px solid rgba(224,40,40,.2); }
+.hcf-sold-row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+.hcf-sold-info { flex: 1; min-width: 0; }
+.hcf-sold-name { font-size: .85rem; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 130px; }
+.hcf-sold-loc  { font-size: .72rem; color: var(--ink4); margin-top: 1px; }
+.hcf-sold-price { font-size: .8rem; font-weight: 700; color: #e02828; margin-top: 2px; }
+.hcf-sold-btn  { background: #e02828; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.75rem; flex-shrink: 0; box-shadow: 0 2px 6px rgba(224,40,40,.4); transition: transform .2s, box-shadow .2s; }
+.hcf-sold-btn:hover { transform: scale(1.15); box-shadow: 0 4px 12px rgba(224,40,40,.5); }
 .hcf-label { font-size: .65rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--ink4); margin-bottom: 4px; }
 .hcf-value { font-size: 1rem; font-weight: 600; color: var(--ink); }
 .hcf-sub { font-size: .78rem; color: var(--ink4); margin-top: 2px; }
@@ -394,6 +404,65 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
 }
 .tag-sale { background: rgba(255,255,255,.95); color: var(--green); }
 .tag-rent { background: rgba(255,255,255,.95); color: var(--accent); }
+.tag-sold { background: rgba(224,40,40,.92); color: #fff; font-weight: 700; letter-spacing: .5px; }
+.prop-card--sold { opacity: 0.82; position: relative; }
+.sold-tape {
+  display: block;
+  width: calc(100% + 32px);
+  margin: -4px -16px 10px -16px;
+  background: #e02828;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 6px 0;
+  box-shadow: 0 2px 8px rgba(224,40,40,.35);
+  user-select: none;
+}
+.plc-sold-tape {
+  display: block;
+  background: #e02828;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 5px 14px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(224,40,40,.3);
+  user-select: none;
+  white-space: nowrap;
+}
+.prop-card--sold .prop-img-wrap img,
+.prop-card--sold .plc-img img { filter: grayscale(30%); }
+.sold-img-overlay {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: rgba(180,20,20,.45);
+    pointer-events: none;
+    padding: 20px;
+    text-align: center;
+}
+.sold-img-overlay .sold-title {
+    font-size: 2rem;
+    font-weight: 900;
+    letter-spacing: 6px;
+    color: #fff;
+    text-shadow: 0 2px 12px rgba(0,0,0,.6);
+    margin-bottom: 8px;
+}
+.sold-img-overlay .sold-message {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: rgba(255,255,255,.95);
+    text-shadow: 0 1px 6px rgba(0,0,0,.5);
+    max-width: 200px;
+    line-height: 1.4;
+}
 .tag-feat { background: var(--amber); color: white; }
 .prop-save {
   position: absolute; top: 14px; right: 14px;
@@ -1382,6 +1451,23 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
         <div class="hcf-sub">Avg. Sale Price</div>
         <span class="hcf-badge badge-amber">↑ 12% vs last month</span>
       </div>
+
+      <div class="hero-card-float hcf-3" id="just-sold-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;">
+          <div class="hcf-label" style="margin:0;">Just Sold</div>
+          <span class="hcf-badge badge-red" style="margin:0;font-size:.65rem;">🔴 SOLD</span>
+        </div>
+        <div class="hcf-sold-row">
+          <img class="hcf-sold-thumb" id="sold-thumb" src="" alt="sold property"/>
+          <div class="hcf-sold-info">
+            <div class="hcf-sold-name" id="sold-title">—</div>
+            <div class="hcf-sold-loc"  id="sold-loc">—</div>
+            <div class="hcf-sold-price" id="sold-price">—</div>
+          </div>
+          <div class="hcf-sold-btn" id="sold-btn" title="View this property" onclick="">➔</div>
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -1411,11 +1497,14 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
           <c:choose>
               <c:when test="${not empty propertyList}">
                   <c:forEach var="p" items="${propertyList}">
-                      <div class="prop-card" onclick="openDetail('${p.id}')" style="cursor: pointer;">
+                      <div class="prop-card${p.status.trim() == 'Sold' ? ' prop-card--sold' : ''}" onclick="openDetail('${p.id}')" style="cursor: pointer;">
                           <div class="prop-img-wrap">
                               <img src="${p.imageUrl}" alt="${p.title}"/>
                               <div class="prop-tags">
                                   <c:choose>
+                                      <c:when test="${p.status.trim() == 'Sold'}">
+                                          <span class="prop-tag tag-sold">Sold</span>
+                                      </c:when>
                                       <c:when test="${p.status.trim() == 'For Rent'}">
                                           <span class="prop-tag tag-rent">${p.status}</span>
                                       </c:when>
@@ -1424,8 +1513,15 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
                                       </c:otherwise>
                                   </c:choose>
                               </div>
+                              <c:if test="${p.status.trim() == 'Sold'}">
+                                  <div class="sold-img-overlay">
+                                      <div class="sold-title">SOLD</div>
+                                      <div class="sold-message">This property has been sold and is no longer available</div>
+                                  </div>
+                              </c:if>
                           </div>
                           <div class="prop-body">
+                              <c:if test="${p.status.trim() == 'Sold'}"><span class="sold-tape">🔴 Sold</span></c:if>
                               <div class="prop-price">$<fmt:formatNumber value="${p.price}" pattern="#,##0.00" /><c:if test="${p.status.trim() == 'For Rent'}"><span style="font-size:0.58em;font-weight:400;color:var(--ink3)">/day</span></c:if></div>
                               <div class="prop-name">${p.title}</div>
                               <div class="prop-loc">
@@ -2291,6 +2387,36 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
                 document.getElementById('latest-loc').innerText = "Check back soon!";
                 document.getElementById('latest-btn').style.display = "none";
             }
+
+            // ── JUST SOLD CARD ─────────────────────────────────────
+            const soldProps = (window.properties || []).filter(p =>
+                p.status && p.status.toLowerCase() === 'sold'
+            );
+
+            if (soldProps.length > 0) {
+                // Pick the last sold property (most recently added)
+                const sp = soldProps[soldProps.length - 1];
+                const card = document.getElementById('just-sold-card');
+                const fmt  = typeof sp.price === 'number'
+                    ? '$' + sp.price.toLocaleString()
+                    : (sp.price ? '$' + sp.price : 'Sold');
+
+                document.getElementById('sold-thumb').src  = sp.image || '';
+                document.getElementById('sold-thumb').alt  = sp.title || 'Sold property';
+                document.getElementById('sold-title').innerText = sp.title  || 'Property';
+                document.getElementById('sold-loc').innerText   = sp.location || '';
+                document.getElementById('sold-price').innerText = fmt;
+
+                document.getElementById('sold-btn').onclick = function () {
+                    showPage('listings');
+                    setTimeout(() => openDetail(sp.id), 120);
+                };
+
+                // Reveal the card with a slight entrance delay
+                setTimeout(() => { card.style.display = 'block'; }, 400);
+            }
+            // If no sold properties exist, card stays hidden (display:none)
+
         }, 150);
     });
 </script>

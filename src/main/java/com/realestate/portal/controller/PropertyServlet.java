@@ -43,11 +43,13 @@ public class PropertyServlet extends HttpServlet {
                             p.setLocation(data[3]);
                             cities.add(data[3]); // Add city to the set
                             p.setType(data[4]);
-                            
-                            // Normalize status to "For Rent" or "For Sale"
+
+                            // Normalize status to "For Rent", "Sold", or "For Sale"
                             String status = data[5].trim();
                             if ("for rent".equalsIgnoreCase(status)) {
                                 p.setStatus("For Rent");
+                            } else if ("sold".equalsIgnoreCase(status)) {
+                                p.setStatus("Sold");
                             } else {
                                 p.setStatus("For Sale");
                             }

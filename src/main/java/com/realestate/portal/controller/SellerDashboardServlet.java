@@ -316,6 +316,16 @@ public class SellerDashboardServlet extends HttpServlet {
                     } catch (Exception ignored) {}
                     bk.put("penaltyFee", String.format("%.2f", penalty));
 
+                    // Get property status from properties.txt
+                    String propertyStatus = "For Sale"; // Default
+                    for (Property p : myProperties) {
+                        if (p.getId().equals(d[1])) {
+                            propertyStatus = p.getStatus();
+                            break;
+                        }
+                    }
+                    bk.put("propertyStatus", propertyStatus);
+
                     if ("COMPLETED".equalsIgnoreCase(d[10])) {
                         completedBookings.add(bk);
                     } else {

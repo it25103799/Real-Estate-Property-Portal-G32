@@ -122,8 +122,12 @@ function renderHomeFeaturedProperties() {
         if (statusOrType === 'all' || statusOrType === '') {
             matchFilter = true;
         } else if (statusOrType === 'sale' || statusOrType === 'rent') {
-            // The filter is for status
-            matchFilter = p.status && p.status.toLowerCase().includes(statusOrType);
+            // The filter is for status — exact match to avoid 'sold'.includes('sale') false positive
+            if (statusOrType === 'sale') {
+                matchFilter = p.status && p.status.toLowerCase() === 'for sale';
+            } else {
+                matchFilter = p.status && p.status.toLowerCase().includes('rent');
+            }
         } else {
             // The filter is for property type
             matchFilter = p.type && p.type.toLowerCase().includes(statusOrType);
@@ -144,13 +148,14 @@ function renderHomeFeaturedProperties() {
     grid.innerHTML = filtered.map(p => {
         const displayPrice = typeof p.price === 'number' ? p.price.toLocaleString() : p.price;
         const safeStatus = p.status ? p.status.toLowerCase() : 'sale';
-        const isRent = safeStatus.includes('rent');
-        const tagClass = isRent ? 'tag-rent' : 'tag-sale';
-        const tagText = isRent ? 'For Rent' : 'For Sale';
+        const isSold = safeStatus === 'sold';
+        const isRent = !isSold && safeStatus.includes('rent');
+        const tagClass = isSold ? 'tag-sold' : (isRent ? 'tag-rent' : 'tag-sale');
+        const tagText = isSold ? 'Sold' : (isRent ? 'For Rent' : 'For Sale');
         const rentSuffixSimple = isRent ? '<span style="font-size:0.58em;font-weight:400;color:var(--ink3)">/day</span>' : '';
 
         return `
-        <div class="prop-card" onclick="openDetail('${p.id}')" style="cursor: pointer;">
+        <div class="prop-card${isSold ? ' prop-card--sold' : ''}" onclick="openDetail('${p.id}')" style="cursor: pointer;">
             <div class="prop-img-wrap">
                 <img src="${p.image}" alt="${p.title}"/>
                 <div class="prop-tags">
@@ -158,6 +163,7 @@ function renderHomeFeaturedProperties() {
                 </div>
             </div>
             <div class="prop-body">
+                ${isSold ? '<span class="sold-tape">🔴 Sold</span>' : ''}
                 <div class="prop-price">$${displayPrice} ${rentSuffixSimple}</div>
                 <div class="prop-name">${p.title}</div>
                 <div class="prop-loc">
@@ -437,7 +443,12 @@ function applyFilters() {
     if(typeof window.properties === 'undefined') return;
 
     let filtered = (window.properties || []).filter(p => {
-        let matchStatus = currentFilters.status === 'all' || (p.status && p.status.toLowerCase().includes(currentFilters.status.toLowerCase()));
+        let matchStatus = currentFilters.status === 'all' || (() => {
+            const s = p.status ? p.status.toLowerCase() : '';
+            if (currentFilters.status === 'sale') return s === 'for sale';
+            if (currentFilters.status === 'rent') return s.includes('rent');
+            return s.includes(currentFilters.status.toLowerCase());
+        })();
         let matchType = currentFilters.type === 'all' || (p.type && p.type.toLowerCase() === currentFilters.type.toLowerCase());
         let matchCity = currentFilters.city === 'all' || (p.location && p.location.toLowerCase().includes(currentFilters.city.toLowerCase()));
 
@@ -487,20 +498,22 @@ function renderListings() {
     const html = paginatedList.map(p => {
         const displayPrice = typeof p.price === 'number' ? p.price.toLocaleString() : p.price;
         const safeStatus   = p.status ? p.status.toLowerCase() : 'sale';
-        const isRent       = safeStatus.includes('rent');
+        const isSold       = safeStatus === 'sold';
+        const isRent       = !isSold && safeStatus.includes('rent');
         const realSeller   = (p.seller && p.seller !== "null" && p.seller.trim() !== "") ? p.seller : "Verified Seller";
         const agent        = getAgentForSeller(realSeller);
         const typeLabel    = p.type ? p.type.charAt(0).toUpperCase() + p.type.slice(1) : 'Property';
-        const statusTag    = isRent ? 'For Rent' : 'For Sale';
-        const tagClass     = isRent ? 'tag-rent' : 'tag-sale';
+        const statusTag    = isSold ? 'Sold' : (isRent ? 'For Rent' : 'For Sale');
+        const tagClass     = isSold ? 'tag-sold' : (isRent ? 'tag-rent' : 'tag-sale');
         const rentSuffix   = isRent ? '<span style="font-size:0.58em;font-weight:400;color:var(--ink4)">/day</span>' : '';
 
         if (currentViewMode === 'list') {
             // ── LIST ROW ──
-            return `<div class="prop-card prop-card--list" onclick="openDetail('${p.id}')">
+            return `<div class="prop-card prop-card--list${isSold ? ' prop-card--sold' : ''}" onclick="openDetail('${p.id}')">
                 <div class="plc-img">
                     <img src="${p.image}" alt="${p.title}">
                     <span class="prop-tag ${tagClass} plc-tag">${statusTag}</span>
+                    ${isSold ? '<div class="sold-img-overlay"><div class="sold-title">SOLD</div><div class="sold-message">This property has been sold and is no longer available</div></div>' : ''}
                 </div>
                 <div class="plc-body">
                     <div class="plc-type">🏠 ${typeLabel}</div>
@@ -513,6 +526,7 @@ function renderListings() {
                     </div>
                 </div>
                 <div class="plc-right">
+                    ${isSold ? '<span class="plc-sold-tape">🔴 Sold</span>' : ''}
                     <div class="plc-price">$${displayPrice}${rentSuffix}</div>
                     <div class="plc-agent">
                         <img src="${agent.img}" alt="${realSeller}">
@@ -523,14 +537,16 @@ function renderListings() {
         }
 
         // ── GRID CARD ──
-        return `<div class="prop-card" onclick="openDetail('${p.id}')" style="cursor:pointer;">
+        return `<div class="prop-card${isSold ? ' prop-card--sold' : ''}" onclick="openDetail('${p.id}')" style="cursor:pointer;">
             <div class="prop-img-wrap">
                 <img src="${p.image}" alt="${p.title}">
                 <div class="prop-tags">
                     <span class="prop-tag ${tagClass}">${statusTag}</span>
                 </div>
+                ${isSold ? '<div class="sold-img-overlay"><div class="sold-title">SOLD</div><div class="sold-message">This property has been sold and is no longer available</div></div>' : ''}
             </div>
             <div class="prop-body">
+                ${isSold ? '<span class="sold-tape">🔴 Sold</span>' : ''}
                 <div class="prop-price">$${displayPrice} ${rentSuffix}</div>
                 <div class="prop-name">${p.title}</div>
                 <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
@@ -589,10 +605,11 @@ function openDetail(id) {
     document.getElementById('detail-address-text').innerText = p.location;
 
     const displayPrice = typeof p.price === 'number' ? p.price.toLocaleString() : p.price;
-    const isRentDetail = p.status && String(p.status).toLowerCase().includes('rent');
+    const isSoldDetail = p.status && String(p.status).toLowerCase() === 'sold';
+    const isRentDetail = !isSoldDetail && p.status && String(p.status).toLowerCase().includes('rent');
     document.getElementById('detail-price').innerHTML = "$" + displayPrice + (isRentDetail ? ' <span style="font-size:0.55em;font-weight:400;color:var(--ink4)">/day</span>' : '');
     const priceLabelEl = document.getElementById('detail-price-label');
-    if (priceLabelEl) priceLabelEl.innerText = isRentDetail ? 'Daily Rental Price' : 'Listing Price';
+    if (priceLabelEl) priceLabelEl.innerText = isRentDetail ? 'Daily Rental Price' : (isSoldDetail ? 'Sold Price' : 'Listing Price');
 
     const favInput = document.getElementById('fav-property-id');
     if (favInput) favInput.value = String(id);
@@ -645,7 +662,8 @@ function openDetail(id) {
 
         // ── BOOKING FORM LOGIC ──
         const bookingForm = document.getElementById('booking-form');
-        const isRent = p.status && String(p.status).toLowerCase().includes('rent');
+        const isSold = p.status && String(p.status).toLowerCase() === 'sold';
+        const isRent = !isSold && p.status && String(p.status).toLowerCase().includes('rent');
         const isBuyer = window.currentRole && String(window.currentRole).toUpperCase() === 'BUYER';
 
         console.log('Property Status:', p.status);
@@ -700,9 +718,20 @@ function openDetail(id) {
 
                 console.log('✅ Booking form shown for property:', p.title);
             } else {
-                // Hide booking form for "For Sale" properties or if not a logged-in buyer
+                // Hide booking form for "For Sale" / "Sold" properties or if not a logged-in buyer
                 bookingForm.style.display = 'none';
-                console.log('❌ Booking form hidden - isRent:', isRent, 'isBuyer:', isBuyer);
+                // Show a "sold" notice if the property is sold
+                const soldNoticeId = 'sold-property-notice';
+                let existing = document.getElementById(soldNoticeId);
+                if (existing) existing.remove();
+                if (isSold) {
+                    const notice = document.createElement('div');
+                    notice.id = soldNoticeId;
+                    notice.innerHTML = '🏷️ <strong>This property has been sold.</strong> It is no longer available for booking or purchase.';
+                    notice.style.cssText = 'background:rgba(224,40,40,0.08);border:1px solid rgba(224,40,40,0.3);border-radius:8px;padding:14px 16px;font-size:0.88rem;color:#c0392b;line-height:1.5;margin-top:8px;';
+                    bookingForm.parentNode.insertBefore(notice, bookingForm.nextSibling);
+                }
+                console.log('❌ Booking form hidden - isRent:', isRent, 'isBuyer:', isBuyer, 'isSold:', isSold);
             }
         }
     }, 400);
