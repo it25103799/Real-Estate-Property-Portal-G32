@@ -352,6 +352,12 @@ public class SellerDashboardServlet extends HttpServlet {
             if (reservedPropIds.contains(p.getId())) reservedCount++;
         }
         int availableCount = totalProperties - reservedCount;
+        int soldCount = 0;
+        for (Property p : myProperties) {
+            if ("Sold".equals(p.getStatus())) {
+                soldCount++;
+            }
+        }
 
         // ── Write availability report to disk ─────────────────────────────────
         String reportPath = getServletContext().getRealPath("/WEB-INF/availability_report.txt");
@@ -392,6 +398,7 @@ public class SellerDashboardServlet extends HttpServlet {
         request.setAttribute("totalProperties",   totalProperties);
         request.setAttribute("reservedCount",      reservedCount);
         request.setAttribute("availableCount",     availableCount);
+        request.setAttribute("soldCount",          soldCount);
         request.setAttribute("activeBookings",     activeBookings);
         request.setAttribute("completedBookings",  completedBookings);
         // ─────────────────────────────────────────────────────────────────────────

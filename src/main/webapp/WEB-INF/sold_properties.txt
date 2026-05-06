@@ -1,0 +1,5 @@
+# This file stores recently sold properties with timestamps
+# Format: timestamp|propertyId|title|price|location|imageUrl
+# Lines starting with # are comments and will be ignored
+2026-05-06 19:37:29|c66a23ca| Kurunegala Lake view|560000|Kurunegala|assets/images/property-types/house.jpg
+2026-05-06 19:38:50|4c9fd0b9|Ambewela coolspot|56000|Nuwara Eliya|assets/images/property-types/villa.jpg

@@ -302,16 +302,108 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
 @keyframes floatCard { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 .hcf-1 { bottom: 120px; left: 24px; min-width: 220px; }
 .hcf-2 { top: 100px; right: 24px; min-width: 180px; animation-delay: 1.5s; }
-.hcf-3 { bottom: 32px; right: 24px; min-width: 220px; animation-delay: 3s; display: none; }
+.hcf-3 { 
+    bottom: 32px; 
+    right: 24px; 
+    min-width: 280px; 
+    animation-delay: 3s; 
+    display: none;
+    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+    border: 1px solid rgba(224,40,40,.25);
+    box-shadow: 0 8px 32px rgba(224,40,40,.15), 0 4px 16px rgba(0,0,0,.08);
+    padding: 18px 20px;
+    border-radius: 16px;
+}
+[data-theme="dark"] .hcf-3 {
+    background: linear-gradient(135deg, #232736 0%, #1a1d27 100%);
+    border: 1px solid rgba(224,40,40,.4);
+    box-shadow: 0 8px 32px rgba(224,40,40,.25), 0 4px 16px rgba(0,0,0,.4);
+}
+.hcf-3 .hcf-label {
+    color: var(--ink);
+    font-size: .7rem;
+    letter-spacing: 1.5px;
+}
+[data-theme="dark"] .hcf-3 .hcf-label {
+    color: rgba(255,255,255,.7);
+}
+.hcf-3 .hcf-badge {
+    background: rgba(224,40,40,.2);
+    border: 1px solid rgba(224,40,40,.4);
+    color: #ff6b6b;
+    font-size: .7rem;
+    padding: 4px 10px;
+}
+.hcf-sold-thumb { 
+    width: 52px; 
+    height: 52px; 
+    border-radius: 10px; 
+    object-fit: cover; 
+    flex-shrink: 0; 
+    border: 2px solid rgba(224,40,40,.3);
+    box-shadow: 0 4px 12px rgba(0,0,0,.3);
+}
+.hcf-sold-row { 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+    margin-top: 10px; 
+}
+.hcf-sold-info { 
+    flex: 1; 
+    min-width: 0; 
+}
+.hcf-sold-name { 
+    font-size: .92rem; 
+    font-weight: 700; 
+    color: var(--ink); 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    max-width: 150px;
+    line-height: 1.3;
+}
+[data-theme="dark"] .hcf-sold-name {
+    color: #ffffff;
+}
+.hcf-sold-loc  { 
+    font-size: .75rem; 
+    color: var(--ink3); 
+    margin-top: 2px;
+}
+[data-theme="dark"] .hcf-sold-loc {
+    color: rgba(255,255,255,.6);
+}
+.hcf-sold-price { 
+    font-size: .88rem; 
+    font-weight: 800; 
+    color: #e02828; 
+    margin-top: 3px;
+    font-family: var(--font-serif);
+}
+[data-theme="dark"] .hcf-sold-price {
+    color: #ff6b6b;
+}
+.hcf-sold-btn  { 
+    background: linear-gradient(135deg, #e02828 0%, #c41e1e 100%);
+    color: white; 
+    width: 32px; 
+    height: 32px; 
+    border-radius: 50%; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    cursor: pointer; 
+    font-size: 0.85rem; 
+    flex-shrink: 0; 
+    box-shadow: 0 4px 12px rgba(224,40,40,.5);
+    transition: all .2s;
+}
+.hcf-sold-btn:hover { 
+    transform: scale(1.15); 
+    box-shadow: 0 6px 20px rgba(224,40,40,.7);
+}
 .badge-red { background: rgba(224,40,40,.12); color: #e02828; }
-.hcf-sold-thumb { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; flex-shrink: 0; border: 2px solid rgba(224,40,40,.2); }
-.hcf-sold-row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
-.hcf-sold-info { flex: 1; min-width: 0; }
-.hcf-sold-name { font-size: .85rem; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 130px; }
-.hcf-sold-loc  { font-size: .72rem; color: var(--ink4); margin-top: 1px; }
-.hcf-sold-price { font-size: .8rem; font-weight: 700; color: #e02828; margin-top: 2px; }
-.hcf-sold-btn  { background: #e02828; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.75rem; flex-shrink: 0; box-shadow: 0 2px 6px rgba(224,40,40,.4); transition: transform .2s, box-shadow .2s; }
-.hcf-sold-btn:hover { transform: scale(1.15); box-shadow: 0 4px 12px rgba(224,40,40,.5); }
 .hcf-label { font-size: .65rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--ink4); margin-bottom: 4px; }
 .hcf-value { font-size: 1rem; font-weight: 600; color: var(--ink); }
 .hcf-sub { font-size: .78rem; color: var(--ink4); margin-top: 2px; }
@@ -2370,17 +2462,32 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
         // Wait just a millisecond to ensure the properties array is fully loaded from Java
         setTimeout(() => {
             if (window.properties && window.properties.length > 0) {
-                // Grab the very last property added to the array (the newest one!)
-                const latestProperty = window.properties[window.properties.length - 1];
+                // Find the latest non-sold property by iterating backwards
+                let latestProperty = null;
+                for (let i = window.properties.length - 1; i >= 0; i--) {
+                    const prop = window.properties[i];
+                    // Check if property status is NOT "Sold" (case-insensitive)
+                    if (prop.status && prop.status.trim().toLowerCase() !== 'sold') {
+                        latestProperty = prop;
+                        break; // Found the latest non-sold property
+                    }
+                }
 
-                // Inject the real data into the UI
-                document.getElementById('latest-title').innerText = latestProperty.title;
-                document.getElementById('latest-loc').innerText = latestProperty.location;
+                if (latestProperty) {
+                    // Inject the real data into the UI
+                    document.getElementById('latest-title').innerText = latestProperty.title;
+                    document.getElementById('latest-loc').innerText = latestProperty.location;
 
-                // Make the blue arrow open the property detail page
-                document.getElementById('latest-btn').onclick = function() {
-                    openDetail(latestProperty.id);
-                };
+                    // Make the blue arrow open the property detail page
+                    document.getElementById('latest-btn').onclick = function() {
+                        openDetail(latestProperty.id);
+                    };
+                } else {
+                    // All properties are sold
+                    document.getElementById('latest-title').innerText = "All sold out";
+                    document.getElementById('latest-loc').innerText = "New listings coming soon!";
+                    document.getElementById('latest-btn').style.display = "none";
+                }
             } else {
                 // Safe fallback if the database is completely empty
                 document.getElementById('latest-title').innerText = "No listings yet";
@@ -2389,27 +2496,38 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
             }
 
             // ── JUST SOLD CARD ─────────────────────────────────────
-            const soldProps = (window.properties || []).filter(p =>
-                p.status && p.status.toLowerCase() === 'sold'
-            );
+            // Use the recentlySold data passed from PropertyServlet
+            const recentlySoldData = [];
+            <c:if test="${not empty recentlySold}">
+                <c:forEach var="sold" items="${recentlySold}">
+                    recentlySoldData.push({
+                        propertyId: "${sold.propertyId}",
+                        title: "${sold.title}",
+                        price: "${sold.price}",
+                        location: "${sold.location}",
+                        imageUrl: "${sold.imageUrl}"
+                    });
+                </c:forEach>
+            </c:if>
 
-            if (soldProps.length > 0) {
-                // Pick the last sold property (most recently added)
-                const sp = soldProps[soldProps.length - 1];
+            if (recentlySoldData.length > 0) {
+                // Get the most recent sold property (last in array = most recent)
+                const sp = recentlySoldData[0]; // Already sorted in PropertyServlet
                 const card = document.getElementById('just-sold-card');
-                const fmt  = typeof sp.price === 'number'
-                    ? '$' + sp.price.toLocaleString()
-                    : (sp.price ? '$' + sp.price : 'Sold');
+                
+                // Format price
+                let priceVal = parseFloat(sp.price);
+                const fmt = isNaN(priceVal) ? sp.price : '$' + priceVal.toLocaleString();
 
-                document.getElementById('sold-thumb').src  = sp.image || '';
+                document.getElementById('sold-thumb').src  = sp.imageUrl || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&q=80';
                 document.getElementById('sold-thumb').alt  = sp.title || 'Sold property';
                 document.getElementById('sold-title').innerText = sp.title  || 'Property';
                 document.getElementById('sold-loc').innerText   = sp.location || '';
                 document.getElementById('sold-price').innerText = fmt;
 
                 document.getElementById('sold-btn').onclick = function () {
-                    showPage('listings');
-                    setTimeout(() => openDetail(sp.id), 120);
+                    // Navigate to property detail
+                    window.location.href = 'properties?viewId=' + sp.propertyId;
                 };
 
                 // Reveal the card with a slight entrance delay

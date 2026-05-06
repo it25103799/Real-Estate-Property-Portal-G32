@@ -115,6 +115,41 @@ public class PropertyServlet extends HttpServlet {
         request.setAttribute("propertyList", propertyList);
         request.setAttribute("allReviews", reviewList);
         request.setAttribute("cities", cities); // Pass the set of cities to the JSP
+        
+        // 2.5 LOAD RECENTLY SOLD PROPERTIES (for "JUST SOLD" floating card)
+        List<Map<String, String>> recentlySold = new ArrayList<>();
+        String soldPath = getServletContext().getRealPath("/WEB-INF/sold_properties.txt");
+        File soldFile = new File(soldPath);
+        if (soldFile.exists()) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(soldFile), "UTF-8"))) {
+                String line;
+                List<String> allSoldLines = new ArrayList<>();
+                while ((line = br.readLine()) != null) {
+                    if (line.trim().isEmpty()) continue;
+                    allSoldLines.add(line);
+                }
+                
+                // Get the last 5 most recent sold properties
+                int startIdx = Math.max(0, allSoldLines.size() - 5);
+                for (int i = allSoldLines.size() - 1; i >= startIdx; i--) {
+                    String soldLine = allSoldLines.get(i);
+                    String[] parts = soldLine.split("\\|", -1);
+                    if (parts.length >= 6) {
+                        Map<String, String> soldProp = new HashMap<>();
+                        soldProp.put("timestamp", parts[0]);
+                        soldProp.put("propertyId", parts[1]);
+                        soldProp.put("title", parts[2]);
+                        soldProp.put("price", parts[3]);
+                        soldProp.put("location", parts[4]);
+                        soldProp.put("imageUrl", parts[5]);
+                        recentlySold.add(soldProp);
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("Error reading sold properties: " + e.getMessage());
+            }
+        }
+        request.setAttribute("recentlySold", recentlySold);
 
         // 3. LOAD NOTIFICATIONS (inquiry messages -> bell icon)
         HttpSession session = request.getSession(false);

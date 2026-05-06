@@ -348,7 +348,7 @@
             <div class="stat-card">
                 <div class="stat-icon done">✅</div>
                 <div class="stat-info">
-                    <span class="stat-value">${not empty completedBookings ? completedBookings.size() : 0}</span>
+                    <span class="stat-value">${not empty soldCount ? soldCount : 0}</span>
                     <span class="stat-label">Sold / Completed</span>
                 </div>
             </div>
@@ -387,33 +387,54 @@
         <div class="table-responsive">
         <table>
             <thead>
-                <tr><th>ID</th><th>Title</th><th>Price</th><th>Location</th><th>Type</th><th>Beds</th><th>Baths</th><th>Actions</th></tr>
+                <tr><th>ID</th><th>Title</th><th>Price</th><th>Location</th><th>Type</th><th>Beds</th><th>Baths</th><th>Status</th><th>Actions</th></tr>
             </thead>
             <tbody>
                 <c:choose>
                     <c:when test="${not empty myProperties}">
                         <c:forEach var="p" items="${myProperties}">
-                            <tr>
+                            <tr style="${p.status == 'Sold' ? 'opacity: 0.7; background: rgba(13,158,110,0.05);' : ''}">
                                 <td><small>${p.id}</small></td>
-                                <td>${p.title}</td>
-                                <td>$${p.price}</td>
+                                <td style="${p.status == 'Sold' ? 'color: #0d9e6e; font-weight: 600;' : ''}">${p.title}</td>
+                                <td style="${p.status == 'Sold' ? 'color: #0d9e6e; font-weight: 700;' : ''}">$${p.price}</td>
                                 <td>${p.location}</td>
                                 <td>${p.type}</td>
                                 <td>${p.bedrooms}</td>
                                 <td>${p.bathrooms}</td>
-                                <td style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-                                   <button class="btn-edit" onclick="openEditModal('${p.id}', '${p.title}', '${p.price}', '${p.location}', '${p.type}', '${p.status}', '${p.bedrooms}', '${p.bathrooms}', '${p.description}')">✏️ Edit</button>
-
-                                   <form action="deleteProperty" method="post" style="margin: 0;" onsubmit="return confirm('Are you absolutely sure you want to delete this property? This cannot be undone!');">
-                                       <input type="hidden" name="propertyId" value="${p.id}">
-                                       <button type="submit" class="btn-edit" style="color: var(--red); border-color: var(--red);">🗑️ Delete</button>
-                                   </form>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${p.status == 'Sold'}">
+                                            <span class="badge-sold" style="font-size: 0.82rem; padding: 6px 14px;">✅ SOLD</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span style="display: inline-block; background: rgba(26,86,219,0.10); color: var(--accent); border: 1px solid rgba(26,86,219,0.35); padding: 6px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; white-space: nowrap;">🏷️ ${p.status}</span>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </td>
+                                 <td style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                                    <c:choose>
+                                        <c:when test="${p.status != 'Sold'}">
+                                            <button class="btn-edit" onclick="openEditModal('${p.id}', '${p.title}', '${p.price}', '${p.location}', '${p.type}', '${p.status}', '${p.bedrooms}', '${p.bathrooms}', '${p.description}')">✏️ Edit</button>
+                                            <form action="markAsSold" method="post" style="margin: 0;" onsubmit="return confirm('Mark &quot;${p.title}&quot; as Sold? This will update the property status to Sold and move it to the Completed Transactions section.');">
+                                                <input type="hidden" name="propertyId" value="${p.id}">
+                                                <button type="submit" class="btn-edit" style="color: #0d9e6e; border-color: #0d9e6e;">🏷️ Mark as Sold</button>
+                                            </form>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span style="opacity: 0.4; font-size: 0.82rem;">—</span>
+                                        </c:otherwise>
+                                    </c:choose>
+    
+                                    <form action="deleteProperty" method="post" style="margin: 0;" onsubmit="return confirm('Are you absolutely sure you want to delete this property? This cannot be undone!');">
+                                        <input type="hidden" name="propertyId" value="${p.id}">
+                                        <button type="submit" class="btn-edit" style="color: var(--red); border-color: var(--red);">🗑️ Delete</button>
+                                    </form>
+                                 </td>
                             </tr>
                         </c:forEach>
                     </c:when>
                     <c:otherwise>
-                        <tr><td colspan="8" style="text-align:center;">You haven't listed any properties yet.</td></tr>
+                        <tr><td colspan="9" style="text-align:center;">You haven't listed any properties yet.</td></tr>
                     </c:otherwise>
                 </c:choose>
             </tbody>
@@ -1010,3 +1031,4 @@
 
 </body>
 </html>
+

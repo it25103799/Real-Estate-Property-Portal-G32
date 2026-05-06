@@ -1,17 +1,17 @@
-PROP_1772770669697,Colombo Beach Villa,600000.0,Colombo,Villa,For Sale,De Silva,assets/images/property-types/villa.jpg,4,4,
+PROP_1772770669697,Colombo Beach Villa,600000.0,Colombo,Villa,Sold,De Silva,assets/images/property-types/villa.jpg,4,4
 PROP_1772773352306,Kaduwela Beach view,5000,Kaduwela,House,Sold,De Silva,assets/images/property-types/house.jpg,0,0
 PROP_1772777000956,Koswatta new Building,6500,Colombo,Apartment,Sold,De Silva,assets/images/property-types/apartment.jpg,0,0
-PROP_1772947911735,Kadawatha New Apartment,9000,Kadawatha,Apartment,For Rent,De Silva,assets/images/property-types/apartment.jpg,0,0,
+PROP_1772947911735,Kadawatha New Apartment,9000.0,Kadawatha,Apartment,For Rent,De Silva,assets/images/property-types/apartment.jpg,0,0,
 PROP_1772952134817,Kurunegala New Building,3500,Kurunegala,Apartment,For Rent,De Silva,assets/images/property-types/apartment.jpg,0,0,
 1f48f435,Kurunegala New Building,4000,Kurunegala,Apartment,Sold,De Silva,assets/images/property-types/apartment.jpg,0,0
 d4ef95b0,Galle New Building,7000,Galle,Apartment,For Rent,De Silva,assets/images/property-types/apartment.jpg,0,0,
 699613a8,Galle New Villa,6000,Galle,Villa,Sold,De Silva,assets/images/property-types/villa.jpg,0,0,
-c66a23ca, Kurunegala Lake view,560000,Kurunegala,House,For Sale,De Silva,assets/images/property-types/house.jpg
+c66a23ca, Kurunegala Lake view,560000,Kurunegala,House,Sold,De Silva,assets/images/property-types/house.jpg
 ba4ccf7e,Awissawella Pro State,7000000.0,Rathnapura,Apartment,For Sale,De Silva,assets/images/property-types/apartment.jpg,2,2,👍❤️
 2a2b0008,Kiribathgoda new building,1700000,Kiribathgoda,Apartment,Sold,Dinesh,assets/images/property-types/apartment.jpg
 0a22dc7a,Hegalla beach Villa,95000.0,Galle,Villa,Sold,Dinesh,assets/images/property-types/villa.jpg,3,3
 f62059d5,Nugegoda Real State,9000000,Colombo,Apartment,For Sale,Kavindi,assets/images/property-types/apartment.jpg
-3ea4a9d6,Kengalla Mount view,1000000,Kandy,House,For Sale,Kavindi,assets/images/property-types/house.jpg
-4c9fd0b9,Ambewela coolspot,56000,Nuwara Eliya,Villa,For Rent,Kavindi,assets/images/property-types/villa.jpg,2,2
+3ea4a9d6,Kengalla Mount view,1000000,Kandy,House,Sold,Kavindi,assets/images/property-types/house.jpg
+4c9fd0b9,Ambewela coolspot,56000,Nuwara Eliya,Villa,Sold,Kavindi,assets/images/property-types/villa.jpg,2,2
 a59d6d6b,Mount Laviniya Pro Yard,30000000,Mount Laviniya,House,For Sale,De Silva,assets/images/property-types/house.jpg,5,6,Discover your dream home in the heart of Mount Lavinia. The 'Mount Lawiniya Pro Yard' is an expansive 5-bedroom residence offering unparalleled comfort and space. Featuring 6 full bathrooms—ensuring ultimate privacy and convenience for a large family and guests—this house is designed for effortless living. Perfectly situated to enjoy the vibrant coastal lifestyle while remaining close to all modern city conveniences. An exceptional opportunity to own a substantial property in a highly sought-after location.
-cfbc6b3c,Nittambuwa Smart Home,20000000.0,Gampaha,House,For Sale,Dinesh,assets/images/property-types/apartment.jpg,6,6,
+cfbc6b3c,Nittambuwa Smart Home,20000000.0,Gampaha,House,Sold,Dinesh,assets/images/property-types/apartment.jpg,6,6
