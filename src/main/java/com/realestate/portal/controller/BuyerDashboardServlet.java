@@ -261,6 +261,40 @@ public class BuyerDashboardServlet extends HttpServlet {
 
         request.setAttribute("savedProperties", savedProperties);
 
+        // ── ALL UNSOLD / AVAILABLE PROPERTIES (for the Replace dropdown) ──
+        List<Property> availableProperties = new ArrayList<>();
+        if (propFile.exists()) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(
+                    Files.newInputStream(Paths.get(propFile.getAbsolutePath())), StandardCharsets.UTF_8))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    if (line.trim().isEmpty()) continue;
+                    String[] data = line.split(",", -1);
+                    // status is index 5 — skip "Sold" properties
+                    if (data.length >= 6 && "Sold".equalsIgnoreCase(data[5].trim())) continue;
+                    try {
+                        Property p = null;
+                        if (data.length >= 11) {
+                            p = new Property(data[0], data[1], Double.parseDouble(data[2].trim()),
+                                    data[3], data[4], data[5], data[6], data[7],
+                                    Integer.parseInt(data[8].trim()), Integer.parseInt(data[9].trim()), data[10]);
+                        } else if (data.length >= 10) {
+                            p = new Property(data[0], data[1], Double.parseDouble(data[2].trim()),
+                                    data[3], data[4], data[5], data[6], data[7],
+                                    Integer.parseInt(data[8].trim()), Integer.parseInt(data[9].trim()), "");
+                        } else if (data.length >= 8) {
+                            p = new Property(data[0], data[1], Double.parseDouble(data[2].trim()),
+                                    data[3], data[4], data[5], data[6], data[7], 0, 0, "");
+                        }
+                        if (p != null) availableProperties.add(p);
+                    } catch (NumberFormatException ignored) {}
+                }
+            } catch (Exception e) {
+                System.err.println("Error reading available properties: " + e.getMessage());
+            }
+        }
+        request.setAttribute("availableProperties", availableProperties);
+
         // ── SELLER MESSAGES as Notifications (unread only) ────────────────
         List<Map<String, String>> allNotifications = new ArrayList<>();
         File messagesFileNotif = new File(getServletContext().getRealPath("/WEB-INF/inquiry_messages.tsv"));

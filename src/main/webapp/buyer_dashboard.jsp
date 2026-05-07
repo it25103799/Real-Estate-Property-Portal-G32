@@ -157,6 +157,104 @@
             background-color: #059669;
         }
 
+        /* ── REPLACE PROPERTY DROPDOWN ── */
+        .replace-wrapper { position: relative; display: inline-block; }
+
+        .btn-replace {
+            background: none;
+            border: 1.5px solid var(--line);
+            color: var(--ink);
+            padding: 8px 11px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            line-height: 1;
+            transition: border-color 0.2s, color 0.2s, background 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-replace:hover { border-color: var(--accent); color: var(--accent); background: rgba(26,86,219,0.05); }
+        .btn-replace.active { border-color: var(--accent); color: var(--accent); background: rgba(26,86,219,0.08); }
+
+        .replace-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 50%;
+            transform: translateX(-50%);
+            min-width: 260px;
+            max-width: 320px;
+            background: var(--bg);
+            border: 1.5px solid var(--line);
+            border-radius: 10px;
+            box-shadow: 0 10px 36px rgba(0,0,0,0.14);
+            z-index: 500;
+            overflow: hidden;
+            animation: dropIn 0.15s ease;
+        }
+        .replace-dropdown.open { display: block; }
+
+        @keyframes dropIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(-6px); }
+            to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        .replace-dropdown-header {
+            padding: 10px 14px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--accent);
+            border-bottom: 1px solid var(--line);
+            background: rgba(26,86,219,0.04);
+        }
+
+        .replace-dropdown-list { max-height: 230px; overflow-y: auto; }
+        .replace-dropdown-list::-webkit-scrollbar { width: 5px; }
+        .replace-dropdown-list::-webkit-scrollbar-thumb { background: var(--line); border-radius: 10px; }
+
+        .replace-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 14px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+            color: var(--ink);
+            font-family: var(--font-sans);
+            font-size: 0.88rem;
+            transition: background 0.15s;
+            border-bottom: 1px solid var(--line);
+        }
+        .replace-item:last-child { border-bottom: none; }
+        .replace-item:hover { background: rgba(26,86,219,0.06); }
+        .replace-item-thumb { width: 38px; height: 28px; object-fit: cover; border-radius: 4px; flex-shrink: 0; }
+        .replace-item-info { flex: 1; min-width: 0; }
+        .replace-item-title { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .replace-item-meta { font-size: 0.75rem; opacity: 0.65; margin-top: 1px; }
+        .replace-item-badge { font-size: 0.68rem; font-weight: 700; padding: 2px 7px; border-radius: 20px; flex-shrink: 0; }
+        .badge-forsale  { background: rgba(13,158,110,0.12); color: var(--green); }
+        .badge-forrent  { background: rgba(26,86,219,0.12); color: var(--accent); }
+
+        .replace-empty { padding: 16px; text-align: center; font-size: 0.85rem; opacity: 0.6; }
+
+        /* Flash alert */
+        .flash-alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-weight: 600;
+            font-size: 0.92rem;
+        }
+        .flash-success { background: rgba(13,158,110,0.1); border: 1px solid #0d9e6e; color: #0d9e6e; }
+        .flash-error   { background: rgba(224,40,40,0.1);  border: 1px solid #e02828; color: #e02828; }
+        .flash-warn    { background: rgba(255,165,0,0.1);  border: 1px solid #ffa500; color: #ff8c00; }
+
         /* ── INQUIRY CHAT MODAL (WhatsApp-like) ── */
         .chat-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 1200; padding: 18px; }
         .chat-overlay.open { display: flex; }
@@ -325,6 +423,19 @@
             </div>
         </div>
 
+        <c:if test="${param.replace == 'success'}">
+            <div class="flash-alert flash-success">✅ Property replaced successfully!</div>
+        </c:if>
+        <c:if test="${param.replace == 'error'}">
+            <div class="flash-alert flash-error">❌ Could not replace property. Please try again.</div>
+        </c:if>
+        <c:if test="${param.replace == 'notfound'}">
+            <div class="flash-alert flash-error">❌ Original property not found in your saved list.</div>
+        </c:if>
+        <c:if test="${param.replace == 'unavailable'}">
+            <div class="flash-alert flash-warn">⚠️ The selected property is sold or unavailable.</div>
+        </c:if>
+
         <table>
             <thead>
                 <tr>
@@ -356,6 +467,48 @@
                                 <td>${p.bathrooms}</td>
                                 <td style="display: flex; gap: 10px; align-items: center;">
                                     <button class="btn" style="padding: 8px 15px; font-size: 0.85rem;" onclick="window.location.href='properties?viewId=${p.id}'">View</button>
+
+                                    <%-- ── REPLACE BUTTON + DROPDOWN ── --%>
+                                    <div class="replace-wrapper" id="rw-${p.id}">
+                                        <button type="button"
+                                                class="btn-replace"
+                                                title="Replace this property"
+                                                onclick="toggleReplaceDropdown('${p.id}', event)">
+                                            &#x21C4;<%-- ⇄ two-sided arrow --%>
+                                        </button>
+
+                                        <div class="replace-dropdown" id="rd-${p.id}">
+                                            <div class="replace-dropdown-header">Replace with…</div>
+                                            <div class="replace-dropdown-list">
+                                                <c:choose>
+                                                    <c:when test="${not empty availableProperties}">
+                                                        <c:forEach var="ap" items="${availableProperties}">
+                                                            <c:if test="${ap.id != p.id}">
+                                                                <form action="replaceFavorite" method="post" style="margin:0; padding:0;">
+                                                                    <input type="hidden" name="oldPropertyId" value="${p.id}">
+                                                                    <input type="hidden" name="newPropertyId" value="${ap.id}">
+                                                                    <button type="submit" class="replace-item">
+                                                                        <img src="${ap.imageUrl}" class="replace-item-thumb" alt="${ap.title}">
+                                                                        <div class="replace-item-info">
+                                                                            <div class="replace-item-title">${ap.title}</div>
+                                                                            <div class="replace-item-meta">📍 ${ap.location}</div>
+                                                                        </div>
+                                                                        <span class="replace-item-badge ${ap.status == 'For Sale' ? 'badge-forsale' : 'badge-forrent'}">
+                                                                            ${ap.status}
+                                                                        </span>
+                                                                    </button>
+                                                                </form>
+                                                            </c:if>
+                                                        </c:forEach>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <div class="replace-empty">No available properties.</div>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <%-- ── END REPLACE ── --%>
 
                                     <form action="removeFavorite" method="post" style="margin: 0;">
                                         <input type="hidden" name="propertyId" value="${p.id}">
@@ -895,6 +1048,45 @@
         if (event.target === this) {
             closeEditBookingModal();
         }
+    });
+</script>
+
+<script>
+    // ── REPLACE PROPERTY DROPDOWN LOGIC ──────────────────────────────
+    function toggleReplaceDropdown(propId, event) {
+        event.stopPropagation();
+        const dropdown = document.getElementById('rd-' + propId);
+        const btn      = event.currentTarget;
+        const isOpen   = dropdown.classList.contains('open');
+
+        // Close ALL open replace dropdowns first
+        closeAllReplaceDropdowns();
+
+        if (!isOpen) {
+            dropdown.classList.add('open');
+            btn.classList.add('active');
+        }
+    }
+
+    function closeAllReplaceDropdowns() {
+        document.querySelectorAll('.replace-dropdown.open').forEach(d => {
+            d.classList.remove('open');
+        });
+        document.querySelectorAll('.btn-replace.active').forEach(b => {
+            b.classList.remove('active');
+        });
+    }
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.replace-wrapper')) {
+            closeAllReplaceDropdowns();
+        }
+    });
+
+    // Prevent dropdown-internal clicks from bubbling to document
+    document.querySelectorAll('.replace-dropdown').forEach(d => {
+        d.addEventListener('click', e => e.stopPropagation());
     });
 </script>
 
