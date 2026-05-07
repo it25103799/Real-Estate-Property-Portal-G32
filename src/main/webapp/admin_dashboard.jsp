@@ -1177,11 +1177,9 @@ function buildActivityFeed() {
         activities.push({ type: 'booking', icon: '📅', text: buyer + ' booked "' + property + '"', time: date, cls: 'booking' });
     });
 
-    // From sold table
-    document.querySelectorAll('#sold-table tbody tr').forEach(row => {
-        if (!row.cells || row.cells.length < 6) return;
-        const title = row.cells[1].textContent.trim();
-        activities.push({ type: 'sold', icon: '🏆', text: '"' + title + '" marked as sold', time: 'Recently', cls: 'sold' });
+    // From sold_properties.txt via server (real timestamps)
+    (window.soldActivities || []).forEach(function(sp) {
+        activities.push({ type: 'sold', icon: '🏆', text: '"' + sp.title + '" marked as sold', time: sp.time, cls: 'sold' });
     });
 
     // Sort by time descending (simple string sort works for ISO dates)
@@ -1314,6 +1312,20 @@ function openEditModal(id, title, message, priority) {
     const el = document.getElementById(id);
     if (el) el.addEventListener('click', function(e) { if (e.target === this) this.style.display = 'none'; });
 });
+</script>
+
+<%-- ── Inject real sold-activity timestamps from sold_properties.txt ── --%>
+<script>
+window.soldActivities = [
+    <c:forEach var="sp" items="${allSoldProperties}" varStatus="vs">
+    {
+        title: "<c:out value='${sp[2]}'/>",
+        time:  "<c:out value='${sp[0]}'/>"
+    }<c:if test="${!vs.last}">,</c:if>
+    </c:forEach>
+];
+// Newest first so Recent Activity shows the most recent sold events
+window.soldActivities.reverse();
 </script>
 
 </body>

@@ -52,7 +52,7 @@ public class ChangeRoleServlet extends HttpServlet {
                     }
                     String[] userData = currentLine.split(",");
                     // Format: username,email,phone,password,role
-                    if (userData.length >= 5 && userData[1].equals(targetEmail)) {
+                    if (userData.length >= 4 && userData[1].equals(targetEmail)) {
                         userFound = true;
                         // Rebuild line with updated role
                         userData[userData.length - 1] = newRole.toUpperCase();
