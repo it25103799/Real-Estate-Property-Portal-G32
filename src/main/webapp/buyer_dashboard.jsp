@@ -15,30 +15,202 @@
             --green: #0d9e6e; --red: #e02828;
         }
         [data-theme="dark"] {
-            --bg: #0f1117; --bg2: #1a1d27; --ink: #ffffff; --line: #232736;
+            --bg: #111827; --bg2: #1f2937; --ink: #f9fafb; --line: #374151;
+            --accent: #3b82f6; --green: #10b981; --red: #ef4444;
         }
-        body { font-family: var(--font-sans); background: var(--bg2); color: var(--ink); margin: 0; padding: 40px; transition: background 0.3s, color 0.3s; }
+        body { font-family: var(--font-sans); background: var(--bg2); color: var(--ink); margin: 0; padding: 30px; transition: background 0.3s, color 0.3s; }
 
-        .dashboard-container { max-width: 1100px; margin: 0 auto; }
+        .dashboard-container { max-width: 1600px; margin: 0 auto; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
 
-        .card { background: var(--bg); border: 1px solid var(--line); border-radius: var(--r); padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 16px rgba(0,0,0,.04); }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .card-title { font-size: 1.2rem; font-weight: 600; margin: 0; }
+        /* ── STAT CARDS GRID ── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        .stat-card {
+            background: var(--bg);
+            border: 1px solid var(--line);
+            border-radius: var(--r);
+            padding: 20px;
+            box-shadow: 0 4px 16px rgba(0,0,0,.04);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        [data-theme="dark"] .stat-card {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25), 0 0 0 1px rgba(255,255,255,0.03);
+            border-color: rgba(255,255,255,0.08);
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent);
+        }
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,.08);
+        }
+        [data-theme="dark"] .stat-card:hover {
+            box-shadow: 0 8px 28px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.12);
+        }
+        .stat-card.green::before { background: var(--green); }
+        .stat-card.red::before { background: var(--red); }
+        .stat-card.amber::before { background: #f59e0b; }
+        
+        .stat-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+        }
+        .stat-icon.blue { background: rgba(26,86,219,0.1); }
+        .stat-icon.green { background: rgba(13,158,110,0.1); }
+        .stat-icon.red { background: rgba(224,40,40,0.1); }
+        .stat-icon.amber { background: rgba(245,158,11,0.1); }
+        
+        .stat-value {
+            font-size: 1.85rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--ink);
+            opacity: 0.6;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card { 
+            background: var(--bg); 
+            border: 1px solid var(--line); 
+            border-radius: var(--r); 
+            padding: 24px; 
+            margin-bottom: 24px; 
+            box-shadow: 0 4px 16px rgba(0,0,0,.04);
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+        [data-theme="dark"] .card {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.05);
+        }
+        .card:hover {
+            box-shadow: 0 6px 20px rgba(0,0,0,.08);
+        }
+        [data-theme="dark"] .card:hover {
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.08);
+            transform: translateY(-2px);
+        }
+        .card-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 2px solid var(--line);
+        }
+        .card-title { 
+            font-size: 1.2rem; 
+            font-weight: 700; 
+            margin: 0;
+            color: var(--ink);
+        }
 
         /* Forms & Toolbars */
         .toolbar { display: flex; gap: 15px; align-items: center; }
-        input, select { padding: 10px 15px; border: 1.5px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); font-family: var(--font-sans); outline: none; transition: 0.2s; }
-        input:focus, select:focus { border-color: var(--accent); }
-        .btn { background: var(--accent); color: white; padding: 10px 20px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .btn:hover { opacity: 0.9; }
-        .btn-outline { background: transparent; border: 1.5px solid var(--line); color: var(--ink); }
-        .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+        input, select { 
+            padding: 10px 15px; 
+            border: 1.5px solid var(--line); 
+            border-radius: 6px; 
+            background: var(--bg); 
+            color: var(--ink); 
+            font-family: var(--font-sans); 
+            outline: none; 
+            transition: all 0.2s;
+        }
+        input:focus, select:focus { 
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(26,86,219,0.1);
+        }
+        .btn { 
+            background: var(--accent); 
+            color: white; 
+            padding: 8px 16px; 
+            border: none; 
+            border-radius: 6px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(26,86,219,0.2);
+            font-size: 0.85rem;
+        }
+        [data-theme="dark"] .btn {
+            box-shadow: 0 2px 12px rgba(59,130,246,0.3);
+        }
+        .btn:hover { 
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(26,86,219,0.3);
+        }
+        [data-theme="dark"] .btn:hover {
+            box-shadow: 0 4px 16px rgba(59,130,246,0.4);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .btn-outline { 
+            background: transparent; 
+            border: 1.5px solid var(--line); 
+            color: var(--ink);
+            box-shadow: none;
+        }
+        .btn-outline:hover { 
+            border-color: var(--accent); 
+            color: var(--accent);
+            background: rgba(26,86,219,0.05);
+        }
 
         /* The Data Table */
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem; }
-        th, td { padding: 16px; border-bottom: 1px solid var(--line); vertical-align: middle; }
-        th { font-weight: 600; color: var(--ink); opacity: 0.7; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
+        th, td { padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+        th { 
+            font-weight: 600; 
+            color: var(--ink); 
+            opacity: 0.75; 
+            font-size: 0.78rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.6px;
+            background: var(--bg2);
+            position: sticky;
+            top: 0;
+        }
+        [data-theme="dark"] th {
+            background: rgba(31,41,55,0.8);
+            opacity: 0.85;
+        }
+        tbody tr {
+            transition: background-color 0.15s ease;
+        }
+        tbody tr:hover {
+            background-color: rgba(26,86,219,0.03);
+        }
+        [data-theme="dark"] tbody tr:hover {
+            background-color: rgba(59,130,246,0.08);
+        }
 
         /* Thumbnail Image for Saved Properties */
         .prop-thumb { width: 60px; height: 45px; border-radius: 4px; object-fit: cover; }
@@ -300,8 +472,10 @@
             <!-- ── ANNOUNCEMENTS BUTTON ── -->
             <div style="position: relative; display: inline-flex;">
                 <button class="btn btn-outline" onclick="window.location.href='announcements'"
+                        id="announcements-tab-btn"
                         title="View Official Announcements"
-                        style="display:flex; align-items:center; gap:6px;">
+                        style="display:flex; align-items:center; gap:6px;
+                               transition: all 0.2s;">
                     📢 Announcements
                 </button>
                 <span id="ann-tab-count"
@@ -309,7 +483,7 @@
                              color: white; border-radius: 50%; font-size: 0.65rem; font-weight: 700;
                              min-width: 18px; height: 18px; display: none; align-items: center;
                              justify-content: center; padding: 0 4px; line-height: 1;
-                             pointer-events: none;"></span>
+                             pointer-events: none; box-shadow: 0 2px 8px rgba(224,40,40,0.3);"></span>
             </div>
 
             <!-- ── NOTIFICATION BELL ── -->
@@ -355,6 +529,34 @@
             </form>
         </div>
     </div>
+
+    <!-- ── STAT CARDS SECTION ─────────────────────────────────────── -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon blue">❤️</div>
+            <div class="stat-value">${not empty savedProperties ? savedProperties.size() : 0}</div>
+            <div class="stat-label">Saved Properties</div>
+        </div>
+        
+        <div class="stat-card green">
+            <div class="stat-icon green">💬</div>
+            <div class="stat-value">${not empty myInquiries ? myInquiries.size() : 0}</div>
+            <div class="stat-label">Active Inquiries</div>
+        </div>
+        
+        <div class="stat-card amber">
+            <div class="stat-icon amber">📅</div>
+            <div class="stat-value">${totalBookings != null ? totalBookings : 0}</div>
+            <div class="stat-label">Total Bookings</div>
+        </div>
+        
+        <div class="stat-card red">
+            <div class="stat-icon red">✅</div>
+            <div class="stat-value">${completedBookings != null ? completedBookings : 0}</div>
+            <div class="stat-label">Completed</div>
+        </div>
+    </div>
+    <!-- ───────────────────────────────────────────────────────────── -->
 
     <div class="profile-section">
         <div class="profile-header">
@@ -1089,6 +1291,9 @@
         d.addEventListener('click', e => e.stopPropagation());
     });
 </script>
+
+<!-- Page Transition Animation System -->
+<script src="page-transitions.js"></script>
 
 </body>
 </html>

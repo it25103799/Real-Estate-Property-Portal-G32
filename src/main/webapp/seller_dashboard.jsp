@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,33 +16,234 @@
             --green: #0d9e6e; --red: #e02828;
         }
         [data-theme="dark"] {
-            --bg: #0f1117; --bg2: #1a1d27; --ink: #ffffff; --line: #232736;
+            --bg: #111827; --bg2: #1f2937; --ink: #f9fafb; --line: #374151;
+            --accent: #3b82f6; --green: #10b981; --red: #ef4444;
         }
-        body { font-family: var(--font-sans); background: var(--bg2); color: var(--ink); margin: 0; padding: 40px; transition: background 0.3s, color 0.3s; }
+        body { font-family: var(--font-sans); background: var(--bg2); color: var(--ink); margin: 0; padding: 30px; transition: background 0.3s, color 0.3s; }
 
-        .dashboard-container { max-width: 1000px; margin: 0 auto; }
+        .dashboard-container { max-width: 1600px; margin: 0 auto; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
 
-        .card { background: var(--bg); border: 1px solid var(--line); border-radius: var(--r); padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 16px rgba(0,0,0,.04); }
-        .card-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 20px; margin-top: 0; }
+        /* ── ENHANCED STAT CARDS ── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        .stat-card {
+            background: var(--bg);
+            border: 1px solid var(--line);
+            border-radius: var(--r);
+            padding: 20px;
+            box-shadow: 0 4px 16px rgba(0,0,0,.04);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent);
+        }
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,.08);
+        }
+        .stat-card.green::before { background: var(--green); }
+        .stat-card.red::before { background: var(--red); }
+        .stat-card.amber::before { background: #f59e0b; }
+        
+        .stat-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+        }
+        .stat-icon.blue { background: rgba(26,86,219,0.1); }
+        .stat-icon.green { background: rgba(13,158,110,0.1); }
+        .stat-icon.red { background: rgba(224,40,40,0.1); }
+        .stat-icon.amber { background: rgba(245,158,11,0.1); }
+        
+        .stat-value {
+            font-size: 1.85rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--ink);
+            opacity: 0.6;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card { 
+            background: var(--bg); 
+            border: 1px solid var(--line); 
+            border-radius: var(--r); 
+            padding: 24px; 
+            margin-bottom: 24px; 
+            box-shadow: 0 4px 16px rgba(0,0,0,.04);
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        [data-theme="dark"] .card {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.05);
+        }
+        .card:hover {
+            box-shadow: 0 6px 20px rgba(0,0,0,.08);
+        }
+        [data-theme="dark"] .card:hover {
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.08);
+            transform: translateY(-2px);
+        }
+        .card-title { 
+            font-size: 1.2rem; 
+            font-weight: 700; 
+            margin-bottom: 20px;
+            margin-top: 0;
+            padding-bottom: 14px;
+            border-bottom: 2px solid var(--line);
+        }
 
         /* Forms & Buttons */
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        .form-group { display: flex; flex-direction: column; gap: 6px; }
-        label { font-size: 0.85rem; font-weight: 500; }
-        input, select, textarea { padding: 10px; border: 1.5px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); font-family: var(--font-sans); outline: none; }
-        input:focus, select:focus, textarea:focus { border-color: var(--accent); }
-        .btn { background: var(--accent); color: white; padding: 10px 20px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .btn:hover { opacity: 0.9; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .form-group { display: flex; flex-direction: column; gap: 5px; }
+        label { font-size: 0.82rem; font-weight: 600; }
+        input, select, textarea { 
+            padding: 9px 11px; 
+            border: 1.5px solid var(--line); 
+            border-radius: 6px; 
+            background: var(--bg); 
+            color: var(--ink); 
+            font-family: var(--font-sans); 
+            outline: none;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+        input:focus, select:focus, textarea:focus { 
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(26,86,219,0.1);
+        }
+        .btn { 
+            background: var(--accent); 
+            color: white; 
+            padding: 8px 16px; 
+            border: none; 
+            border-radius: 6px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(26,86,219,0.2);
+            font-size: 0.85rem;
+        }
+        [data-theme="dark"] .btn {
+            box-shadow: 0 2px 12px rgba(59,130,246,0.3);
+        }
+        .btn:hover { 
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(26,86,219,0.3);
+        }
+        [data-theme="dark"] .btn:hover {
+            box-shadow: 0 4px 16px rgba(59,130,246,0.4);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
 
         /* The Data Table */
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
-        th, td { padding: 14px; border-bottom: 1px solid var(--line); white-space: nowrap; }
-        th { font-weight: 600; color: var(--accent); }
-        .btn-edit { background: none; border: 1px solid var(--accent); color: var(--accent); padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
-        .btn-edit:hover { background: var(--accent); color: white; }
-        .badge-sold { display: inline-block; background: rgba(13,158,110,0.12); color: #0d9e6e; border: 1px solid rgba(13,158,110,0.35); padding: 4px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; white-space: nowrap; }
-        .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: var(--r);
+            width: 100%;
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            font-size: 0.9rem;
+        }
+        th, td { 
+            padding: 12px 14px; 
+            border-bottom: 1px solid var(--line); 
+            white-space: nowrap;
+            vertical-align: middle;
+            text-align: left;
+        }
+        th { 
+            font-weight: 600; 
+            color: var(--ink);
+            opacity: 0.75;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            background: var(--bg2);
+            position: sticky;
+            top: 0;
+            text-align: left;
+        }
+        [data-theme="dark"] th {
+            background: rgba(31,41,55,0.8);
+            opacity: 0.85;
+        }
+        tbody tr {
+            transition: background-color 0.15s ease;
+        }
+        tbody tr:hover {
+            background-color: rgba(26,86,219,0.03);
+        }
+        [data-theme="dark"] tbody tr:hover {
+            background-color: rgba(59,130,246,0.08);
+        }
+        .btn-edit { 
+            background: none; 
+            border: 1.5px solid var(--accent); 
+            color: var(--accent); 
+            padding: 6px 12px; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 0.78rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .btn-edit:hover { 
+            background: var(--accent); 
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(26,86,219,0.25);
+        }
+        .badge-sold { 
+            display: inline-block; 
+            background: rgba(13,158,110,0.12); 
+            color: #0d9e6e; 
+            border: 1px solid rgba(13,158,110,0.35); 
+            padding: 6px 12px; 
+            border-radius: 20px; 
+            font-size: 0.78rem; 
+            font-weight: 700; 
+            white-space: nowrap;
+        }
+
+        /* Responsive layout for stats + inquiries */
+        @media (max-width: 1200px) {
+            .stats-inquiries-row {
+                grid-template-columns: 1fr !important;
+            }
+        }
 
         /* The Edit Modal */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 1000; }
@@ -58,8 +260,10 @@
             padding: 25px;
             border-radius: var(--r);
             margin-bottom: 30px;
+            margin-left: 80px; /* More push to right to give stats more left space */
             color: var(--ink); /* Automatically shifts text color */
-            max-width: 400px;
+            max-width: 380px;
+            min-width: 340px;
         }
 
         /* ── SELLER STATS ROW (profile + stats side-by-side) ── */
@@ -69,6 +273,8 @@
             align-items: flex-start;
             margin-bottom: 0;
             flex-wrap: wrap;
+            width: 100%;
+            justify-content: space-between;
         }
         .seller-top-row .profile-section {
             margin-bottom: 30px;
@@ -91,6 +297,19 @@
             display: flex;
             align-items: center;
             gap: 16px;
+            transition: all 0.3s ease;
+        }
+        [data-theme="dark"] .stat-card {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25), 0 0 0 1px rgba(255,255,255,0.03);
+            border-color: rgba(255,255,255,0.08);
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+        [data-theme="dark"] .stat-card:hover {
+            box-shadow: 0 8px 28px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.12);
         }
         .stat-icon {
             font-size: 1.6rem;
@@ -240,8 +459,10 @@
                 <!-- ── ANNOUNCEMENTS BUTTON ── -->
                 <div style="position: relative; display: inline-flex;">
                     <button class="btn" onclick="window.location.href='announcements'"
+                            id="announcements-tab-btn"
                             title="View Official Announcements"
-                            style="background:var(--line); color:var(--ink); display:flex; align-items:center; gap:6px;">
+                            style="background:var(--line); color:var(--ink); display:flex; align-items:center; gap:6px;
+                                   transition: all 0.2s;">
                         📢 Announcements
                     </button>
                     <span id="ann-tab-count"
@@ -249,7 +470,7 @@
                                  color: white; border-radius: 50%; font-size: 0.65rem; font-weight: 700;
                                  min-width: 18px; height: 18px; display: none; align-items: center;
                                  justify-content: center; padding: 0 4px; line-height: 1;
-                                 pointer-events: none;"></span>
+                                 pointer-events: none; box-shadow: 0 2px 8px rgba(224,40,40,0.3);"></span>
                 </div>
 
                 <!-- Bell Notifications (same as homepage) -->
@@ -323,50 +544,74 @@
     </div>
     <!-- end .profile-section -->
 
-        <!-- ── STATS PANEL ── -->
-        <div class="seller-stats-panel">
-
-            <%-- Total Properties --%>
+    <!-- ── STATS + INQUIRIES ROW ─────────────────────────────────────── -->
+    <div class="stats-inquiries-row" style="display: grid; grid-template-columns: 1fr 400px; gap: 20px; margin-bottom: 24px;">
+        
+        <!-- Left: Stat Cards -->
+        <div class="stats-grid" style="margin-bottom: 0;">
             <div class="stat-card">
-                <div class="stat-icon total">🏠</div>
-                <div class="stat-info">
-                    <span class="stat-value">${not empty myProperties ? myProperties.size() : 0}</span>
-                    <span class="stat-label">Total Properties</span>
-                </div>
+                <div class="stat-icon blue">🏠</div>
+                <div class="stat-value">${not empty myProperties ? myProperties.size() : 0}</div>
+                <div class="stat-label">Total Properties</div>
             </div>
-
-            <%-- Booked / Active --%>
-            <div class="stat-card">
-                <div class="stat-icon booked">📋</div>
-                <div class="stat-info">
-                    <span class="stat-value">${not empty activeBookings ? activeBookings.size() : 0}</span>
-                    <span class="stat-label">Booked / Active</span>
-                </div>
+            
+            <div class="stat-card amber">
+                <div class="stat-icon amber">📋</div>
+                <div class="stat-value">${not empty activeBookings ? activeBookings.size() : 0}</div>
+                <div class="stat-label">Active Bookings</div>
             </div>
-
-            <%-- Sold / Completed --%>
-            <div class="stat-card">
-                <div class="stat-icon done">✅</div>
-                <div class="stat-info">
-                    <span class="stat-value">${not empty soldCount ? soldCount : 0}</span>
-                    <span class="stat-label">Sold / Completed</span>
-                </div>
+            
+            <div class="stat-card green">
+                <div class="stat-icon green">✅</div>
+                <div class="stat-value">${not empty soldCount ? soldCount : 0}</div>
+                <div class="stat-label">Sold Properties</div>
             </div>
-
-            <%-- Total Earnings --%>
-            <div class="stat-card">
-                <div class="stat-icon" style="background: rgba(16,185,129,0.12);">💰</div>
-                <div class="stat-info">
-                    <span class="stat-value" style="font-size: 1.4rem;">$<fmt:formatNumber value="${not empty totalEarnings ? totalEarnings : 0}" pattern="#,##0.00"/></span>
-                    <span class="stat-label">Total Earnings</span>
-                </div>
+            
+            <div class="stat-card red">
+                <div class="stat-icon red">💰</div>
+                <div class="stat-value">$<fmt:formatNumber value="${not empty totalEarnings ? totalEarnings : 0}" pattern="#,##0"/></div>
+                <div class="stat-label">Total Earnings</div>
             </div>
-
         </div>
-        <!-- end .seller-stats-panel -->
 
+        <!-- Right: Buyer Inquiries Card -->
+        <div class="card" style="margin-bottom: 0; padding: 20px;">
+            <h3 class="card-title" style="font-size: 1.1rem; margin-bottom: 16px; padding-bottom: 12px;">📩 Buyer Inquiries</h3>
+            
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <select id="inqSelect" style="width: 100%; min-width: unset;">
+                    <option value="">Select an inquiry...</option>
+                    <c:forEach var="t" items="${sellerThreads}">
+                        <option value="${t.id}">${t.buyerName} — ${t.propertyTitle}</option>
+                    </c:forEach>
+                </select>
+                
+                <button class="btn" type="button" onclick="openInquiryFromSelect()" style="width: 100%;">Open Inquiry</button>
+                
+                <div style="margin-top: 8px; color: var(--ink); opacity: 0.7; font-size: 0.82rem; line-height: 1.5;">
+                    <c:choose>
+                        <c:when test="${empty sellerThreads}">
+                            <div style="text-align: center; padding: 16px 0; opacity: 0.6;">
+                                <div style="font-size: 2rem; margin-bottom: 8px;">💬</div>
+                                <div>No inquiries yet</div>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <div style="padding: 10px; background: var(--bg2); border-radius: 6px; border-left: 3px solid var(--accent);">
+                                💡 Tip: Select an inquiry above to view the conversation and reply to buyers.
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- end .seller-top-row -->
+    <!-- ─────────────────────────────────────────────────────────────── -->
+
+    <!-- Clearfix for flex row -->
+    <div style="clear: both; width: 100%;"></div>
+
+    <div class="card">
         <h3 class="card-title">List a New Property</h3>
         <p style="color: #0d9e6e; font-weight: bold;">${successMessage}</p>
         <form action="addProperty" method="post" class="form-grid">
@@ -392,58 +637,118 @@
     </div>
 
     <div class="card">
-        <h3 class="card-title">My Managed Properties</h3>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 2px solid var(--line);">
+            <h3 class="card-title" style="margin:0; padding-bottom: 0; border-bottom: none;">🏠 My Managed Properties</h3>
+            <span style="font-size:0.85rem; opacity:0.65; background: var(--bg2); padding: 6px 14px; border-radius: 20px; border: 1px solid var(--line);">
+                ${not empty myProperties ? myProperties.size() : 0} Total Properties
+            </span>
+        </div>
         <div class="table-responsive">
         <table>
             <thead>
-                <tr><th>ID</th><th>Title</th><th>Price</th><th>Location</th><th>Type</th><th>Beds</th><th>Baths</th><th>Status</th><th>Actions</th></tr>
+                <tr>
+                    <th style="width: 60px;">ID</th>
+                    <th>Title</th>
+                    <th style="width: 120px;">Price</th>
+                    <th>Location</th>
+                    <th style="width: 100px;">Type</th>
+                    <th style="width: 70px;">Beds</th>
+                    <th style="width: 70px;">Baths</th>
+                    <th style="width: 120px;">Status</th>
+                    <th style="width: 280px;">Actions</th>
+                </tr>
             </thead>
             <tbody>
                 <c:choose>
                     <c:when test="${not empty myProperties}">
                         <c:forEach var="p" items="${myProperties}">
                             <tr style="${p.status == 'Sold' ? 'opacity: 0.7; background: rgba(13,158,110,0.05);' : ''}">
-                                <td><small>${p.id}</small></td>
-                                <td style="${p.status == 'Sold' ? 'color: #0d9e6e; font-weight: 600;' : ''}">${p.title}</td>
-                                <td style="${p.status == 'Sold' ? 'color: #0d9e6e; font-weight: 700;' : ''}">$${p.price}</td>
-                                <td>${p.location}</td>
-                                <td>${p.type}</td>
-                                <td>${p.bedrooms}</td>
-                                <td>${p.bathrooms}</td>
+                                <td><small style="opacity: 0.6; font-weight: 600;">#${p.id}</small></td>
+                                <td>
+                                    <div style="font-weight: 600; color: var(--ink);">${p.title}</div>
+                                    <c:if test="${p.status == 'Sold'}">
+                                        <div style="font-size: 0.75rem; color: #0d9e6e; margin-top: 2px;">✓ Sold Property</div>
+                                    </c:if>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 700; color: ${p.status == 'Sold' ? '#0d9e6e' : 'var(--accent)'}; font-size: 0.95rem;">
+                                        $${p.price}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 4px;">
+                                        <span style="font-size: 0.85rem;">📍</span>
+                                        <span>${p.location}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span style="background: var(--bg2); padding: 4px 10px; border-radius: 6px; font-size: 0.82rem; font-weight: 600; border: 1px solid var(--line);">
+                                        ${p.type}
+                                    </span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span style="background: rgba(26,86,219,0.08); padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; color: var(--accent);">
+                                        ${p.bedrooms}
+                                    </span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span style="background: rgba(13,158,110,0.08); padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; color: var(--green);">
+                                        ${p.bathrooms}
+                                    </span>
+                                </td>
                                 <td>
                                     <c:choose>
                                         <c:when test="${p.status == 'Sold'}">
-                                            <span class="badge-sold" style="font-size: 0.82rem; padding: 6px 14px;">✅ SOLD</span>
+                                            <span class="badge-sold" style="font-size: 0.82rem; padding: 6px 14px; display: inline-flex; align-items: center; gap: 4px;">
+                                                ✅ SOLD
+                                            </span>
                                         </c:when>
                                         <c:otherwise>
-                                            <span style="display: inline-block; background: rgba(26,86,219,0.10); color: var(--accent); border: 1px solid rgba(26,86,219,0.35); padding: 6px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; white-space: nowrap;">🏷️ ${p.status}</span>
+                                            <span style="display: inline-block; background: rgba(26,86,219,0.10); color: var(--accent); border: 1px solid rgba(26,86,219,0.35); padding: 6px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; white-space: nowrap;">
+                                                🏷️ ${p.status}
+                                            </span>
                                         </c:otherwise>
                                     </c:choose>
                                 </td>
-                                 <td style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-                                    <c:choose>
-                                        <c:when test="${p.status != 'Sold'}">
-                                            <button class="btn-edit" onclick="openEditModal('${p.id}', '${p.title}', '${p.price}', '${p.location}', '${p.type}', '${p.status}', '${p.bedrooms}', '${p.bathrooms}', '${p.description}')">✏️ Edit</button>
-                                            <form action="markAsSold" method="post" style="margin: 0;" onsubmit="return confirm('Mark &quot;${p.title}&quot; as Sold? This will update the property status to Sold and move it to the Completed Transactions section.');">
-                                                <input type="hidden" name="propertyId" value="${p.id}">
-                                                <button type="submit" class="btn-edit" style="color: #0d9e6e; border-color: #0d9e6e;">🏷️ Mark as Sold</button>
-                                            </form>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <span style="opacity: 0.4; font-size: 0.82rem;">—</span>
-                                        </c:otherwise>
-                                    </c:choose>
-    
-                                    <form action="deleteProperty" method="post" style="margin: 0;" onsubmit="return confirm('Are you absolutely sure you want to delete this property? This cannot be undone!');">
-                                        <input type="hidden" name="propertyId" value="${p.id}">
-                                        <button type="submit" class="btn-edit" style="color: var(--red); border-color: var(--red);">🗑️ Delete</button>
-                                    </form>
+                                 <td>
+                                    <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+                                        <c:choose>
+                                            <c:when test="${p.status != 'Sold'}">
+                                                <button class="btn-edit" onclick="openEditModal('${p.id}', '${p.title}', '${p.price}', '${p.location}', '${p.type}', '${p.status}', '${p.bedrooms}', '${p.bathrooms}', '${p.description}')" 
+                                                        style="padding: 6px 10px; font-size: 0.75rem;" title="Edit property details">
+                                                    ✏️ Edit
+                                                </button>
+                                                <form action="markAsSold" method="post" style="margin: 0;" onsubmit="return confirm('Mark &quot;${p.title}&quot; as Sold? This will update the property status to Sold and move it to the Completed Transactions section.');">
+                                                    <input type="hidden" name="propertyId" value="${p.id}">
+                                                    <button type="submit" class="btn-edit" style="color: #0d9e6e; border-color: #0d9e6e; padding: 6px 10px; font-size: 0.75rem;" title="Mark this property as sold">
+                                                        🏷️ Sold
+                                                    </button>
+                                                </form>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span style="opacity: 0.4; font-size: 0.82rem; padding: 6px 10px;">—</span>
+                                            </c:otherwise>
+                                        </c:choose>
+        
+                                        <form action="deleteProperty" method="post" style="margin: 0;" onsubmit="return confirm('Are you absolutely sure you want to delete this property? This cannot be undone!');">
+                                            <input type="hidden" name="propertyId" value="${p.id}">
+                                            <button type="submit" class="btn-edit" style="color: var(--red); border-color: var(--red); padding: 6px 10px; font-size: 0.75rem;" title="Delete this property permanently">
+                                                🗑️ Delete
+                                            </button>
+                                        </form>
+                                    </div>
                                  </td>
                             </tr>
                         </c:forEach>
                     </c:when>
                     <c:otherwise>
-                        <tr><td colspan="9" style="text-align:center;">You haven't listed any properties yet.</td></tr>
+                        <tr>
+                            <td colspan="9" style="text-align:center; padding: 40px 20px;">
+                                <div style="font-size: 3rem; margin-bottom: 12px;">🏠</div>
+                                <div style="font-weight: 600; margin-bottom: 6px; color: var(--ink);">No Properties Listed Yet</div>
+                                <div style="opacity: 0.7; font-size: 0.9rem;">Start by adding your first property above!</div>
+                            </td>
+                        </tr>
                     </c:otherwise>
                 </c:choose>
             </tbody>
@@ -452,90 +757,110 @@
     </div>
 
     <div class="card" id="reviews-section">
-        <h3 class="card-title">💬 Property Reviews</h3>
-        <div style="color: var(--ink); opacity: 0.75; font-size: 0.9rem; margin-top: -10px; margin-bottom: 16px;">
-            Reviews posted by buyers for your listings.
-        </div>
+        <h3 class="card-title">💬 Buyer Reviews</h3>
+        <p style="color: var(--ink); opacity: 0.7; font-size: 0.9rem; margin-top: -16px; margin-bottom: 24px;">
+            Reviews posted by buyers for your properties.
+        </p>
 
         <c:choose>
             <c:when test="${empty myProperties}">
-                <div style="text-align:center; padding: 18px; opacity: 0.8;">
-                    No properties found. Add a property to start receiving reviews.
+                <div style="text-align:center; padding: 40px; background: var(--bg2); border-radius: var(--r); border: 2px dashed var(--line);">
+                    <div style="font-size: 3rem; margin-bottom: 12px;">🏠</div>
+                    <div style="font-weight: 600; margin-bottom: 6px;">No Properties Yet</div>
+                    <div style="opacity: 0.7; font-size: 0.9rem;">Add a property to start receiving reviews from buyers.</div>
                 </div>
             </c:when>
             <c:otherwise>
-                <div style="display:flex; flex-direction:column; gap: 16px;">
+                <div style="display:flex; flex-direction:column; gap: 24px;">
                     <c:forEach var="p" items="${myProperties}">
-                        <div style="border: 1px solid var(--line); border-radius: var(--r); background: var(--bg2); padding: 16px;">
-                            <div style="display:flex; justify-content:space-between; gap: 12px; flex-wrap: wrap;">
-                                <div>
-                                    <div style="font-weight: 800;">${p.title}</div>
-                                    <div style="font-size: 0.85rem; opacity: 0.8;">Property ID: <small>${p.id}</small></div>
-                                </div>
-                                <div style="font-size: 0.85rem; opacity: 0.8;">
-                                    ${p.location} · ${p.type}
+                        <!-- Property Card -->
+                        <div style="border: 1px solid var(--line); border-radius: var(--r); background: var(--bg); overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: box-shadow 0.3s ease;"
+                             onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,0.08)'"
+                             onmouseout="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.04)'">
+                            
+                            <!-- Property Header -->
+                            <div style="background: linear-gradient(135deg, rgba(26,86,219,0.05) 0%, rgba(13,158,110,0.05) 100%); padding: 18px 20px; border-bottom: 1px solid var(--line);">
+                                <div style="display:flex; justify-content:space-between; align-items:center; gap: 12px; flex-wrap: wrap;">
+                                    <div>
+                                        <div style="font-weight: 800; font-size: 1.05rem; color: var(--ink);">${p.title}</div>
+                                        <div style="font-size: 0.82rem; opacity: 0.7; margin-top: 4px; display: flex; align-items: center; gap: 8px;">
+                                            <span>🆔 ${p.id}</span>
+                                            <span>•</span>
+                                            <span>📍 ${p.location}</span>
+                                            <span>•</span>
+                                            <span>🏷️ ${p.type}</span>
+                                        </div>
+                                    </div>
+                                    <c:set var="revList" value="${reviewsByProperty[p.id]}"/>
+                                    <div style="background: var(--accent); color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.78rem; font-weight: 700;">
+                                        ${not empty revList ? revList.size() : 0} Review${not empty revList && revList.size() != 1 ? 's' : ''}
+                                    </div>
                                 </div>
                             </div>
 
-                            <c:set var="revList" value="${reviewsByProperty[p.id]}"/>
-                            <c:choose>
-                                <c:when test="${empty revList}">
-                                    <div style="margin-top: 12px; padding: 12px; border-radius: 8px; background: var(--bg); border: 1px solid var(--line); opacity: 0.9;">
-                                        No reviews yet.
-                                    </div>
-                                </c:when>
-                                <c:otherwise>
-                                    <div style="margin-top: 12px; display:flex; flex-direction:column; gap: 10px;">
-                                        <c:forEach var="r" items="${revList}">
-                                            <div style="padding: 12px; border-radius: 8px; background: var(--bg); border: 1px solid var(--line);">
-                                                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap: 10px; flex-wrap: wrap;">
-                                                    <div style="font-weight: 700;"><c:out value="${r.buyerName}"/></div>
-                                                    <div style="display: flex; align-items: center; gap: 10px;">
-                                                        <div style="color: #d97706; letter-spacing: 1px; font-size: 0.9rem;">
-                                                            <c:forEach begin="1" end="${r.rating}" var="i">★</c:forEach>
-                                                            <c:forEach begin="1" end="${5 - r.rating}" var="i">☆</c:forEach>
+                            <!-- Reviews List -->
+                            <div style="padding: 20px;">
+                                <c:choose>
+                                    <c:when test="${empty revList}">
+                                        <div style="text-align: center; padding: 32px 20px; background: var(--bg2); border-radius: 8px; border: 1px dashed var(--line);">
+                                            <div style="font-size: 2.5rem; margin-bottom: 10px;">⭐</div>
+                                            <div style="font-weight: 600; margin-bottom: 4px;">No Reviews Yet</div>
+                                            <div style="font-size: 0.85rem; opacity: 0.7;">Be patient! Buyers will leave reviews after viewing this property.</div>
+                                        </div>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <div style="display:flex; flex-direction:column; gap: 14px;">
+                                            <c:forEach var="r" items="${revList}">
+                                                <!-- Individual Review Card -->
+                                                <div style="padding: 16px 18px; border-radius: 10px; background: var(--bg2); border: 1.5px solid var(--line); transition: all 0.2s ease;"
+                                                     onmouseover="this.style.borderColor='var(--accent)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(26,86,219,0.1)'"
+                                                     onmouseout="this.style.borderColor='var(--line)'; this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                                                    
+                                                    <!-- Review Header -->
+                                                    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap: 12px; margin-bottom: 12px; flex-wrap: wrap;">
+                                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                                            <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), #1041b0); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.1rem; flex-shrink: 0;">
+                                                                ${fn:substring(r.buyerName, 0, 1)}
+                                                            </div>
+                                                            <div>
+                                                                <div style="font-weight: 700; font-size: 0.95rem; color: var(--ink);"><c:out value="${r.buyerName}"/></div>
+                                                                <div style="font-size: 0.75rem; opacity: 0.6; margin-top: 2px;">Verified Buyer ✓</div>
+                                                            </div>
                                                         </div>
-                                                        <form action="deleteReview" method="post" onsubmit="return confirm('Are you sure you want to delete this review?');">
-                                                            <input type="hidden" name="reviewId" value="${r.reviewID}">
-                                                            <button type="submit" class="btn-edit" style="color: var(--red); border-color: var(--red);">Remove</button>
-                                                        </form>
+                                                        <div style="display: flex; align-items: center; gap: 12px;">
+                                                            <div style="display: flex; align-items: center; gap: 4px; background: rgba(217,119,6,0.1); padding: 6px 12px; border-radius: 20px; border: 1px solid rgba(217,119,6,0.2);">
+                                                                <span style="color: #d97706; letter-spacing: 1px; font-size: 0.95rem;">
+                                                                    <c:forEach begin="1" end="${r.rating}" var="i">★</c:forEach>
+                                                                    <c:forEach begin="1" end="${5 - r.rating}" var="i">☆</c:forEach>
+                                                                </span>
+                                                                <span style="font-weight: 700; color: #d97706; font-size: 0.85rem;">${r.rating}.0</span>
+                                                            </div>
+                                                            <form action="deleteReview" method="post" onsubmit="return confirm('Are you sure you want to delete this review? This action cannot be undone.');" style="margin: 0;">
+                                                                <input type="hidden" name="reviewId" value="${r.reviewID}">
+                                                                <button type="submit" class="btn-edit" style="color: var(--red); border-color: var(--red); padding: 6px 12px; font-size: 0.78rem;" title="Delete this review">
+                                                                    🗑️ Delete
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Review Comment -->
+                                                    <div style="background: var(--bg); padding: 14px 16px; border-radius: 8px; border-left: 3px solid var(--accent);">
+                                                        <div style="font-size: 0.88rem; line-height: 1.6; color: var(--ink); opacity: 0.9; white-space: pre-wrap;">
+                                                            <c:out value="${r.comment}"/>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div style="margin-top: 6px; opacity: 0.9; white-space: pre-wrap;">
-                                                    <c:out value="${r.comment}"/>
-                                                </div>
-                                            </div>
-                                        </c:forEach>
-                                    </div>
-                                </c:otherwise>
-                            </c:choose>
+                                            </c:forEach>
+                                        </div>
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
                         </div>
                     </c:forEach>
                 </div>
             </c:otherwise>
         </c:choose>
-    </div>
-
-    <div class="card">
-        <div style="display:flex; align-items:center; justify-content:space-between; gap: 12px; flex-wrap: wrap;">
-            <h3 class="card-title" style="margin-bottom: 0;">📩 Buyer Inquiries</h3>
-            <div style="display:flex; gap: 10px; align-items:center;">
-                <select id="inqSelect" style="min-width: 320px; max-width: 520px;">
-                    <option value="">Select an inquiry...</option>
-                    <c:forEach var="t" items="${sellerThreads}">
-                        <option value="${t.id}">${t.buyerName} — ${t.propertyTitle}</option>
-                    </c:forEach>
-                </select>
-                <button class="btn" type="button" onclick="openInquiryFromSelect()">Open</button>
-            </div>
-        </div>
-
-        <div style="margin-top: 14px; color: var(--ink); opacity: 0.75; font-size: 0.9rem;">
-            <c:choose>
-                <c:when test="${empty sellerThreads}">No inquiries yet.</c:when>
-                <c:otherwise>Tip: pick an inquiry to view the chat thread and reply.</c:otherwise>
-            </c:choose>
-        </div>
     </div>
 
     <!-- ── ACTIVE BOOKINGS ──────────────────────────────────────────────── -->
@@ -1037,6 +1362,9 @@
         </div>
     </c:forEach>
 </div>
+
+<!-- Page Transition Animation System -->
+<script src="page-transitions.js"></script>
 
 </body>
 </html>

@@ -1026,6 +1026,19 @@ function renderNotifications() {
             }).join('');
         }
     }
+
+    // 4. Update Announcements tab badge with clickable handler
+    const annTabCount = document.getElementById('ann-tab-count');
+    if (annTabCount && announcementItems.length > 0) {
+        // Make the entire announcements tab clickable to view all announcements
+        const annTab = document.querySelector('[data-panel="announcements"]');
+        if (annTab) {
+            annTab.style.cursor = 'pointer';
+            annTab.onclick = function() {
+                window.location.href = 'announcements';
+            };
+        }
+    }
 }
 
 // ── NOTIFICATION PANEL TOGGLE (shared pages) ──

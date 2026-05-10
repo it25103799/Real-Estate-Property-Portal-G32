@@ -423,19 +423,25 @@ public class SellerDashboardServlet extends HttpServlet {
                 String annLine;
                 while ((annLine = annBr.readLine()) != null) {
                     if (annLine.trim().isEmpty()) continue;
-                    String[] parts = annLine.split(",", 6);
-                    if (parts.length == 6 && !readAnnIds.contains(parts[0].trim())) {
-                        Map<String, String> n = new HashMap<>();
-                        n.put("sender",    "System Administration");
-                        n.put("receiver",  loggedUser);
-                        n.put("title",     parts[1]);
-                        n.put("content",   parts[2]);
-                        n.put("priority",  parts[3]);
-                        n.put("timestamp", parts[5]);
-                        n.put("type",      "ANNOUNCEMENT");
-                        n.put("threadId",  "");
-                        allNotifications.add(n);
-                    }
+                    String[] parts = annLine.split(",", 9); // Updated to 9 fields for new format
+                    if (parts.length < 6) continue;
+                    
+                    String annId = parts[0].trim();
+                    
+                    // Skip if already read
+                    if (readAnnIds.contains(annId)) continue;
+                    
+                    // All announcements are shown to all users (no filtering by audience)
+                    Map<String, String> n = new HashMap<>();
+                    n.put("sender",    "System Administration");
+                    n.put("receiver",  loggedUser);
+                    n.put("title",     parts[1]);
+                    n.put("content",   parts[2]);
+                    n.put("priority",  parts[3]);
+                    n.put("timestamp", parts[5]);
+                    n.put("type",      "ANNOUNCEMENT");
+                    n.put("threadId",  "");
+                    allNotifications.add(n);
                 }
             } catch (Exception e) {
                 System.err.println("Error reading announcements for seller: " + e.getMessage());

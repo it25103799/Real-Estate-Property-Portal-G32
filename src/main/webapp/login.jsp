@@ -10,5 +10,8 @@
         Password: <input type="password" name="password" required><br><br>
         <button type="submit">Login</button>
     </form>
+
+<!-- Page Transition Animation System -->
+<script src="page-transitions.js"></script>
 </body>
 </html>

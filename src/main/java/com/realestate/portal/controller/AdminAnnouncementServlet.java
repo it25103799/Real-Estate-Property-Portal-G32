@@ -14,7 +14,8 @@ import javax.servlet.http.HttpSession;
  * AdminAnnouncementServlet — Full CRUD for Platform Announcements
  *
  * Data file  : WEB-INF/announcements.txt
- * Line format: <id>,<title>,<message>,<priority>,<postedBy>,<timestamp>
+ * Line format: <id>,<title>,<message>,<priority>,<postedBy>,<timestamp>,<category>,audience=<ALL>,<expiryDate>
+ * Note: All announcements are broadcast to ALL users (no targeting)
  *
  * URL mapping: /adminAnnouncement
  *   GET  ?action=list              → load all announcements → forward to admin_dashboard.jsp
@@ -79,10 +80,12 @@ public class AdminAnnouncementServlet extends HttpServlet {
                               HttpServletResponse response,
                               HttpSession session) throws IOException {
 
-        String title    = sanitize(request.getParameter("announcementTitle"));
-        String message  = sanitize(request.getParameter("announcementMessage"));
-        String priority = sanitize(request.getParameter("announcementPriority")); // HIGH / MEDIUM / LOW
-        String postedBy = (String) session.getAttribute("loggedUser");
+        String title     = sanitize(request.getParameter("announcementTitle"));
+        String message   = sanitize(request.getParameter("announcementMessage"));
+        String priority  = sanitize(request.getParameter("announcementPriority")); // HIGH / MEDIUM / LOW
+        String category  = sanitize(request.getParameter("announcementCategory")); // MAINTENANCE / UPDATE / EVENT / ALERT / GENERAL
+        String expiry    = sanitize(request.getParameter("announcementExpiry"));   // YYYY-MM-DD or empty
+        String postedBy  = (String) session.getAttribute("loggedUser");
 
         if (title.isEmpty() || message.isEmpty()) {
             session.setAttribute("flashMessage", "❌ Title and message are required.");
@@ -91,14 +94,22 @@ public class AdminAnnouncementServlet extends HttpServlet {
             return;
         }
 
-        // Validate priority
+        // Validate and set defaults
         if (!priority.equals("HIGH") && !priority.equals("MEDIUM") && !priority.equals("LOW")) {
             priority = "MEDIUM";
         }
+        if (category.isEmpty() || (!category.equals("MAINTENANCE") && !category.equals("UPDATE") && 
+            !category.equals("EVENT") && !category.equals("ALERT") && !category.equals("GENERAL"))) {
+            category = "GENERAL";
+        }
+        // All announcements go to ALL users - no targeting
+        String audience = "ALL";
 
         String id        = "ANN" + System.currentTimeMillis();
         String timestamp = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm").format(new java.util.Date());
-        String newLine   = String.join(",", id, title, message, priority, postedBy, timestamp);
+        
+        // Save all 9 fields: id,title,message,priority,postedBy,timestamp,category,audience(=ALL),expiry
+        String newLine   = String.join(",", id, title, message, priority, postedBy, timestamp, category, audience, expiry);
 
         String filePath = getServletContext().getRealPath("/WEB-INF/announcements.txt");
         File file = new File(filePath);
@@ -129,6 +140,8 @@ public class AdminAnnouncementServlet extends HttpServlet {
         String title    = sanitize(request.getParameter("announcementTitle"));
         String message  = sanitize(request.getParameter("announcementMessage"));
         String priority = sanitize(request.getParameter("announcementPriority"));
+        String category = sanitize(request.getParameter("announcementCategory"));
+        String expiry   = sanitize(request.getParameter("announcementExpiry"));
         String postedBy = (String) session.getAttribute("loggedUser");
 
         if (id.isEmpty() || title.isEmpty() || message.isEmpty()) {
@@ -138,9 +151,16 @@ public class AdminAnnouncementServlet extends HttpServlet {
             return;
         }
 
+        // Validate and set defaults
         if (!priority.equals("HIGH") && !priority.equals("MEDIUM") && !priority.equals("LOW")) {
             priority = "MEDIUM";
         }
+        if (category.isEmpty() || (!category.equals("MAINTENANCE") && !category.equals("UPDATE") && 
+            !category.equals("EVENT") && !category.equals("ALERT") && !category.equals("GENERAL"))) {
+            category = "GENERAL";
+        }
+        // All announcements go to ALL users - no targeting
+        String audience = "ALL";
 
         String filePath  = getServletContext().getRealPath("/WEB-INF/announcements.txt");
         File file        = new File(filePath);
@@ -152,11 +172,12 @@ public class AdminAnnouncementServlet extends HttpServlet {
                 String line;
                 while ((line = br.readLine()) != null) {
                     if (line.trim().isEmpty()) { lines.add(line); continue; }
-                    String[] parts = line.split(",", 6);
+                    String[] parts = line.split(",", 9); // Updated to handle 9 fields
                     if (parts.length >= 1 && parts[0].equals(id)) {
                         // Keep original timestamp (parts[5]) so we know when it was first posted
                         String originalTimestamp = parts.length >= 6 ? parts[5] : "—";
-                        lines.add(String.join(",", id, title, message, priority, postedBy, originalTimestamp));
+                        // Save all 9 fields with updated values (audience always = ALL)
+                        lines.add(String.join(",", id, title, message, priority, postedBy, originalTimestamp, category, audience, expiry));
                         found = true;
                     } else {
                         lines.add(line);
@@ -243,9 +264,22 @@ public class AdminAnnouncementServlet extends HttpServlet {
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
-                // Format: id, title, message, priority, postedBy, timestamp
-                String[] parts = line.split(",", 6);
-                if (parts.length == 6) list.add(parts);
+                // Format: id,title,message,priority,postedBy,timestamp,category,audience,expiry
+                String[] parts = line.split(",", 9); // Updated to handle 9 fields
+                if (parts.length >= 6) { // At least 6 fields for backward compatibility
+                    // Ensure array has 9 elements (fill missing with defaults)
+                    if (parts.length < 9) {
+                        String[] fullParts = new String[9];
+                        System.arraycopy(parts, 0, fullParts, 0, parts.length);
+                        // Fill missing fields with defaults
+                        if (parts.length <= 6) fullParts[6] = "GENERAL"; // category
+                        if (parts.length <= 7) fullParts[7] = "ALL";     // audience
+                        if (parts.length <= 8) fullParts[8] = "";        // expiry
+                        list.add(fullParts);
+                    } else {
+                        list.add(parts);
+                    }
+                }
             }
         } catch (IOException e) {
             System.out.println("Error reading announcements.txt: " + e.getMessage());

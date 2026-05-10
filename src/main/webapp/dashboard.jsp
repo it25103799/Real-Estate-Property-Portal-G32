@@ -24,5 +24,8 @@
         <p>This is the central hub for Group G32's Real Estate Portal.</p>
         <a href="logout">Logout</a>
     </div>
+
+<!-- Page Transition Animation System -->
+<script src="page-transitions.js"></script>
 </body>
 </html>

@@ -313,5 +313,8 @@
     window.currentRole = "${sessionScope.loggedRole}";
 </script>
 
+<!-- Page Transition Animation System -->
+<script src="${pageContext.request.contextPath}/page-transitions.js"></script>
+
 </body>
 </html>

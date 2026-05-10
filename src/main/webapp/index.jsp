@@ -1523,6 +1523,7 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
       <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1200&q=85" class="hero-main-img" alt="hero"/>
       <div class="hero-img-overlay"></div>
 
+      <!-- Floating Card 1: Latest Listing -->
       <div class="hero-card-float hcf-1">
                 <div class="hcf-label">Latest Listing</div>
                 <div class="hcf-value" id="latest-title" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px;">Loading...</div>
@@ -1537,6 +1538,7 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
                 </div>
       </div>
 
+      <!-- Floating Card 2: Market Stats -->
       <div class="hero-card-float hcf-2">
         <div class="hcf-label">This Week</div>
         <div class="hcf-value" style="font-size:1.4rem;font-family:var(--font-serif)">$4.2M</div>
@@ -1544,6 +1546,7 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
         <span class="hcf-badge badge-amber">↑ 12% vs last month</span>
       </div>
 
+      <!-- Floating Card 3: Recently Sold -->
       <div class="hero-card-float hcf-3" id="just-sold-card">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;">
           <div class="hcf-label" style="margin:0;">Just Sold</div>
@@ -1569,6 +1572,7 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
         <div>
           <div class="section-tag">Hand-Picked</div>
           <h2 class="section-title">Featured Properties</h2>
+          <p style="color: var(--ink3); font-size: 0.95rem; margin-top: 8px; max-width: 500px; line-height: 1.6;">Explore our curated selection of premium properties, verified for quality and value.</p>
 
                   <c:if test="${not empty searchMessage}">
                       <p style="color: var(--accent); font-weight: 600; margin-bottom: 20px;">${searchMessage}</p>
@@ -1589,9 +1593,9 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
           <c:choose>
               <c:when test="${not empty propertyList}">
                   <c:forEach var="p" items="${propertyList}">
-                      <div class="prop-card${p.status.trim() == 'Sold' ? ' prop-card--sold' : ''}" onclick="openDetail('${p.id}')" style="cursor: pointer;">
+                      <div class="prop-card${p.status.trim() == 'Sold' ? ' prop-card--sold' : ''}" onclick="openDetail('${p.id}')" style="cursor: pointer;" title="View details for ${p.title}">
                           <div class="prop-img-wrap">
-                              <img src="${p.imageUrl}" alt="${p.title}"/>
+                              <img src="${p.imageUrl}" alt="${p.title}" loading="lazy"/>
                               <div class="prop-tags">
                                   <c:choose>
                                       <c:when test="${p.status.trim() == 'Sold'}">
@@ -1636,7 +1640,11 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
                   </c:forEach>
               </c:when>
               <c:otherwise>
-                  <p style="grid-column: 1 / -1; text-align: center; color: var(--ink3); padding: 40px;">No properties available at the moment. Please check back later!</p>
+                  <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px;">
+                      <div style="font-size: 4rem; margin-bottom: 16px;">🏠</div>
+                      <div style="font-weight: 600; font-size: 1.1rem; color: var(--ink); margin-bottom: 8px;">No Properties Available</div>
+                      <div style="color: var(--ink3); font-size: 0.95rem; max-width: 400px; margin: 0 auto;">We're currently updating our listings. Please check back soon or contact us for assistance!</div>
+                  </div>
               </c:otherwise>
           </c:choose>
       </div>
@@ -1711,6 +1719,40 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
     </div>
   </section>
 
+  <!-- Call-to-Action for Unsigned Users -->
+  <c:if test="${empty sessionScope.loggedUser}">
+  <section class="section" style="background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%); padding: 80px 40px;">
+    <div class="container">
+      <div style="text-align: center; max-width: 700px; margin: 0 auto;">
+        <div style="font-size: 3rem; margin-bottom: 20px;">🏠✨</div>
+        <h2 style="font-family: var(--font-serif); font-size: 2.4rem; color: white; margin-bottom: 16px; line-height: 1.2;">Ready to Find Your Dream Home?</h2>
+        <p style="color: rgba(255,255,255,0.9); font-size: 1.05rem; line-height: 1.7; margin-bottom: 36px;">
+          Join thousands of satisfied buyers and sellers. Create your free account to save properties, get personalized recommendations, and connect with top agents.
+        </p>
+        <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+          <button onclick="showPage('register')" style="background: white; color: var(--accent); padding: 14px 32px; border-radius: var(--r); font-weight: 700; font-size: 0.95rem; border: none; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 16px rgba(0,0,0,0.2);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 24px rgba(0,0,0,0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 16px rgba(0,0,0,0.2)'">
+            Get Started Free →
+          </button>
+          <button onclick="showPage('login')" style="background: transparent; color: white; padding: 14px 32px; border-radius: var(--r); font-weight: 600; font-size: 0.95rem; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='white'; this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.4)'; this.style.background='transparent'">
+            Sign In
+          </button>
+        </div>
+        <div style="margin-top: 32px; display: flex; gap: 32px; justify-content: center; flex-wrap: wrap;">
+          <div style="color: rgba(255,255,255,0.85); font-size: 0.85rem; display: flex; align-items: center; gap: 6px;">
+            <span style="font-size: 1.1rem;">✓</span> Save Favorites
+          </div>
+          <div style="color: rgba(255,255,255,0.85); font-size: 0.85rem; display: flex; align-items: center; gap: 6px;">
+            <span style="font-size: 1.1rem;">✓</span> Price Alerts
+          </div>
+          <div style="color: rgba(255,255,255,0.85); font-size: 0.85rem; display: flex; align-items: center; gap: 6px;">
+            <span style="font-size: 1.1rem;">✓</span> Direct Messaging
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  </c:if>
+
   <footer class="footer">
     <div class="container">
       <div class="footer-top">
@@ -1765,79 +1807,157 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
 </div>
 
 <div class="page" id="page-about">
+  <!-- Hero Section -->
   <div class="agents-hero">
     <div class="container">
       <div class="section-tag">Our Story</div>
       <h1 class="section-title mt-8">Redefining Real Estate in Sri Lanka</h1>
-      <p class="section-sub">At NESTIQ, we believe that finding a home is more than just a transaction — it's the start of a new chapter in your life.</p>
+      <p class="section-sub" style="max-width: 650px;">At NESTIQ, we believe that finding a home is more than just a transaction — it's the start of a new chapter in your life. We're here to make that journey seamless, transparent, and enjoyable.</p>
     </div>
   </div>
 
+  <!-- Mission Section with Visual Layout -->
   <section class="section">
     <div class="container">
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;">
         <div>
-          <h2 style="font-family: var(--font-serif); font-size: 2.4rem; margin-bottom: 24px;">The NESTIQ Mission</h2>
-          <p style="color: var(--ink3); font-size: 1.1rem; line-height: 1.8; margin-bottom: 20px;">
+          <div class="section-tag">Our Mission</div>
+          <h2 style="font-family: var(--font-serif); font-size: 2.4rem; margin-bottom: 24px; line-height: 1.2;">Building Trust in Every Transaction</h2>
+          <p style="color: var(--ink3); font-size: 1.05rem; line-height: 1.8; margin-bottom: 20px;">
             Founded in 2020, NESTIQ emerged from a simple observation: the Sri Lankan real estate market was fragmented, opaque, and difficult to navigate. We set out to build a platform that brings transparency, trust, and professional service to every corner of the island.
           </p>
-          <p style="color: var(--ink3); font-size: 1.1rem; line-height: 1.8;">
+          <p style="color: var(--ink3); font-size: 1.05rem; line-height: 1.8; margin-bottom: 24px;">
             From the bustling streets of Colombo to the serene beaches of Bentota and the misty hills of Kandy, we are committed to helping every Sri Lankan find their perfect place. Our platform combines cutting-edge technology with deep local expertise.
           </p>
+          
+          <!-- Key Values -->
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div style="display: flex; align-items: flex-start; gap: 12px;">
+              <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--green-l); color: var(--green); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; margin-top: 2px;">✓</div>
+              <div>
+                <div style="font-weight: 600; color: var(--ink); margin-bottom: 4px;">Transparency First</div>
+                <div style="font-size: 0.9rem; color: var(--ink3);">Clear pricing, verified listings, no hidden fees</div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 12px;">
+              <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--accent-l); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; margin-top: 2px;">✓</div>
+              <div>
+                <div style="font-weight: 600; color: var(--ink); margin-bottom: 4px;">Local Expertise</div>
+                <div style="font-size: 0.9rem; color: var(--ink3);">Deep knowledge of Sri Lankan neighborhoods and markets</div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 12px;">
+              <div style="width: 24px; height: 24px; border-radius: 50%; background: rgba(217,119,6,0.1); color: var(--amber); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; margin-top: 2px;">✓</div>
+              <div>
+                <div style="font-weight: 600; color: var(--ink); margin-bottom: 4px;">Customer Success</div>
+                <div style="font-size: 0.9rem; color: var(--ink3);">Your satisfaction is our ultimate measure of success</div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div style="border-radius: var(--r3); overflow: hidden; box-shadow: var(--shadow-xl);">
+        <div style="border-radius: var(--r3); overflow: hidden; box-shadow: var(--shadow-xl); position: relative;">
           <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=800&q=80" alt="Sri Lankan Property" style="width: 100%; height: 450px; object-fit: cover;">
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.7), transparent); padding: 30px 24px 24px; color: white;">
+            <div style="font-size: 0.85rem; font-weight: 600; opacity: 0.9;">Serving Since 2020</div>
+            <div style="font-size: 1.1rem; font-weight: 700; margin-top: 4px;">4+ Years of Excellence</div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- What Makes Us Different - Enhanced Cards -->
   <section class="section" style="background: var(--bg2);">
     <div class="container">
-      <div style="text-align: center; max-width: 800px; margin: 0 auto 60px;">
+      <div style="text-align: center; max-width: 700px; margin: 0 auto 60px;">
+        <div class="section-tag" style="justify-content: center;">Why Choose Us</div>
         <h2 style="font-family: var(--font-serif); font-size: 2.2rem; margin-bottom: 16px;">What Makes Us Different?</h2>
-        <p style="color: var(--ink3);">We don't just list properties; we verify them. Every agent on our platform is hand-picked for their integrity and track record.</p>
+        <p style="color: var(--ink3); font-size: 1.05rem; line-height: 1.7;">We don't just list properties; we verify them. Every agent on our platform is hand-picked for their integrity and track record.</p>
       </div>
 
       <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
-        <div class="why-card" style="background: var(--bg); padding: 40px;">
-          <div style="font-size: 2.5rem; margin-bottom: 20px;">🛡️</div>
-          <h3 style="margin-bottom: 12px; font-size: 1.25rem;">100% Verified Listings</h3>
-          <p style="color: var(--ink4); font-size: 0.95rem;">Every property on NESTIQ undergoes a rigorous verification process to ensure accuracy and prevent fraud.</p>
+        <div class="why-card" style="background: var(--bg); padding: 40px; border-radius: var(--r2); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-xl)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+          <div style="width: 60px; height: 60px; border-radius: 16px; background: var(--green-l); display: flex; align-items: center; justify-content: center; font-size: 2rem; margin-bottom: 24px;">🛡️</div>
+          <h3 style="margin-bottom: 12px; font-size: 1.25rem; font-weight: 700;">100% Verified Listings</h3>
+          <p style="color: var(--ink4); font-size: 0.95rem; line-height: 1.7;">Every property on NESTIQ undergoes a rigorous verification process to ensure accuracy and prevent fraud. No surprises, just trust.</p>
         </div>
-        <div class="why-card" style="background: var(--bg); padding: 40px;">
-          <div style="font-size: 2.5rem; margin-bottom: 20px;">💎</div>
-          <h3 style="margin-bottom: 12px; font-size: 1.25rem;">Exclusive Portfolios</h3>
-          <p style="color: var(--ink4); font-size: 0.95rem;">Access luxury apartments and colonial villas that aren't available anywhere else in the market.</p>
+        <div class="why-card" style="background: var(--bg); padding: 40px; border-radius: var(--r2); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-xl)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+          <div style="width: 60px; height: 60px; border-radius: 16px; background: var(--accent-l); display: flex; align-items: center; justify-content: center; font-size: 2rem; margin-bottom: 24px;">💎</div>
+          <h3 style="margin-bottom: 12px; font-size: 1.25rem; font-weight: 700;">Exclusive Portfolios</h3>
+          <p style="color: var(--ink4); font-size: 0.95rem; line-height: 1.7;">Access luxury apartments and colonial villas that aren't available anywhere else in the market. Curated for discerning buyers.</p>
         </div>
-        <div class="why-card" style="background: var(--bg); padding: 40px;">
-          <div style="font-size: 2.5rem; margin-bottom: 20px;">🤝</div>
-          <h3 style="margin-bottom: 12px; font-size: 1.25rem;">Expert Guidance</h3>
-          <p style="color: var(--ink4); font-size: 0.95rem;">Our agents aren't just salespeople; they are consultants with decades of experience in the Sri Lankan market.</p>
+        <div class="why-card" style="background: var(--bg); padding: 40px; border-radius: var(--r2); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-xl)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+          <div style="width: 60px; height: 60px; border-radius: 16px; background: rgba(217,119,6,0.1); display: flex; align-items: center; justify-content: center; font-size: 2rem; margin-bottom: 24px;">🤝</div>
+          <h3 style="margin-bottom: 12px; font-size: 1.25rem; font-weight: 700;">Expert Guidance</h3>
+          <p style="color: var(--ink4); font-size: 0.95rem; line-height: 1.7;">Our agents aren't just salespeople; they are consultants with decades of experience in the Sri Lankan market, ready to guide you.</p>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- Statistics Section - Enhanced Visual Design -->
   <section class="section">
-    <div class="container" style="text-align: center;">
-      <h2 style="font-family: var(--font-serif); font-size: 2.2rem; margin-bottom: 40px;">Our Presence Across Sri Lanka</h2>
-      <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;">
-        <div style="text-align: center;">
-          <div style="font-size: 2rem; font-weight: 700; color: var(--accent);">25+</div>
-          <div style="color: var(--ink3); font-weight: 500;">Cities Covered</div>
+    <div class="container">
+      <div style="text-align: center; max-width: 700px; margin: 0 auto 60px;">
+        <div class="section-tag" style="justify-content: center;">Our Impact</div>
+        <h2 style="font-family: var(--font-serif); font-size: 2.2rem; margin-bottom: 16px;">Our Presence Across Sri Lanka</h2>
+        <p style="color: var(--ink3); font-size: 1.05rem;">From Colombo to Kandy, we're transforming how Sri Lankans buy, sell, and rent properties.</p>
+      </div>
+      
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; max-width: 1000px; margin: 0 auto;">
+        <div style="text-align: center; padding: 32px 20px; background: var(--bg2); border-radius: var(--r2); border: 1px solid var(--line); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-lg)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+          <div style="font-size: 3rem; margin-bottom: 8px;">🏙️</div>
+          <div style="font-size: 2.5rem; font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: 8px;">25+</div>
+          <div style="color: var(--ink3); font-weight: 600; font-size: 0.95rem;">Cities Covered</div>
         </div>
-        <div style="text-align: center;">
-          <div style="font-size: 2rem; font-weight: 700; color: var(--accent);">5000+</div>
-          <div style="color: var(--ink3); font-weight: 500;">Verified Listings</div>
+        <div style="text-align: center; padding: 32px 20px; background: var(--bg2); border-radius: var(--r2); border: 1px solid var(--line); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-lg)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+          <div style="font-size: 3rem; margin-bottom: 8px;">🏠</div>
+          <div style="font-size: 2.5rem; font-weight: 800; color: var(--green); line-height: 1; margin-bottom: 8px;">5000+</div>
+          <div style="color: var(--ink3); font-weight: 600; font-size: 0.95rem;">Verified Listings</div>
         </div>
-        <div style="text-align: center;">
-          <div style="font-size: 2rem; font-weight: 700; color: var(--accent);">150+</div>
-          <div style="color: var(--ink3); font-weight: 500;">Certified Agents</div>
+        <div style="text-align: center; padding: 32px 20px; background: var(--bg2); border-radius: var(--r2); border: 1px solid var(--line); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-lg)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+          <div style="font-size: 3rem; margin-bottom: 8px;">👥</div>
+          <div style="font-size: 2.5rem; font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: 8px;">150+</div>
+          <div style="color: var(--ink3); font-weight: 600; font-size: 0.95rem;">Certified Agents</div>
         </div>
-        <div style="text-align: center;">
-          <div style="font-size: 2rem; font-weight: 700; color: var(--accent);">10k+</div>
-          <div style="color: var(--ink3); font-weight: 500;">Happy Families</div>
+        <div style="text-align: center; padding: 32px 20px; background: var(--bg2); border-radius: var(--r2); border: 1px solid var(--line); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-lg)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+          <div style="font-size: 3rem; margin-bottom: 8px;">😊</div>
+          <div style="font-size: 2.5rem; font-weight: 800; color: var(--green); line-height: 1; margin-bottom: 8px;">10k+</div>
+          <div style="color: var(--ink3); font-weight: 600; font-size: 0.95rem;">Happy Families</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team/Culture Section (New) -->
+  <section class="section" style="background: var(--bg2);">
+    <div class="container">
+      <div style="text-align: center; max-width: 700px; margin: 0 auto 60px;">
+        <div class="section-tag" style="justify-content: center;">Our Culture</div>
+        <h2 style="font-family: var(--font-serif); font-size: 2.2rem; margin-bottom: 16px;">Driven by Passion, Guided by Values</h2>
+        <p style="color: var(--ink3); font-size: 1.05rem;">We're not just building a platform; we're building a community of trusted professionals who care about your journey home.</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; max-width: 900px; margin: 0 auto;">
+        <div style="background: var(--bg); padding: 36px; border-radius: var(--r2); border: 1px solid var(--line);">
+          <div style="font-size: 2.5rem; margin-bottom: 16px;">🎯</div>
+          <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 12px;">Our Vision</h3>
+          <p style="color: var(--ink3); line-height: 1.7; font-size: 0.95rem;">To become Sri Lanka's most trusted real estate platform, where every transaction is transparent, efficient, and rewarding for all parties involved.</p>
+        </div>
+        <div style="background: var(--bg); padding: 36px; border-radius: var(--r2); border: 1px solid var(--line);">
+          <div style="font-size: 2.5rem; margin-bottom: 16px;">💡</div>
+          <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 12px;">Our Innovation</h3>
+          <p style="color: var(--ink3); line-height: 1.7; font-size: 0.95rem;">Leveraging cutting-edge technology to simplify property searches, streamline transactions, and provide data-driven insights for smarter decisions.</p>
+        </div>
+        <div style="background: var(--bg); padding: 36px; border-radius: var(--r2); border: 1px solid var(--line);">
+          <div style="font-size: 2.5rem; margin-bottom: 16px;">🌟</div>
+          <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 12px;">Our Commitment</h3>
+          <p style="color: var(--ink3); line-height: 1.7; font-size: 0.95rem;">Every team member is dedicated to delivering exceptional service, maintaining integrity, and ensuring your complete satisfaction throughout your property journey.</p>
+        </div>
+        <div style="background: var(--bg); padding: 36px; border-radius: var(--r2); border: 1px solid var(--line);">
+          <div style="font-size: 2.5rem; margin-bottom: 16px;">🤲</div>
+          <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 12px;">Community First</h3>
+          <p style="color: var(--ink3); line-height: 1.7; font-size: 0.95rem;">We believe in giving back to the communities we serve, supporting local initiatives, and contributing to Sri Lanka's sustainable development.</p>
         </div>
       </div>
     </div>
@@ -2555,6 +2675,9 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
         }, 150);
     });
 </script>
+
+<!-- Page Transition Animation System -->
+<script src="page-transitions.js"></script>
 
 </body>
 </html>
