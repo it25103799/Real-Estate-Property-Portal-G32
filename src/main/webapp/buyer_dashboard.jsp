@@ -113,7 +113,6 @@
         }
         [data-theme="dark"] .card:hover {
             box-shadow: 0 8px 30px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.08);
-            transform: translateY(-2px);
         }
         .card-header { 
             display: flex; 
@@ -330,7 +329,9 @@
         }
 
         /* ── REPLACE PROPERTY DROPDOWN ── */
-        .replace-wrapper { position: relative; display: inline-block; }
+        .replace-wrapper { position: relative; display: inline-block; z-index: 10000; }
+        .replace-wrapper td { overflow: visible !important; }
+        .replace-wrapper table { overflow: visible !important; }
 
         .btn-replace {
             background: none;
@@ -357,19 +358,16 @@
             transform: translateX(-50%);
             min-width: 260px;
             max-width: 320px;
+            max-height: 350px;
             background: var(--bg);
             border: 1.5px solid var(--line);
             border-radius: 10px;
-            box-shadow: 0 10px 36px rgba(0,0,0,0.14);
-            z-index: 500;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+            z-index: 9999;
             overflow: hidden;
-            animation: dropIn 0.15s ease;
         }
-        .replace-dropdown.open { display: block; }
-
-        @keyframes dropIn {
-            from { opacity: 0; transform: translateX(-50%) translateY(-6px); }
-            to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+        .replace-dropdown.open {
+            display: block;
         }
 
         .replace-dropdown-header {
@@ -381,9 +379,12 @@
             color: var(--accent);
             border-bottom: 1px solid var(--line);
             background: rgba(26,86,219,0.04);
+            position: sticky;
+            top: 0;
+            z-index: 1;
         }
 
-        .replace-dropdown-list { max-height: 230px; overflow-y: auto; }
+        .replace-dropdown-list { max-height: 300px; overflow-y: auto; }
         .replace-dropdown-list::-webkit-scrollbar { width: 5px; }
         .replace-dropdown-list::-webkit-scrollbar-thumb { background: var(--line); border-radius: 10px; }
 
@@ -1255,8 +1256,16 @@
 
 <script>
     // ── REPLACE PROPERTY DROPDOWN LOGIC ──────────────────────────────
+    let isToggling = false;
     function toggleReplaceDropdown(propId, event) {
         event.stopPropagation();
+        event.preventDefault();
+        
+        // Prevent rapid toggling
+        if (isToggling) return;
+        isToggling = true;
+        setTimeout(() => { isToggling = false; }, 200);
+        
         const dropdown = document.getElementById('rd-' + propId);
         const btn      = event.currentTarget;
         const isOpen   = dropdown.classList.contains('open');
@@ -1281,14 +1290,13 @@
 
     // Close dropdowns when clicking outside
     document.addEventListener('click', function(e) {
-        if (!e.target.closest('.replace-wrapper')) {
+        const isInsideDropdown = e.target.closest('.replace-dropdown');
+        const isInsideWrapper = e.target.closest('.replace-wrapper');
+        
+        // Only close if clicking completely outside the dropdown and wrapper
+        if (!isInsideDropdown && !isInsideWrapper) {
             closeAllReplaceDropdowns();
         }
-    });
-
-    // Prevent dropdown-internal clicks from bubbling to document
-    document.querySelectorAll('.replace-dropdown').forEach(d => {
-        d.addEventListener('click', e => e.stopPropagation());
     });
 </script>
 
