@@ -87,15 +87,6 @@ public class SubmitInquiryServlet extends HttpServlet {
             out.println(messageRecord);
         } catch (Exception e) {}
 
-        // ===== Backward-compat: keep the original inquiries.txt list engine =====
-        // Format: BuyerName,AgentName,PropertyTitle,Date,Status
-        String record = buyerName + "," + agentName + "," + propertyTitle + "," + date + "," + status;
-
-        String filePath = getServletContext().getRealPath("/WEB-INF/inquiries.txt");
-        try (PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(filePath, true), "UTF-8"))) {
-            out.println(record);
-        } catch (Exception e) {}
-
         // Send them straight to the dashboard to see their new inquiry!
         response.sendRedirect("buyerDashboard");
     }

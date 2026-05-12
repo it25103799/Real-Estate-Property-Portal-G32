@@ -1,9 +1,7 @@
-# This file stores recently sold properties with timestamps
 # Format: timestamp|propertyId|title|price|location|imageUrl
-# Lines starting with # are comments and will be ignored
 2026-05-06 19:37:29|c66a23ca| Kurunegala Lake view|560000|Kurunegala|assets/images/property-types/house.jpg
 2026-05-06 19:38:50|4c9fd0b9|Ambewela coolspot|56000|Nuwara Eliya|assets/images/property-types/villa.jpg
-2026-05-06 22:19:19|5625c066|Rathkarawa Premium Site|50000000|Wellava|assets/images/property-types/house.jpg
 2026-05-06 22:24:01|PROP_1772952134817|Kurunegala New Building|3500|Kurunegala|assets/images/property-types/apartment.jpg
 2026-05-06 22:30:38|a59d6d6b|Mount Laviniya Pro Yard|30000000|Mount Laviniya|assets/images/property-types/house.jpg
 2026-05-06 22:38:15|839afd67|wettr|235566|erettrr|assets/images/property-types/apartment.jpg
+2026-05-12 23:00:51|d4ef95b0|Galle New Building|7000|Galle|assets/images/property-types/apartment.jpg

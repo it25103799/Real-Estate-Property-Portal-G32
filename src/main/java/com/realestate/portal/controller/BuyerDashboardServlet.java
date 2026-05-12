@@ -143,27 +143,6 @@ public class BuyerDashboardServlet extends HttpServlet {
                     System.err.println("Error reading inquiry messages: " + e.getMessage());
                 }
             }
-        } else {
-            // Backward compat: read old inquiries.txt if new threads file doesn't exist
-            File inqFile = new File(getServletContext().getRealPath("/WEB-INF/inquiries.txt"));
-            if (inqFile.exists()) {
-                try (BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(inqFile.getAbsolutePath())), StandardCharsets.UTF_8))) {
-                    String line;
-                    while ((line = br.readLine()) != null) {
-                        String[] data = line.split(",");
-                        if (data.length >= 5 && data[0].equals(loggedUser)) {
-                            Map<String, String> inq = new HashMap<>();
-                            inq.put("agentName", data[1]);
-                            inq.put("propertyTitle", data[2]);
-                            inq.put("date", data[3]);
-                            inq.put("status", data[4]);
-                            myInquiries.add(inq);
-                        }
-                    }
-                } catch (Exception e) {
-                    System.err.println("Error reading inquiries: " + e.getMessage());
-                }
-            }
         }
 
         request.setAttribute("myInquiries", myInquiries);
