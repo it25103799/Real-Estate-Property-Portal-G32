@@ -239,6 +239,25 @@
 
         /* Container styling to match your dark theme */
         /* Container styling adapting to Light/Dark Mode */
+        /* ── PROFILE & STATS 2X2 GRID LAYOUT ── */
+        .profile-stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .stats-2x2-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 16px;
+            align-content: center;
+        }
+        
+        .stats-2x2-grid .stat-card {
+            margin: 0;
+        }
                 .profile-section {
                     background: var(--bg); /* Automatically shifts between light/dark background */
                     border: 1px solid var(--line); /* Adds a subtle, elegant outline */
@@ -531,35 +550,10 @@
         </div>
     </div>
 
-    <!-- ── STAT CARDS SECTION ─────────────────────────────────────── -->
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-icon blue">❤️</div>
-            <div class="stat-value">${not empty savedProperties ? savedProperties.size() : 0}</div>
-            <div class="stat-label">Saved Properties</div>
-        </div>
-        
-        <div class="stat-card green">
-            <div class="stat-icon green">💬</div>
-            <div class="stat-value">${not empty myInquiries ? myInquiries.size() : 0}</div>
-            <div class="stat-label">Active Inquiries</div>
-        </div>
-        
-        <div class="stat-card amber">
-            <div class="stat-icon amber">📅</div>
-            <div class="stat-value">${totalBookings != null ? totalBookings : 0}</div>
-            <div class="stat-label">Total Bookings</div>
-        </div>
-        
-        <div class="stat-card red">
-            <div class="stat-icon red">✅</div>
-            <div class="stat-value">${completedBookings != null ? completedBookings : 0}</div>
-            <div class="stat-label">Completed</div>
-        </div>
-    </div>
-    <!-- ───────────────────────────────────────────────────────────── -->
-
-    <div class="profile-section">
+    <!-- ── PROFILE & STATS GRID LAYOUT ───────────────────────────── -->
+    <div class="profile-stats-grid">
+        <!-- Profile Section -->
+        <div class="profile-section">
         <div class="profile-header">
             <h3>Personal Information</h3>
             <button type="button" id="superEditBtn" class="edit-btn" onclick="toggleEditMode()">Edit</button>
@@ -605,6 +599,35 @@
                     </form>
         </div>
     </div>
+
+        <!-- 2x2 Stat Cards Grid -->
+        <div class="stats-2x2-grid">
+            <div class="stat-card">
+                <div class="stat-icon blue">❤️</div>
+                <div class="stat-value">${not empty savedProperties ? savedProperties.size() : 0}</div>
+                <div class="stat-label">Saved Properties</div>
+            </div>
+            
+            <div class="stat-card green">
+                <div class="stat-icon green">💬</div>
+                <div class="stat-value">${not empty myInquiries ? myInquiries.size() : 0}</div>
+                <div class="stat-label">Active Inquiries</div>
+            </div>
+            
+            <div class="stat-card amber">
+                <div class="stat-icon amber">📅</div>
+                <div class="stat-value">${totalBookings != null ? totalBookings : 0}</div>
+                <div class="stat-label">Total Bookings</div>
+            </div>
+            
+            <div class="stat-card red">
+                <div class="stat-icon red">✅</div>
+                <div class="stat-value">${completedBookings != null ? completedBookings : 0}</div>
+                <div class="stat-label">Completed</div>
+            </div>
+        </div>
+    </div>
+    <!-- ───────────────────────────────────────────────────────────── -->
 
     <div class="card">
         <div class="card-header">

@@ -2163,12 +2163,7 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
 
           <div class="detail-section-title" style="font-size: 1.4rem; margin-top: 40px; margin-bottom: 20px;">✨ Premium Amenities</div>
           <div class="features-grid" id="detail-features" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; color: var(--ink); opacity: 0.8; font-size: 1.05rem;">
-              <div>✔️ Fully Air Conditioned</div>
-              <div>✔️ Imported Teak Floors</div>
-              <div>✔️ Smart Home Security</div>
-              <div>✔️ Backup Solar Power</div>
-              <div>✔️ Infinity Pool Access</div>
-              <div>✔️ 2-Car Private Parking</div>
+              <!-- Amenities will be dynamically loaded based on property type -->
           </div>
       </div>
     </div>

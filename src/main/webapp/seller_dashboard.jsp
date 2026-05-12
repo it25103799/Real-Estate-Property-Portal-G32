@@ -961,6 +961,18 @@
             <h3 class="card-title" style="margin:0;">Completed Transactions</h3>
             <span style="font-size:0.85rem; opacity:0.65;">${completedBookings.size()} completed</span>
         </div>
+        
+        <c:if test="${param.delete == 'success'}">
+            <div style="background:rgba(13,158,110,0.1);border:1px solid rgba(13,158,110,0.3);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:0.9rem;color:#0d9e6e;font-weight:600;">
+                ✅ Completed transaction removed successfully!
+            </div>
+        </c:if>
+        <c:if test="${param.delete == 'error'}">
+            <div style="background:rgba(224,40,40,0.1);border:1px solid rgba(224,40,40,0.3);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:0.9rem;color:#c0392b;font-weight:600;">
+                ️ Failed to remove transaction. Please try again.
+            </div>
+        </c:if>
+        
         <div class="table-responsive">
         <table>
             <thead>
@@ -972,6 +984,7 @@
                     <th>Returned On</th>
                     <th>Booking Status</th>
                     <th>Property Status</th>
+                    <th style="width:100px;">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -1004,11 +1017,19 @@
                                         </c:otherwise>
                                     </c:choose>
                                 </td>
+                                <td>
+                                    <form action="deleteCompletedBooking" method="post" style="margin:0;" onsubmit="return confirm('Are you sure you want to delete this completed transaction? This action cannot be undone.');">
+                                        <input type="hidden" name="bookingId" value="${bk.bookingId}">
+                                        <button type="submit" class="btn-edit" style="color: #ef4444; border-color: #ef4444; font-size: 0.78rem; padding: 6px 10px;" title="Delete this completed transaction">
+                                            🗑️ Delete
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
                         </c:forEach>
                     </c:when>
                     <c:otherwise>
-                        <tr><td colspan="8" style="text-align:center; padding:36px; opacity:0.6;">No completed transactions yet.</td></tr>
+                        <tr><td colspan="9" style="text-align:center; padding:36px; opacity:0.6;">No completed transactions yet.</td></tr>
                     </c:otherwise>
                 </c:choose>
             </tbody>

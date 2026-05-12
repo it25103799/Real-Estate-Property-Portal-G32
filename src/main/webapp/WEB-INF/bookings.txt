@@ -1,9 +1,5 @@
 # NESTIQ Property Bookings - Format: bookingId|propertyId|propertyTitle|sellerName|buyerUsername|buyerName|buyerEmail|buyerPhone|bookingDate|returnDate|status
 BK_1777837015833|2a2b0008|Kiribathgoda new building|Dinesh|Sadun Priya|Sadun Priya|priya564@gmail.com|0786324531|2026-05-04|2026-05-06|COMPLETED
 BK_1777837015834|PROP_1772773352306|Kaduwela Beach view|De Silva|Bhashi Navod|Bhashi Navod|bhashithanavod800@gmail.com|0786324531|2026-05-05|2026-05-07|COMPLETED
-BK_1777989808147|PROP_1772777000956|Koswatta new Building|De Silva|Bhashi Navod|Bhashi Navod|bhashithanavod800@gmail.com|0786324531|2026-05-05|2026-05-07|COMPLETED
 BK_1777990358948|PROP_1772773352306|Kaduwela Beach view|De Silva|Ralph Will|Ralph Will|willral432@gmail.com|0786532343|2026-05-05|2026-05-08|COMPLETED
-BK_1777991269745|699613a8|Galle New Villa|De Silva|Bhashi Navod|Bhashi Navod|bhashithanavod800@gmail.com|0786532343|2026-05-05|2026-05-09|COMPLETED
-BK_1777992314436|PROP_1772777000956|Koswatta new Building|De Silva|Ravindu Lohan|Ravindu Lohan|ravilohan600@gmail.com|0786324531|2026-05-05|2026-05-09|COMPLETED
 BK_1778053250090|0a22dc7a|Hegalla beach Villa|Dinesh|Bhashi Navod|Bhashi Navod|bhashithanavod800@gmail.com|0786324531|2026-05-06|2026-05-07|COMPLETED
-BK_1778086294675|PROP_1772952134817|Kurunegala New Building|De Silva|Tommy Silva|Tommy Silva|tommy453@gmail.com|0786547809|2026-05-06|2026-05-12|COMPLETED

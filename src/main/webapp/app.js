@@ -620,6 +620,59 @@ function openDetail(id) {
         detailDescEl.innerText = p.description && p.description.trim() !== "" ? p.description : "No Description yet..";
     }
 
+    // Set Premium Amenities based on property type
+    const detailFeaturesEl = document.getElementById('detail-features');
+    if (detailFeaturesEl) {
+        const propertyType = (p.type || '').toLowerCase();
+        let amenitiesHTML = '';
+        
+        if (propertyType === 'villa') {
+            // Villa-specific premium amenities
+            amenitiesHTML = `
+                <div>✔️ Private Swimming Pool</div>
+                <div>✔️ Landscaped Garden</div>
+                <div>✔️ Outdoor BBQ Area</div>
+                <div>✔️ Smart Home Automation</div>
+                <div>✔️ 3-Car Garage</div>
+                <div>✔️ Home Theater Room</div>
+                <div>✔️ Wine Cellar</div>
+                <div>✔️ Gym & Spa Suite</div>
+            `;
+        } else if (propertyType === 'apartment') {
+            // Apartment-specific premium amenities
+            amenitiesHTML = `
+                <div>✔️ Fully Air Conditioned</div>
+                <div>✔️ Imported Teak Floors</div>
+                <div>✔️ Smart Home Security</div>
+                <div>✔️ Backup Solar Power</div>
+                <div>✔️ Infinity Pool Access</div>
+                <div>✔️ 2-Car Private Parking</div>
+            `;
+        } else if (propertyType === 'house') {
+            // House-specific premium amenities
+            amenitiesHTML = `
+                <div>✔️ Central Heating System</div>
+                <div>✔️ Modern Kitchen</div>
+                <div>✔️ Hardwood Flooring</div>
+                <div>✔️ Security Alarm System</div>
+                <div>✔️ Private Backyard</div>
+                <div>✔️ 2-Car Garage</div>
+            `;
+        } else {
+            // Default amenities for other types (studio, etc.)
+            amenitiesHTML = `
+                <div>✔️ Fully Furnished</div>
+                <div>✔️ High-Speed Internet</div>
+                <div>✔️ Modern Appliances</div>
+                <div>✔️ 24/7 Security</div>
+                <div>✔️ Laundry Facilities</div>
+                <div>✔️ Parking Space</div>
+            `;
+        }
+        
+        detailFeaturesEl.innerHTML = amenitiesHTML;
+    }
+
     // Set bedrooms and bathrooms in detail-specs
     const detailSpecsEl = document.getElementById('detail-specs');
     if (detailSpecsEl) {
