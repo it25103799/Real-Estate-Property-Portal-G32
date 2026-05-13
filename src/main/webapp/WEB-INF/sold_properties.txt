@@ -4,3 +4,4 @@
 2026-05-06 22:38:15|839afd67|wettr|235566|erettrr|assets/images/property-types/apartment.jpg
 2026-05-12 23:00:51|d4ef95b0|Galle New Building|7000|Galle|assets/images/property-types/apartment.jpg
 2026-05-13 16:05:21|PROP_1772947911735|Kadawatha New Apartment|9000.0|Kadawatha|assets/images/property-types/apartment.jpg
+2026-05-13 16:14:11|ba4ccf7e|Awissawella Pro State|7000000.0|Rathnapura|assets/images/property-types/apartment.jpg

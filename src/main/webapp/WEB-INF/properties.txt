@@ -3,7 +3,7 @@ PROP_1772773352306,Kaduwela Beach view,5000,Kaduwela,House,Sold,De Silva,assets/
 PROP_1772947911735,Kadawatha New Apartment,9000.0,Kadawatha,Apartment,Sold,De Silva,assets/images/property-types/apartment.jpg,0,0
 1f48f435,Kurunegala New Building,4000,Kurunegala,Apartment,Sold,De Silva,assets/images/property-types/apartment.jpg,0,0
 d4ef95b0,Galle New Building,7000,Galle,Apartment,Sold,De Silva,assets/images/property-types/apartment.jpg,0,0
-ba4ccf7e,Awissawella Pro State,7000000.0,Rathnapura,Apartment,For Sale,De Silva,assets/images/property-types/apartment.jpg,2,2,👍❤️
+ba4ccf7e,Awissawella Pro State,7000000.0,Rathnapura,Apartment,Sold,De Silva,assets/images/property-types/apartment.jpg,2,2,👍❤️
 2a2b0008,Kiribathgoda new building,1700000,Kiribathgoda,Apartment,Sold,Dinesh,assets/images/property-types/apartment.jpg
 0a22dc7a,Hegalla beach Villa,95000.0,Galle,Villa,Sold,Dinesh,assets/images/property-types/villa.jpg,3,3
 f62059d5,Nugegoda Real State,9000000,Colombo,Apartment,For Sale,Kavindi,assets/images/property-types/apartment.jpg
