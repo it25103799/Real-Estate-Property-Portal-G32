@@ -161,6 +161,10 @@ function renderHomeFeaturedProperties() {
                 <div class="prop-tags">
                     <span class="prop-tag ${tagClass}">${tagText}</span>
                 </div>
+                ${window.currentRole === 'BUYER' ? `
+                <button class="heart-btn${window.favPropertyIds && window.favPropertyIds.has(p.id) ? ' heart-btn--saved' : ''}"
+                    title="${window.favPropertyIds && window.favPropertyIds.has(p.id) ? 'Remove from Favorites' : 'Save to Favorites'}"
+                    onclick="event.stopPropagation(); toggleFavorite(this, '${p.id}')">&#10084;</button>` : ''}
             </div>
             <div class="prop-body">
                 ${isSold ? '<span class="sold-tape">🔴 Sold</span>' : ''}
@@ -543,6 +547,10 @@ function renderListings() {
                 <div class="prop-tags">
                     <span class="prop-tag ${tagClass}">${statusTag}</span>
                 </div>
+                ${window.currentRole === 'BUYER' ? `
+                <button class="heart-btn${window.favPropertyIds && window.favPropertyIds.has(p.id) ? ' heart-btn--saved' : ''}"
+                    title="${window.favPropertyIds && window.favPropertyIds.has(p.id) ? 'Remove from Favorites' : 'Save to Favorites'}"
+                    onclick="event.stopPropagation(); toggleFavorite(this, '${p.id}')">&#10084;</button>` : ''}
                 ${isSold ? '<div class="sold-img-overlay"><div class="sold-title">SOLD</div><div class="sold-message">This property has been sold and is no longer available</div></div>' : ''}
             </div>
             <div class="prop-body">
@@ -625,7 +633,7 @@ function openDetail(id) {
     if (detailFeaturesEl) {
         const propertyType = (p.type || '').toLowerCase();
         let amenitiesHTML = '';
-        
+
         if (propertyType === 'villa') {
             // Villa-specific premium amenities
             amenitiesHTML = `
@@ -669,7 +677,7 @@ function openDetail(id) {
                 <div>✔️ Parking Space</div>
             `;
         }
-        
+
         detailFeaturesEl.innerHTML = amenitiesHTML;
     }
 
@@ -1251,4 +1259,41 @@ function handleChatSubmit(event, role, formElement) {
             newBubble.style.opacity = '0.6';
             newBubble.title = 'Network error. Could not send message.';
         });
+}
+
+// ── Heart Toggle: Save / Remove Favorite without page reload ──────────────
+function toggleFavorite(btn, propertyId) {
+    if (!window.favPropertyIds) window.favPropertyIds = new Set();
+
+    const isSaved = window.favPropertyIds.has(propertyId);
+    const url = isSaved ? 'removeFavorite' : 'saveFavorite';
+
+    const formData = new URLSearchParams();
+    formData.append('propertyId', propertyId);
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: formData.toString()
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'ok') {
+            if (isSaved) {
+                // Remove from favorites
+                window.favPropertyIds.delete(propertyId);
+                btn.classList.remove('heart-btn--saved');
+                btn.title = 'Save to Favorites';
+            } else {
+                // Add to favorites
+                window.favPropertyIds.add(propertyId);
+                btn.classList.add('heart-btn--saved');
+                btn.title = 'Remove from Favorites';
+            }
+        }
+    })
+    .catch(err => console.error('Favorite toggle failed:', err));
 }

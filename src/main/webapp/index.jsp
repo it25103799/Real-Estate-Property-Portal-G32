@@ -489,6 +489,22 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
   position: absolute; top: 14px; left: 14px;
   display: flex; gap: 6px;
 }
+/* ── Heart Favorite Button ── */
+.heart-btn {
+  position: absolute; top: 10px; right: 10px;
+  z-index: 10;
+  background: rgba(255,255,255,0.92);
+  border: none; border-radius: 50%;
+  width: 36px; height: 36px;
+  font-size: 17px; color: #ccc;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  transition: color 0.2s, transform 0.15s;
+  line-height: 1;
+}
+.heart-btn:hover { color: #e63946; transform: scale(1.18); }
+.heart-btn--saved { color: #e63946; }
 .prop-tag {
   font-size: .68rem; font-weight: 700; letter-spacing: .5px;
   padding: 4px 10px; border-radius: 99px;
@@ -1829,7 +1845,7 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
           <p style="color: var(--ink3); font-size: 1.05rem; line-height: 1.8; margin-bottom: 24px;">
             From the bustling streets of Colombo to the serene beaches of Bentota and the misty hills of Kandy, we are committed to helping every Sri Lankan find their perfect place. Our platform combines cutting-edge technology with deep local expertise.
           </p>
-          
+
           <!-- Key Values -->
           <div style="display: flex; flex-direction: column; gap: 16px;">
             <div style="display: flex; align-items: flex-start; gap: 12px;">
@@ -1903,7 +1919,7 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
         <h2 style="font-family: var(--font-serif); font-size: 2.2rem; margin-bottom: 16px;">Our Presence Across Sri Lanka</h2>
         <p style="color: var(--ink3); font-size: 1.05rem;">From Colombo to Kandy, we're transforming how Sri Lankans buy, sell, and rent properties.</p>
       </div>
-      
+
       <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; max-width: 1000px; margin: 0 auto;">
         <div style="text-align: center; padding: 32px 20px; background: var(--bg2); border-radius: var(--r2); border: 1px solid var(--line); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-lg)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
           <div style="font-size: 3rem; margin-bottom: 8px;">🏙️</div>
@@ -2409,6 +2425,12 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
     if (typeof buildPriceRangeDropdown === 'function') {
         setTimeout(() => buildPriceRangeDropdown(), 100);
     }
+
+    // 2.5 Favorites Bridge — IDs this buyer has already saved
+    window.favPropertyIds = new Set();
+    <c:forEach items="${favPropertyIds}" var="fid">
+        window.favPropertyIds.add("${fid}");
+    </c:forEach>
 
     // 3. Reviews Bridge (Kalhari's Data)
     window.allReviews = [];

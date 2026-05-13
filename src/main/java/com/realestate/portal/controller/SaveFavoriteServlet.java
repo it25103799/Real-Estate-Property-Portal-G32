@@ -1,8 +1,9 @@
 package com.realestate.portal.controller;
 
-import java.io.*;
-import java.nio.file.*;
-import java.util.List;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -27,34 +28,26 @@ public class SaveFavoriteServlet extends HttpServlet {
         String propertyId = request.getParameter("propertyId");
         if (propertyId != null && !propertyId.isEmpty()) {
             String filePath = getServletContext().getRealPath("/WEB-INF/favorites.txt");
-
-            // ── DUPLICATE CHECK ──────────────────────────────────────────────
-            // Read existing favorites and skip if this buyer already saved it
-            boolean alreadySaved = false;
-            File favFile = new File(filePath);
-            if (favFile.exists()) {
-                List<String> lines = Files.readAllLines(favFile.toPath());
-                String newEntry = buyerName + "," + propertyId;
-                for (String line : lines) {
-                    if (line.trim().equalsIgnoreCase(newEntry)) {
-                        alreadySaved = true;
-                        break;
-                    }
-                }
-            }
-            // ─────────────────────────────────────────────────────────────────
-
-            if (!alreadySaved) {
-                // Save the match: BuyerName,PropertyID
-                try (PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(filePath, true), "UTF-8"))) {
-                    out.println(buyerName + "," + propertyId);
-                } catch (Exception e) {
-                    System.out.println("Error saving favorite: " + e.getMessage());
-                }
+            // Save the match: BuyerName,PropertyID
+            try (PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(filePath, true), "UTF-8"))) {
+                out.println(buyerName + "," + propertyId);
+            } catch (Exception e) {
+                System.out.println("Error saving favorite: " + e.getMessage());
             }
         }
 
-        // Instantly redirect them to their Dashboard to see it!
-        response.sendRedirect("buyerDashboard");
+        // If called via fetch (heart icon), return JSON. Otherwise redirect normally.
+        String xhrHeader = request.getHeader("X-Requested-With");
+        if ("XMLHttpRequest".equals(xhrHeader)) {
+            response.setContentType("application/json");
+            response.getWriter().write("{\"status\":\"ok\"}");
+        } else {
+            String redirectTo = request.getParameter("redirectTo");
+            if (redirectTo != null && !redirectTo.trim().isEmpty()) {
+                response.sendRedirect(redirectTo);
+            } else {
+                response.sendRedirect("buyerDashboard");
+            }
+        }
     }
 }

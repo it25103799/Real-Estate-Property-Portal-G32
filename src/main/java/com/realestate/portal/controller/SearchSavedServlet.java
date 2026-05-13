@@ -29,16 +29,12 @@ public class SearchSavedServlet extends HttpServlet {
     static class PropertyBST {
         PropertyNode root;
 
-        // Insert into the Tree
         public void insert(Property p) {
             root = insertRec(root, p);
         }
 
         private PropertyNode insertRec(PropertyNode root, Property p) {
-            if (root == null) {
-                return new PropertyNode(p);
-            }
-            // Sort the tree alphabetically by Property ID
+            if (root == null) return new PropertyNode(p);
             if (p.getId().compareToIgnoreCase(root.data.getId()) < 0)
                 root.left = insertRec(root.left, p);
             else if (p.getId().compareToIgnoreCase(root.data.getId()) > 0)
@@ -46,20 +42,16 @@ public class SearchSavedServlet extends HttpServlet {
             return root;
         }
 
-        // Search the Tree in O(log N) Time!
         public Property searchById(String id) {
             PropertyNode result = searchRec(root, id);
             return result != null ? result.data : null;
         }
 
         private PropertyNode searchRec(PropertyNode root, String id) {
-            // Base Cases: root is null or key is present at root
             if (root == null || root.data.getId().equalsIgnoreCase(id))
                 return root;
-            // Key is greater than root's key
             if (root.data.getId().compareToIgnoreCase(id) > 0)
                 return searchRec(root.left, id);
-            // Key is smaller than root's key
             return searchRec(root.right, id);
         }
     }
@@ -106,16 +98,14 @@ public class SearchSavedServlet extends HttpServlet {
                     if (myFavIds.contains(data[0])) {
                         Property p = null;
                         try {
-                            if (data.length == 11) { // New format with description
+                            if (data.length == 11) {
                                 p = new Property(data[0], data[1], Double.parseDouble(data[2]), data[3], data[4], data[5], data[6], data[7], Integer.parseInt(data[8]), Integer.parseInt(data[9]), data[10]);
-                            } else if (data.length == 10) { // Format without description
+                            } else if (data.length == 10) {
                                 p = new Property(data[0], data[1], Double.parseDouble(data[2]), data[3], data[4], data[5], data[6], data[7], Integer.parseInt(data[8]), Integer.parseInt(data[9]), "");
-                            } else if (data.length == 8) { // Old format
+                            } else if (data.length == 8) {
                                 p = new Property(data[0], data[1], Double.parseDouble(data[2]), data[3], data[4], data[5], data[6], data[7], 0, 0, "");
                             }
-                            if (p != null) {
-                                allSavedProperties.add(p);
-                            }
+                            if (p != null) allSavedProperties.add(p);
                         } catch (NumberFormatException e) {
                             System.err.println("Skipping malformed property line: " + line);
                         }
@@ -131,30 +121,30 @@ public class SearchSavedServlet extends HttpServlet {
         // 3. EXECUTE THE SEARCH
         if (!query.isEmpty()) {
             PropertyBST bst = new PropertyBST();
-
-            // Load all saved properties into the Binary Search Tree
             for (Property p : allSavedProperties) {
                 bst.insert(p);
             }
 
-            // Try to find the exact property using our ultra-fast BST!
+            // Try exact ID match first using BST
             Property foundById = bst.searchById(query);
 
             if (foundById != null) {
                 searchResults.add(foundById);
             } else {
-                // Fallback: If they typed a City instead of an ID, do a standard linear search
+                // ── UPDATED FALLBACK: now also matches property type ──────────
                 for (Property p : allSavedProperties) {
-                    if (p.getLocation().toLowerCase().contains(query) || p.getTitle().toLowerCase().contains(query)) {
+                    if (p.getLocation().toLowerCase().contains(query)
+                            || p.getTitle().toLowerCase().contains(query)
+                            || p.getType().toLowerCase().contains(query)) {  // ← NEW: type search
                         searchResults.add(p);
                     }
                 }
+                // ─────────────────────────────────────────────────────────────
             }
         } else {
-            searchResults = allSavedProperties; // Show all if search box is empty
+            searchResults = allSavedProperties;
         }
 
-        // Send the filtered results back to the Dashboard
         request.setAttribute("savedProperties", searchResults);
         request.getRequestDispatcher("/buyer_dashboard.jsp").forward(request, response);
     }

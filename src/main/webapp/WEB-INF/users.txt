@@ -10,3 +10,6 @@ John Fane,johnf234@gmail.com,0765642314,pannejon482#@,SELLER
 Tommy Silva,tommy453@gmail.com,0743461234,silva567#@,BUYER
 Don Lee,leedon463@gmail.com,0765678754,leee543@$,SELLER
 sandeepa thisum,sandeepathisum68@gmail.com,0781598624,12345678,BUYER
+bhg,sandeepathisum68@gmail.com,0781598624,12345678,SELLER
+bhg,sandeepathisum68@gmail.com,0781598624,12345678,SELLER
+jack william,sandeepa05@gmail.com,0776895456,12345678,SELLER

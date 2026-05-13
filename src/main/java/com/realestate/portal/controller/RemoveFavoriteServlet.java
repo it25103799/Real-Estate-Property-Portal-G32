@@ -48,7 +48,13 @@ public class RemoveFavoriteServlet extends HttpServlet {
             } catch (Exception e) {}
         }
 
-        // Refresh the dashboard!
-        response.sendRedirect("buyerDashboard");
+        // If called via fetch (heart icon), return JSON. Otherwise redirect normally.
+        String xhrHeader = request.getHeader("X-Requested-With");
+        if ("XMLHttpRequest".equals(xhrHeader)) {
+            response.setContentType("application/json");
+            response.getWriter().write("{\"status\":\"ok\"}");
+        } else {
+            response.sendRedirect("buyerDashboard");
+        }
     }
 }

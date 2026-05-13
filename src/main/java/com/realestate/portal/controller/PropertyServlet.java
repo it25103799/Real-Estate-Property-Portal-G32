@@ -115,7 +115,7 @@ public class PropertyServlet extends HttpServlet {
         request.setAttribute("propertyList", propertyList);
         request.setAttribute("allReviews", reviewList);
         request.setAttribute("cities", cities); // Pass the set of cities to the JSP
-        
+
         // 2.5 LOAD RECENTLY SOLD PROPERTIES (for "JUST SOLD" floating card)
         List<Map<String, String>> recentlySold = new ArrayList<>();
         String soldPath = getServletContext().getRealPath("/WEB-INF/sold_properties.txt");
@@ -128,7 +128,7 @@ public class PropertyServlet extends HttpServlet {
                     if (line.trim().isEmpty()) continue;
                     allSoldLines.add(line);
                 }
-                
+
                 // Get the last 5 most recent sold properties
                 int startIdx = Math.max(0, allSoldLines.size() - 5);
                 for (int i = allSoldLines.size() - 1; i >= startIdx; i--) {
@@ -242,6 +242,25 @@ public class PropertyServlet extends HttpServlet {
         }
 
         request.setAttribute("allNotifications", allNotifications);
+
+        // 4. LOAD BUYER'S SAVED FAVORITE IDs (for red heart highlighting)
+        List<String> favPropertyIds = new ArrayList<>();
+        if (loggedUser != null) {
+            File favFile = new File(getServletContext().getRealPath("/WEB-INF/favorites.txt"));
+            if (favFile.exists()) {
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(favFile), "UTF-8"))) {
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        String[] parts = line.split(",");
+                        if (parts.length == 2 && parts[0].trim().equals(loggedUser)) {
+                            favPropertyIds.add(parts[1].trim());
+                        }
+                    }
+                } catch (Exception ignored) {}
+            }
+        }
+        request.setAttribute("favPropertyIds", favPropertyIds);
+
         request.getRequestDispatcher("/index.jsp").forward(request, response);
     }
 }
