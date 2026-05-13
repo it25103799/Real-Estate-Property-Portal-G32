@@ -150,7 +150,7 @@ pom.xml
 
 1. **Clone the repository**
    ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/IT25103795/Real-Estate-Property-Portal-G32.git
    cd OOP-PROJECT
    ```
 
