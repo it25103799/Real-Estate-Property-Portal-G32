@@ -161,7 +161,7 @@ function renderHomeFeaturedProperties() {
                 <div class="prop-tags">
                     <span class="prop-tag ${tagClass}">${tagText}</span>
                 </div>
-                ${window.currentRole === 'BUYER' ? `
+                ${window.currentRole === 'BUYER' && !isSold ? `
                 <button class="heart-btn${window.favPropertyIds && window.favPropertyIds.has(p.id) ? ' heart-btn--saved' : ''}"
                     title="${window.favPropertyIds && window.favPropertyIds.has(p.id) ? 'Remove from Favorites' : 'Save to Favorites'}"
                     onclick="event.stopPropagation(); toggleFavorite(this, '${p.id}')">&#10084;</button>` : ''}
@@ -547,7 +547,7 @@ function renderListings() {
                 <div class="prop-tags">
                     <span class="prop-tag ${tagClass}">${statusTag}</span>
                 </div>
-                ${window.currentRole === 'BUYER' ? `
+                ${window.currentRole === 'BUYER' && !isSold ? `
                 <button class="heart-btn${window.favPropertyIds && window.favPropertyIds.has(p.id) ? ' heart-btn--saved' : ''}"
                     title="${window.favPropertyIds && window.favPropertyIds.has(p.id) ? 'Remove from Favorites' : 'Save to Favorites'}"
                     onclick="event.stopPropagation(); toggleFavorite(this, '${p.id}')">&#10084;</button>` : ''}

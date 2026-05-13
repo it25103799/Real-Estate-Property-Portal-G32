@@ -244,19 +244,47 @@ public class PropertyServlet extends HttpServlet {
         request.setAttribute("allNotifications", allNotifications);
 
         // 4. LOAD BUYER'S SAVED FAVORITE IDs (for red heart highlighting)
+        // Also auto-clean any sold properties out of favorites.txt
         List<String> favPropertyIds = new ArrayList<>();
         if (loggedUser != null) {
+            // Build a set of sold property IDs from the already-loaded propertyList
+            Set<String> soldIds = new TreeSet<>();
+            for (Property p : propertyList) {
+                if ("sold".equalsIgnoreCase(p.getStatus())) {
+                    soldIds.add(p.getId());
+                }
+            }
+
             File favFile = new File(getServletContext().getRealPath("/WEB-INF/favorites.txt"));
             if (favFile.exists()) {
+                List<String> allLines = new ArrayList<>();
+                List<String> cleanedLines = new ArrayList<>();
                 try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(favFile), "UTF-8"))) {
                     String line;
                     while ((line = br.readLine()) != null) {
+                        if (line.trim().isEmpty()) continue;
+                        allLines.add(line);
                         String[] parts = line.split(",");
-                        if (parts.length == 2 && parts[0].trim().equals(loggedUser)) {
-                            favPropertyIds.add(parts[1].trim());
+                        if (parts.length == 2) {
+                            String favUser = parts[0].trim();
+                            String favPropId = parts[1].trim();
+                            // Drop lines where property is sold
+                            if (soldIds.contains(favPropId)) continue;
+                            cleanedLines.add(line);
+                            // Collect IDs for the logged-in buyer
+                            if (favUser.equals(loggedUser)) {
+                                favPropertyIds.add(favPropId);
+                            }
                         }
                     }
                 } catch (Exception ignored) {}
+
+                // Rewrite favorites.txt only if something was actually removed
+                if (cleanedLines.size() < allLines.size()) {
+                    try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(favFile, false), "UTF-8"))) {
+                        for (String l : cleanedLines) pw.println(l);
+                    } catch (Exception ignored) {}
+                }
             }
         }
         request.setAttribute("favPropertyIds", favPropertyIds);

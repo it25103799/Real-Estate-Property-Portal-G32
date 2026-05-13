@@ -1,6 +1,6 @@
 PROP_1772770669697,Colombo Beach Villa,600000.0,Colombo,Villa,Sold,De Silva,assets/images/property-types/villa.jpg,4,4
 PROP_1772773352306,Kaduwela Beach view,5000,Kaduwela,House,Sold,De Silva,assets/images/property-types/house.jpg,0,0
-PROP_1772947911735,Kadawatha New Apartment,9000.0,Kadawatha,Apartment,For Rent,De Silva,assets/images/property-types/apartment.jpg,0,0,
+PROP_1772947911735,Kadawatha New Apartment,9000.0,Kadawatha,Apartment,Sold,De Silva,assets/images/property-types/apartment.jpg,0,0
 1f48f435,Kurunegala New Building,4000,Kurunegala,Apartment,Sold,De Silva,assets/images/property-types/apartment.jpg,0,0
 d4ef95b0,Galle New Building,7000,Galle,Apartment,Sold,De Silva,assets/images/property-types/apartment.jpg,0,0
 ba4ccf7e,Awissawella Pro State,7000000.0,Rathnapura,Apartment,For Sale,De Silva,assets/images/property-types/apartment.jpg,2,2,👍❤️
