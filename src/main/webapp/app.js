@@ -168,7 +168,7 @@ function renderHomeFeaturedProperties() {
             </div>
             <div class="prop-body">
                 ${isSold ? '<span class="sold-tape">🔴 Sold</span>' : ''}
-                <div class="prop-price">$${displayPrice} ${rentSuffixSimple}</div>
+                <div class="prop-price">LKR ${displayPrice} ${rentSuffixSimple}</div>
                 <div class="prop-name">${p.title}</div>
                 <div class="prop-loc">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -379,9 +379,9 @@ function buildPriceRangeDropdown() {
     }
 
     function fmt(n) {
-        if (n >= 1000000) return '$' + (n / 1000000).toLocaleString(undefined, {maximumFractionDigits: 1}) + 'M';
-        if (n >= 1000)    return '$' + Math.round(n / 1000) + 'K';
-        return '$' + n.toLocaleString();
+        if (n >= 1000000) return 'LKR ' + (n / 1000000).toLocaleString(undefined, {maximumFractionDigits: 1}) + 'M';
+        if (n >= 1000)    return 'LKR ' + Math.round(n / 1000) + 'K';
+        return 'LKR ' + n.toLocaleString();
     }
 
     // Remember current selection so it survives a rebuild
@@ -531,7 +531,7 @@ function renderListings() {
                 </div>
                 <div class="plc-right">
                     ${isSold ? '<span class="plc-sold-tape">🔴 Sold</span>' : ''}
-                    <div class="plc-price">$${displayPrice}${rentSuffix}</div>
+                    <div class="plc-price">LKR ${displayPrice}${rentSuffix}</div>
                     <div class="plc-agent">
                         <img src="${agent.img}" alt="${realSeller}">
                         <span>${realSeller}</span>
@@ -555,7 +555,7 @@ function renderListings() {
             </div>
             <div class="prop-body">
                 ${isSold ? '<span class="sold-tape">🔴 Sold</span>' : ''}
-                <div class="prop-price">$${displayPrice} ${rentSuffix}</div>
+                <div class="prop-price">LKR ${displayPrice} ${rentSuffix}</div>
                 <div class="prop-name">${p.title}</div>
                 <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
                     <span style="font-size:0.78rem;font-weight:600;color:var(--accent);background:var(--accent-l);padding:3px 10px;border-radius:6px;text-transform:capitalize;">🏠 ${typeLabel}</span>
@@ -615,7 +615,7 @@ function openDetail(id) {
     const displayPrice = typeof p.price === 'number' ? p.price.toLocaleString() : p.price;
     const isSoldDetail = p.status && String(p.status).toLowerCase() === 'sold';
     const isRentDetail = !isSoldDetail && p.status && String(p.status).toLowerCase().includes('rent');
-    document.getElementById('detail-price').innerHTML = "$" + displayPrice + (isRentDetail ? ' <span style="font-size:0.55em;font-weight:400;color:var(--ink4)">/day</span>' : '');
+    document.getElementById('detail-price').innerHTML = "LKR " + displayPrice + (isRentDetail ? ' <span style="font-size:0.55em;font-weight:400;color:var(--ink4)">/day</span>' : '');
     const priceLabelEl = document.getElementById('detail-price-label');
     if (priceLabelEl) priceLabelEl.innerText = isRentDetail ? 'Daily Rental Price' : (isSoldDetail ? 'Sold Price' : 'Listing Price');
 
@@ -1279,21 +1279,21 @@ function toggleFavorite(btn, propertyId) {
         },
         body: formData.toString()
     })
-    .then(res => res.json())
-    .then(data => {
-        if (data.status === 'ok') {
-            if (isSaved) {
-                // Remove from favorites
-                window.favPropertyIds.delete(propertyId);
-                btn.classList.remove('heart-btn--saved');
-                btn.title = 'Save to Favorites';
-            } else {
-                // Add to favorites
-                window.favPropertyIds.add(propertyId);
-                btn.classList.add('heart-btn--saved');
-                btn.title = 'Remove from Favorites';
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'ok') {
+                if (isSaved) {
+                    // Remove from favorites
+                    window.favPropertyIds.delete(propertyId);
+                    btn.classList.remove('heart-btn--saved');
+                    btn.title = 'Save to Favorites';
+                } else {
+                    // Add to favorites
+                    window.favPropertyIds.add(propertyId);
+                    btn.classList.add('heart-btn--saved');
+                    btn.title = 'Remove from Favorites';
+                }
             }
-        }
-    })
-    .catch(err => console.error('Favorite toggle failed:', err));
+        })
+        .catch(err => console.error('Favorite toggle failed:', err));
 }

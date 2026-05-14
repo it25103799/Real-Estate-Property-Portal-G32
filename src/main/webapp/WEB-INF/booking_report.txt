@@ -193,3 +193,18 @@
   Status        : RESERVED
   Penalty Rate  : $3500.00 / overdue day (= daily rental fee)
 
+=========================================================
+  NEW BOOKING — 2026-05-14
+=========================================================
+  Booking ID    : BK_1778749489687
+  Property      : Galle resort  [ca8d1b41]
+  Seller        : jack william
+  Buyer Account : Bhashi Navod
+  Buyer Name    : Bhashitha Navod
+  Buyer Email   : bhashithanavod800@gmail.com
+  Buyer Phone   : 0786451658
+  Booked On     : 2026-05-14
+  Return Date   : 2026-05-15
+  Status        : RESERVED
+  Penalty Rate  : $75000.00 / overdue day (= daily rental fee)
+

@@ -1884,7 +1884,7 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
       <!-- Floating Card 2: Market Stats -->
       <div class="hero-card-float hcf-2">
         <div class="hcf-label">This Week</div>
-        <div class="hcf-value" style="font-size:1.4rem;font-family:var(--font-serif)">$4.2M</div>
+        <div class="hcf-value" style="font-size:1.4rem;font-family:var(--font-serif)">LKR 4.2M</div>
         <div class="hcf-sub">Avg. Sale Price</div>
         <span class="hcf-badge badge-amber">↑ 12% vs last month</span>
       </div>
@@ -1961,7 +1961,7 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
                           </div>
                           <div class="prop-body">
                               <c:if test="${p.status.trim() == 'Sold'}"><span class="sold-tape">🔴 Sold</span></c:if>
-                              <div class="prop-price">$<fmt:formatNumber value="${p.price}" pattern="#,##0.00" /><c:if test="${p.status.trim() == 'For Rent'}"><span style="font-size:0.58em;font-weight:400;color:var(--ink3)">/day</span></c:if></div>
+                              <div class="prop-price">LKR <fmt:formatNumber value="${p.price}" pattern="#,##0.00" /><c:if test="${p.status.trim() == 'For Rent'}"><span style="font-size:0.58em;font-weight:400;color:var(--ink3)">/day</span></c:if></div>
                               <div class="prop-name">${p.title}</div>
                               <div class="prop-loc">
                                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -2998,7 +2998,7 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
 
                 // Format price
                 let priceVal = parseFloat(sp.price);
-                const fmt = isNaN(priceVal) ? sp.price : '$' + priceVal.toLocaleString();
+                const fmt = isNaN(priceVal) ? sp.price : 'LKR ' + priceVal.toLocaleString();
 
                 document.getElementById('sold-thumb').src  = sp.imageUrl || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&q=80';
                 document.getElementById('sold-thumb').alt  = sp.title || 'Sold property';

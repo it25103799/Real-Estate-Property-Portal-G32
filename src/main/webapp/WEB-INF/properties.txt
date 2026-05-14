@@ -15,4 +15,4 @@ a4441c7d,Nugegoda up-Rise,7500000,Nugegoda,House,For Sale,De Silva,assets/images
 9f4e6bca,Kawisigamuwa Cool Yard,75000.0,Ibbagamuwa,Villa,For Rent,De Silva,assets/images/property-types/villa.jpg,4,4,Best for Holiday vacations to stay here !
 5625c066,Rathkarawa Premium Site,15000000,Rathkarawa,House,For Sale,John Fane,assets/images/property-types/house.jpg,4,3,Premium residential site in Rathkarawa area
 c151fd4d,The Hortan Yard ,65000000,Nuwara Eliya,House,For Sale,Don Lee,assets/images/property-types/house.jpg,6,6,Explore the Beauty near your own property !
-ca8d1b41,Galle resort,75000,Galle,Villa,For Rent,jack william,assets/images/property-types/villa.jpg,04,04,
+ca8d1b41,Galle resort,75000,Galle,Villa,Sold,jack william,assets/images/property-types/villa.jpg,04,04

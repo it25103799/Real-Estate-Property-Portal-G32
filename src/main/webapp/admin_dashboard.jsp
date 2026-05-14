@@ -82,12 +82,12 @@
             margin-bottom: 2px; white-space: nowrap;
         }
         .nav-item:hover { opacity: 1; background: var(--bg2); }
-        [data-theme="dark"] .nav-item:hover { 
+        [data-theme="dark"] .nav-item:hover {
             background: rgba(59,130,246,0.08);
             box-shadow: inset 0 0 0 1px rgba(59,130,246,0.1);
         }
         .nav-item { opacity: 1; background: var(--bg2); color: var(--accent); font-weight: 700; }
-        [data-theme="dark"] .nav-item.active { 
+        [data-theme="dark"] .nav-item.active {
             background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(96,165,250,0.08));
             box-shadow: 0 0 0 1px rgba(59,130,246,0.2), inset 0 1px 0 rgba(255,255,255,0.05);
         }
@@ -151,8 +151,8 @@
         .stat-card.purple::before{ background: linear-gradient(180deg, var(--purple), #7c3aed); }
         .stat-card.red::before   { background: linear-gradient(180deg, var(--red), #dc2626); }
         .stat-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
-        [data-theme="dark"] .stat-card:hover { 
-            transform: translateY(-5px); 
+        [data-theme="dark"] .stat-card:hover {
+            transform: translateY(-5px);
             box-shadow: 0 12px 48px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.1);
         }
         .stat-icon { font-size: 1.5rem; margin-bottom: 12px; opacity: 0.9; }
@@ -478,13 +478,13 @@
                     <div class="stat-card blue">
                         <div class="stat-icon">💼</div>
                         <div class="stat-label">Market Value</div>
-                        <div class="stat-value" style="font-size:1.35rem;">$<fmt:formatNumber value="${totalPropertyValue}" pattern="#,##0"/></div>
+                        <div class="stat-value" style="font-size:1.35rem;">LKR <fmt:formatNumber value="${totalPropertyValue}" pattern="#,##0"/></div>
                         <div class="stat-sub">Combined listing values</div>
                     </div>
                     <div class="stat-card green">
                         <div class="stat-icon">💰</div>
                         <div class="stat-label">Total Revenue</div>
-                        <div class="stat-value" style="font-size:1.35rem;">$<fmt:formatNumber value="${not empty totalEarnings ? totalEarnings : 0}" pattern="#,##0.00"/></div>
+                        <div class="stat-value" style="font-size:1.35rem;">LKR <fmt:formatNumber value="${not empty totalEarnings ? totalEarnings : 0}" pattern="#,##0.00"/></div>
                         <div class="stat-sub">From completed bookings</div>
                     </div>
                     <div class="stat-card purple">
@@ -624,7 +624,7 @@
                                             <tr>
                                                 <td><small style="opacity:0.4; font-family:var(--font-mono);">${prop.id}</small></td>
                                                 <td><strong>${prop.title}</strong></td>
-                                                <td><strong>$<fmt:formatNumber value="${prop.price}" pattern="#,##0"/></strong></td>
+                                                <td><strong>LKR <fmt:formatNumber value="${prop.price}" pattern="#,##0"/></strong></td>
                                                 <td>${prop.location}</td>
                                                 <td>${prop.type}</td>
                                                 <td>
@@ -766,7 +766,7 @@
                                                 <tr>
                                                     <td><small style="opacity:0.45; font-family:var(--font-mono);">${prop.id}</small></td>
                                                     <td><strong>${prop.title}</strong></td>
-                                                    <td><strong style="color:var(--green);">$<fmt:formatNumber value="${prop.price}" pattern="#,##0"/></strong></td>
+                                                    <td><strong style="color:var(--green);">LKR <fmt:formatNumber value="${prop.price}" pattern="#,##0"/></strong></td>
                                                     <td>${prop.location}</td>
                                                     <td>${prop.type}</td>
                                                     <td>${prop.sellerName}</td>
@@ -851,7 +851,7 @@
                         <button class="btn" onclick="document.getElementById('create-ann-modal').style.display='flex'">+ New Announcement</button>
                     </div>
                 </div>
-                
+
                 <!-- Announcement Summary Stats -->
                 <div class="card" style="border-radius:0; border-top:none; border-bottom:none; padding:18px 24px;">
                     <div style="display:flex; gap:14px; flex-wrap:wrap;">
@@ -1011,7 +1011,7 @@
                     <div class="card-title">📈 Platform Summary</div>
                     <div class="summary-grid">
                         <div class="summary-item">
-                            <div class="summary-num" style="color:var(--accent);">$<fmt:formatNumber value="${totalProperties > 0 && (totalProperties - totalSoldProperties) > 0 ? totalPropertyValue / (totalProperties - totalSoldProperties) : 0}" pattern="#,##0"/></div>
+                            <div class="summary-num" style="color:var(--accent);">LKR <fmt:formatNumber value="${totalProperties > 0 && (totalProperties - totalSoldProperties) > 0 ? totalPropertyValue / (totalProperties - totalSoldProperties) : 0}" pattern="#,##0"/></div>
                             <div class="summary-lbl">Avg. Active Property Price</div>
                         </div>
                         <div class="summary-item">
@@ -1035,7 +1035,7 @@
                             <div class="summary-lbl">Properties Sold</div>
                         </div>
                         <div class="summary-item">
-                            <div class="summary-num" style="color:var(--green); font-size:1.1rem;">$<fmt:formatNumber value="${not empty totalEarnings ? totalEarnings : 0}" pattern="#,##0.00"/></div>
+                            <div class="summary-num" style="color:var(--green); font-size:1.1rem;">LKR <fmt:formatNumber value="${not empty totalEarnings ? totalEarnings : 0}" pattern="#,##0.00"/></div>
                             <div class="summary-lbl">Total Earned</div>
                         </div>
                     </div>
@@ -1337,11 +1337,11 @@ function countAnnouncements() {
         else if (priority === 'MEDIUM') medium++;
         else if (priority === 'LOW') low++;
     });
-    
+
     const highEl = document.getElementById('count-high');
     const mediumEl = document.getElementById('count-medium');
     const lowEl = document.getElementById('count-low');
-    
+
     if (highEl) highEl.textContent = high;
     if (mediumEl) mediumEl.textContent = medium;
     if (lowEl) lowEl.textContent = low;

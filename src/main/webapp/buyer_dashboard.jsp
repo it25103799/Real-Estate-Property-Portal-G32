@@ -739,7 +739,7 @@
                                     </div>
                                 </td>
                                 <td>📍 ${p.location}</td>
-                                <td style="font-weight: 600; color: var(--accent);">$<fmt:formatNumber value="${p.price}" pattern="#,##0.00" /><c:if test="${p.status == 'For Rent'}"><span style="font-size:0.75em; font-weight:400; opacity:0.65;">/day</span></c:if></td>
+                                <td style="font-weight: 600; color: var(--accent);">LKR <fmt:formatNumber value="${p.price}" pattern="#,##0.00" /><c:if test="${p.status == 'For Rent'}"><span style="font-size:0.75em; font-weight:400; opacity:0.65;">/day</span></c:if></td>
                                 <td>${p.type}</td>
                                 <td>${p.bedrooms}</td>
                                 <td>${p.bathrooms}</td>
@@ -923,12 +923,12 @@
                         <div style="font-weight:700;color:var(--red);font-size:0.95rem;margin-bottom:4px;">Overdue Penalty Active — "${bk.propertyTitle}"</div>
                         <div style="font-size:0.83rem;color:var(--ink);line-height:1.6;">
                             Your return date of <strong>${bk.returnDate}</strong> has passed.
-                            A penalty of <strong>$<fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" /> per day</strong>
+                            A penalty of <strong>LKR <fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" /> per day</strong>
                             (equal to the property's daily rental rate) is being charged for each overdue day.
                             <c:if test="${not empty bk.daysOverdue}">
                                 You are currently <strong>${bk.daysOverdue} day(s) overdue</strong>.
                             </c:if>
-                            Total penalty so far: <strong style="color:var(--red);">$<fmt:formatNumber value="${bk.penaltyFee}" pattern="#,##0.00" /></strong>.
+                            Total penalty so far: <strong style="color:var(--red);">LKR <fmt:formatNumber value="${bk.penaltyFee}" pattern="#,##0.00" /></strong>.
                             Please contact the seller <strong>${bk.sellerName}</strong> immediately to settle the outstanding amount.
                         </div>
                     </div>
@@ -990,7 +990,7 @@
                                         </c:when>
                                         <c:otherwise>
                                             <div style="font-weight:600;color:var(--accent);">
-                                                $<fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" />/day
+                                                LKR <fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" />/day
                                             </div>
                                             <div style="font-size:0.72rem;opacity:0.6;margin-top:1px;">penalty rate</div>
                                         </c:otherwise>
@@ -999,9 +999,9 @@
                                 <td>
                                     <c:choose>
                                         <c:when test="${bk.penaltyFee != '0.00'}">
-                                            <div style="color:var(--red); font-weight:700;">$<fmt:formatNumber value="${bk.penaltyFee}" pattern="#,##0.00" /></div>
+                                            <div style="color:var(--red); font-weight:700;">LKR <fmt:formatNumber value="${bk.penaltyFee}" pattern="#,##0.00" /></div>
                                             <c:if test="${not empty bk.daysOverdue}">
-                                                <div style="font-size:0.72rem;color:var(--red);margin-top:2px;">${bk.daysOverdue} × $<fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" /></div>
+                                                <div style="font-size:0.72rem;color:var(--red);margin-top:2px;">${bk.daysOverdue} × LKR <fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" /></div>
                                             </c:if>
                                         </c:when>
                                         <c:otherwise>

@@ -57,7 +57,7 @@
         .stat-card.green::before { background: var(--green); }
         .stat-card.red::before { background: var(--red); }
         .stat-card.amber::before { background: #f59e0b; }
-        
+
         .stat-icon {
             width: 44px;
             height: 44px;
@@ -72,7 +72,7 @@
         .stat-icon.green { background: rgba(13,158,110,0.1); }
         .stat-icon.red { background: rgba(224,40,40,0.1); }
         .stat-icon.amber { background: rgba(245,158,11,0.1); }
-        
+
         .stat-value {
             font-size: 1.85rem;
             font-weight: 700;
@@ -89,12 +89,12 @@
             letter-spacing: 0.5px;
         }
 
-        .card { 
-            background: var(--bg); 
-            border: 1px solid var(--line); 
-            border-radius: var(--r); 
-            padding: 24px; 
-            margin-bottom: 24px; 
+        .card {
+            background: var(--bg);
+            border: 1px solid var(--line);
+            border-radius: var(--r);
+            padding: 24px;
+            margin-bottom: 24px;
             box-shadow: 0 4px 16px rgba(0,0,0,.04);
             transition: box-shadow 0.3s ease, transform 0.3s ease;
             width: 100%;
@@ -110,9 +110,9 @@
             box-shadow: 0 8px 30px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.08);
             transform: translateY(-2px);
         }
-        .card-title { 
-            font-size: 1.2rem; 
-            font-weight: 700; 
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
             margin-bottom: 20px;
             margin-top: 0;
             padding-bottom: 14px;
@@ -123,29 +123,29 @@
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
         .form-group { display: flex; flex-direction: column; gap: 5px; }
         label { font-size: 0.82rem; font-weight: 600; }
-        input, select, textarea { 
-            padding: 9px 11px; 
-            border: 1.5px solid var(--line); 
-            border-radius: 6px; 
-            background: var(--bg); 
-            color: var(--ink); 
-            font-family: var(--font-sans); 
+        input, select, textarea {
+            padding: 9px 11px;
+            border: 1.5px solid var(--line);
+            border-radius: 6px;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: var(--font-sans);
             outline: none;
             transition: all 0.2s;
             font-size: 0.9rem;
         }
-        input:focus, select:focus, textarea:focus { 
+        input:focus, select:focus, textarea:focus {
             border-color: var(--accent);
             box-shadow: 0 0 0 3px rgba(26,86,219,0.1);
         }
-        .btn { 
-            background: var(--accent); 
-            color: white; 
-            padding: 8px 16px; 
-            border: none; 
-            border-radius: 6px; 
-            font-weight: 600; 
-            cursor: pointer; 
+        .btn {
+            background: var(--accent);
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
             transition: all 0.2s;
             box-shadow: 0 2px 8px rgba(26,86,219,0.2);
             font-size: 0.85rem;
@@ -153,7 +153,7 @@
         [data-theme="dark"] .btn {
             box-shadow: 0 2px 12px rgba(59,130,246,0.3);
         }
-        .btn:hover { 
+        .btn:hover {
             opacity: 0.9;
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(26,86,219,0.3);
@@ -172,20 +172,20 @@
             border-radius: var(--r);
             width: 100%;
         }
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
+        table {
+            width: 100%;
+            border-collapse: collapse;
             font-size: 0.9rem;
         }
-        th, td { 
-            padding: 12px 14px; 
-            border-bottom: 1px solid var(--line); 
+        th, td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--line);
             white-space: nowrap;
             vertical-align: middle;
             text-align: left;
         }
-        th { 
-            font-weight: 600; 
+        th {
+            font-weight: 600;
             color: var(--ink);
             opacity: 0.75;
             font-size: 0.78rem;
@@ -209,32 +209,32 @@
         [data-theme="dark"] tbody tr:hover {
             background-color: rgba(59,130,246,0.08);
         }
-        .btn-edit { 
-            background: none; 
-            border: 1.5px solid var(--accent); 
-            color: var(--accent); 
-            padding: 6px 12px; 
-            border-radius: 5px; 
-            cursor: pointer; 
+        .btn-edit {
+            background: none;
+            border: 1.5px solid var(--accent);
+            color: var(--accent);
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
             font-size: 0.78rem;
             font-weight: 600;
             transition: all 0.2s;
         }
-        .btn-edit:hover { 
-            background: var(--accent); 
+        .btn-edit:hover {
+            background: var(--accent);
             color: white;
             transform: translateY(-1px);
             box-shadow: 0 3px 10px rgba(26,86,219,0.25);
         }
-        .badge-sold { 
-            display: inline-block; 
-            background: rgba(13,158,110,0.12); 
-            color: #0d9e6e; 
-            border: 1px solid rgba(13,158,110,0.35); 
-            padding: 6px 12px; 
-            border-radius: 20px; 
-            font-size: 0.78rem; 
-            font-weight: 700; 
+        .badge-sold {
+            display: inline-block;
+            background: rgba(13,158,110,0.12);
+            color: #0d9e6e;
+            border: 1px solid rgba(13,158,110,0.35);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
             white-space: nowrap;
         }
 
@@ -546,7 +546,7 @@
 
     <!-- ── STATS + INQUIRIES ROW ─────────────────────────────────────── -->
     <div class="stats-inquiries-row" style="display: grid; grid-template-columns: 1fr 400px; gap: 20px; margin-bottom: 24px;">
-        
+
         <!-- Left: Stat Cards -->
         <div class="stats-grid" style="margin-bottom: 0;">
             <div class="stat-card">
@@ -554,22 +554,22 @@
                 <div class="stat-value">${not empty myProperties ? myProperties.size() : 0}</div>
                 <div class="stat-label">Total Properties</div>
             </div>
-            
+
             <div class="stat-card amber">
                 <div class="stat-icon amber">📋</div>
                 <div class="stat-value">${not empty activeBookings ? activeBookings.size() : 0}</div>
                 <div class="stat-label">Active Bookings</div>
             </div>
-            
+
             <div class="stat-card green">
                 <div class="stat-icon green">✅</div>
                 <div class="stat-value">${not empty soldCount ? soldCount : 0}</div>
                 <div class="stat-label">Sold Properties</div>
             </div>
-            
+
             <div class="stat-card red">
                 <div class="stat-icon red">💰</div>
-                <div class="stat-value">$<fmt:formatNumber value="${not empty totalEarnings ? totalEarnings : 0}" pattern="#,##0"/></div>
+                <div class="stat-value">LKR <fmt:formatNumber value="${not empty totalEarnings ? totalEarnings : 0}" pattern="#,##0"/></div>
                 <div class="stat-label">Total Earnings</div>
             </div>
         </div>
@@ -577,7 +577,7 @@
         <!-- Right: Buyer Inquiries Card -->
         <div class="card" style="margin-bottom: 0; padding: 20px;">
             <h3 class="card-title" style="font-size: 1.1rem; margin-bottom: 16px; padding-bottom: 12px;">📩 Buyer Inquiries</h3>
-            
+
             <div style="display: flex; flex-direction: column; gap: 12px;">
                 <select id="inqSelect" style="width: 100%; min-width: unset;">
                     <option value="">Select an inquiry...</option>
@@ -585,9 +585,9 @@
                         <option value="${t.id}">${t.buyerName} — ${t.propertyTitle}</option>
                     </c:forEach>
                 </select>
-                
+
                 <button class="btn" type="button" onclick="openInquiryFromSelect()" style="width: 100%;">Open Inquiry</button>
-                
+
                 <div style="margin-top: 8px; color: var(--ink); opacity: 0.7; font-size: 0.82rem; line-height: 1.5;">
                     <c:choose>
                         <c:when test="${empty sellerThreads}">
@@ -616,7 +616,7 @@
         <p style="color: #0d9e6e; font-weight: bold;">${successMessage}</p>
         <form action="addProperty" method="post" class="form-grid">
             <div class="form-group"><label>Property Title</label><input type="text" name="title" required></div>
-            <div class="form-group"><label id="add-price-label">Price ($)</label><input type="number" name="price" required></div>
+            <div class="form-group"><label id="add-price-label">Price (LKR)</label><input type="number" name="price" required></div>
             <div class="form-group"><label>Location / City</label><input type="text" name="location" required></div>
             <div class="form-group"><label>Type</label>
                 <select name="type"><option>Apartment</option><option>House</option><option>Villa</option><option>Studio</option></select>
@@ -672,7 +672,7 @@
                                 </td>
                                 <td>
                                     <div style="font-weight: 700; color: ${p.status == 'Sold' ? '#0d9e6e' : 'var(--accent)'}; font-size: 0.95rem;">
-                                        $${p.price}
+                                        LKR <fmt:formatNumber value="${p.price}" pattern="#,##0.##"/>
                                     </div>
                                 </td>
                                 <td>
@@ -714,7 +714,7 @@
                                     <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
                                         <c:choose>
                                             <c:when test="${p.status != 'Sold'}">
-                                                <button class="btn-edit" onclick="openEditModal('${p.id}', '${p.title}', '${p.price}', '${p.location}', '${p.type}', '${p.status}', '${p.bedrooms}', '${p.bathrooms}', '${p.description}')" 
+                                                <button class="btn-edit" onclick="openEditModal('${p.id}', '${p.title}', '${p.price}', '${p.location}', '${p.type}', '${p.status}', '${p.bedrooms}', '${p.bathrooms}', '${p.description}')"
                                                         style="padding: 6px 10px; font-size: 0.75rem;" title="Edit property details">
                                                     ✏️ Edit
                                                 </button>
@@ -729,7 +729,7 @@
                                                 <span style="opacity: 0.4; font-size: 0.82rem; padding: 6px 10px;">—</span>
                                             </c:otherwise>
                                         </c:choose>
-        
+
                                         <form action="deleteProperty" method="post" style="margin: 0;" onsubmit="return confirm('Are you absolutely sure you want to delete this property? This cannot be undone!');">
                                             <input type="hidden" name="propertyId" value="${p.id}">
                                             <button type="submit" class="btn-edit" style="color: var(--red); border-color: var(--red); padding: 6px 10px; font-size: 0.75rem;" title="Delete this property permanently">
@@ -777,7 +777,7 @@
                         <div style="border: 1px solid var(--line); border-radius: var(--r); background: var(--bg); overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: box-shadow 0.3s ease;"
                              onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,0.08)'"
                              onmouseout="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.04)'">
-                            
+
                             <!-- Property Header -->
                             <div style="background: linear-gradient(135deg, rgba(26,86,219,0.05) 0%, rgba(13,158,110,0.05) 100%); padding: 18px 20px; border-bottom: 1px solid var(--line);">
                                 <div style="display:flex; justify-content:space-between; align-items:center; gap: 12px; flex-wrap: wrap;">
@@ -815,7 +815,7 @@
                                                 <div style="padding: 16px 18px; border-radius: 10px; background: var(--bg2); border: 1.5px solid var(--line); transition: all 0.2s ease;"
                                                      onmouseover="this.style.borderColor='var(--accent)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(26,86,219,0.1)'"
                                                      onmouseout="this.style.borderColor='var(--line)'; this.style.transform='translateY(0)'; this.style.boxShadow='none'">
-                                                    
+
                                                     <!-- Review Header -->
                                                     <div style="display:flex; justify-content:space-between; align-items:flex-start; gap: 12px; margin-bottom: 12px; flex-wrap: wrap;">
                                                         <div style="display: flex; align-items: center; gap: 10px;">
@@ -917,15 +917,15 @@
                                 <td>
                                     <c:choose>
                                         <c:when test="${bk.penaltyFee != '0.00'}">
-                                            <div style="color:#e02828; font-weight:700;">$<fmt:formatNumber value="${bk.penaltyFee}" pattern="#,##0.00" /></div>
+                                            <div style="color:#e02828; font-weight:700;">LKR <fmt:formatNumber value="${bk.penaltyFee}" pattern="#,##0.00" /></div>
                                             <c:if test="${not empty bk.daysOverdue}">
-                                                <div style="font-size:0.72rem;color:#e02828;margin-top:2px;">${bk.daysOverdue} × $<fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" />/day</div>
+                                                <div style="font-size:0.72rem;color:#e02828;margin-top:2px;">${bk.daysOverdue} × LKR <fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" />/day</div>
                                             </c:if>
                                         </c:when>
                                         <c:otherwise>
                                             <div style="opacity:0.4;">&#8212;</div>
                                             <c:if test="${not empty bk.dailyRate}">
-                                                <div style="font-size:0.72rem;opacity:0.55;margin-top:2px;">Rate: $<fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" />/day</div>
+                                                <div style="font-size:0.72rem;opacity:0.55;margin-top:2px;">Rate: LKR <fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" />/day</div>
                                             </c:if>
                                         </c:otherwise>
                                     </c:choose>
@@ -961,7 +961,7 @@
             <h3 class="card-title" style="margin:0;">Completed Transactions</h3>
             <span style="font-size:0.85rem; opacity:0.65;">${completedBookings.size()} completed</span>
         </div>
-        
+
         <c:if test="${param.delete == 'success'}">
             <div style="background:rgba(13,158,110,0.1);border:1px solid rgba(13,158,110,0.3);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:0.9rem;color:#0d9e6e;font-weight:600;">
                 ✅ Completed transaction removed successfully!
@@ -972,7 +972,7 @@
                 ️ Failed to remove transaction. Please try again.
             </div>
         </c:if>
-        
+
         <div class="table-responsive">
         <table>
             <thead>
@@ -1047,7 +1047,7 @@
             <input type="hidden" name="propertyId" id="edit-id">
 
             <div class="form-group"><label>Title</label><input type="text" name="title" id="edit-title" required></div>
-            <div class="form-group"><label id="edit-price-label">Price ($)</label><input type="number" name="price" id="edit-price" required></div>
+            <div class="form-group"><label id="edit-price-label">Price (LKR)</label><input type="number" name="price" id="edit-price" required></div>
             <div class="form-group"><label>Location</label><input type="text" name="location" id="edit-location" required></div>
             <div class="form-grid">
                 <div class="form-group"><label>Type</label>
@@ -1173,9 +1173,9 @@
 
         if (statusSelect && priceLabel) {
             if (statusSelect.value === 'For Rent') {
-                priceLabel.innerText = 'Daily Price ($)';
+                priceLabel.innerText = 'Daily Price (LKR)';
             } else {
-                priceLabel.innerText = 'Price ($)';
+                priceLabel.innerText = 'Price (LKR)';
             }
         }
     }
@@ -1389,4 +1389,3 @@
 
 </body>
 </html>
-
