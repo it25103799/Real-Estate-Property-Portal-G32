@@ -45,7 +45,7 @@ const TESTIMONIALS = [
     { name:"Ashan Dias", role:"Renting in Malabe", img:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80", text:"The entire process was transparent, fast and stress-free. Kavindi found us the perfect annex near the campus. Exceptional service from start to finish.", stars:5 }
 ];
 
-let currentFilters = { status: 'all', type: 'all', city: 'all', beds: 'any', priceMin: 0, priceMax: Infinity };
+let currentFilters = { soldStatus: 'all', status: 'all', type: 'all', city: 'all', beds: 'any', priceMin: 0, priceMax: Infinity };
 // Removed: Unused variable savedIds
 
 // ── ROUTER ────────────────────────────
@@ -321,7 +321,7 @@ function setBeds(btn, value) {
 }
 
 function resetFilters() {
-    currentFilters = { status: 'all', type: 'all', city: 'all', beds: 'any', priceMin: 0, priceMax: Infinity };
+    currentFilters = { soldStatus: 'all', status: 'all', type: 'all', city: 'all', beds: 'any', priceMin: 0, priceMax: Infinity };
     const priceSelect = document.getElementById('priceRangeSelect');
     if (priceSelect) priceSelect.value = 'all';
     currentListingsPage = 0;  // Reset to first page
@@ -447,6 +447,17 @@ function applyFilters() {
     if(typeof window.properties === 'undefined') return;
 
     let filtered = (window.properties || []).filter(p => {
+        // STATUS (Sold / Available / All) filter
+        let matchSoldStatus = true;
+        if (currentFilters.soldStatus !== 'all') {
+            const s = p.status ? p.status.trim().toLowerCase() : '';
+            if (currentFilters.soldStatus === 'sold') {
+                matchSoldStatus = s === 'sold';
+            } else if (currentFilters.soldStatus === 'available') {
+                matchSoldStatus = s !== 'sold';
+            }
+        }
+
         let matchStatus = currentFilters.status === 'all' || (() => {
             const s = p.status ? p.status.toLowerCase() : '';
             if (currentFilters.status === 'sale') return s === 'for sale';
@@ -472,7 +483,7 @@ function applyFilters() {
             matchBeds = propBeds >= minBeds;
         }
 
-        return matchStatus && matchType && matchCity && matchPrice && matchBeds;
+        return matchSoldStatus && matchStatus && matchType && matchCity && matchPrice && matchBeds;
     });
 
     allFilteredProperties = sortProperties(filtered);
