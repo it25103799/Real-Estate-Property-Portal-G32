@@ -533,6 +533,12 @@
 
             <button type="submit" id="saveProfileBtn" class="save-btn" style="display: none;">Save Changes</button>
         </form>
+
+        <c:if test="${param.profile == 'success'}">
+            <div style="background: rgba(13,158,110,0.1); border: 1px solid #0d9e6e; color: #0d9e6e; padding: 12px 16px; border-radius: 8px; margin-top: 15px; font-weight: 600; text-align: center;">
+                ✅ Profile credentials updated successfully!
+            </div>
+        </c:if>
         <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--line); text-align: center;">
                     <form action="DeleteAccountServlet" method="POST" style="margin: 0;" onsubmit="return confirm('⚠️ WARNING: Are you absolutely sure you want to permanently delete your account? This action cannot be undone and you will lose all saved properties.');">
                         <input type="hidden" name="userEmail" value="<%= session.getAttribute("loggedEmail") %>">

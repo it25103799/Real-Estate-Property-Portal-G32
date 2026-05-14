@@ -12,9 +12,15 @@
     // FIX: If propertyList is null (user hit index.jsp directly instead of /properties servlet),
     // redirect to /properties which loads all data then forwards back here.
     // This ensures Featured Properties and Browse page always have data, even when not logged in.
+    // IMPORTANT: Preserve login error message across redirects
     if (request.getAttribute("propertyList") == null) {
+        // If there's a login error, preserve it in a request param so PropertyServlet can keep it
+        String loginError = (String) session.getAttribute("loginError");
         String qs = request.getQueryString();
         String redirect = request.getContextPath() + "/properties" + (qs != null ? "?" + qs : "");
+        if (loginError != null) {
+            redirect += (qs == null ? "?" : "&") + "loginError=true";
+        }
         response.sendRedirect(redirect);
         return;
     }
@@ -2606,9 +2612,15 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
         </p>
 
         <form action="login" method="post">
-           <p style="color: var(--red); font-size: 0.8rem; margin-bottom: 10px; font-weight: 500;">
-               ${errorMessage}
-           </p>
+           <%-- Show error from session (survives redirects) or from request --%>
+           <c:if test="${not empty sessionScope.loginError}">
+               <div style="background: rgba(224,40,40,0.1); border: 1.5px solid rgba(224,40,40,0.4); color: var(--red); padding: 14px 16px; border-radius: 8px; margin-bottom: 18px; font-weight: 600; font-size: 0.9rem; display: flex; align-items: center; gap: 10px;">
+                   <span style="font-size: 1.2rem; flex-shrink: 0;">❌</span>
+                   <span>${sessionScope.loginError}</span>
+               </div>
+               <%-- Clear the error after displaying so it doesn't show again --%>
+               <% session.removeAttribute("loginError"); %>
+           </c:if>
 
            <div class="auth-field">
              <label>Email</label>
@@ -3035,6 +3047,37 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
 
 <!-- Page Transition Animation System -->
 <script src="page-transitions.js"></script>
+
+<script>
+    // Auto-show login page if redirected back after a failed sign-in attempt
+    window.addEventListener('DOMContentLoaded', function() {
+        // Check session-based error (set by LoginServlet) OR query-string flag
+        var hasSessionError = "${not empty sessionScope.loginError}" === "true";
+        var hasQueryError   = new URLSearchParams(window.location.search).get('loginError') === 'true';
+
+        if (hasSessionError || hasQueryError) {
+            // Hide all pages, then show the login page
+            document.querySelectorAll('.page').forEach(function(p) {
+                p.classList.remove('active');
+            });
+            var loginPage = document.getElementById('page-login');
+            if (loginPage) {
+                loginPage.classList.add('active');
+                loginPage.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            // Reset nav active state
+            document.querySelectorAll('.nav-links a').forEach(function(a) {
+                a.classList.remove('active');
+            });
+            // Clean the query string without a page reload so the flag doesn't persist on F5
+            if (hasQueryError && window.history.replaceState) {
+                var url = new URL(window.location.href);
+                url.searchParams.delete('loginError');
+                window.history.replaceState(null, '', url.toString());
+            }
+        }
+    });
+</script>
 
 </body>
 </html>

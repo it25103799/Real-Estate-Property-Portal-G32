@@ -289,6 +289,15 @@ public class PropertyServlet extends HttpServlet {
         }
         request.setAttribute("favPropertyIds", favPropertyIds);
 
+        // Preserve login error from query parameter across redirect chain
+        String loginErrorParam = request.getParameter("loginError");
+        if ("true".equals(loginErrorParam)) {
+            HttpSession session2 = request.getSession();
+            if (session2.getAttribute("loginError") == null) {
+                session2.setAttribute("loginError", "Invalid email or password!");
+            }
+        }
+
         request.getRequestDispatcher("/index.jsp").forward(request, response);
     }
 }
