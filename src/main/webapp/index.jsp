@@ -2830,6 +2830,19 @@ input, select, textarea { font-family: var(--font-sans); outline: none; }
     document.addEventListener("DOMContentLoaded", function() {
         const urlParams = new URLSearchParams(window.location.search);
         const viewId = urlParams.get('viewId');
+        const tab = urlParams.get('tab');
+
+        // Auto-show listings tab if ?tab=browse is present
+        if (tab === 'browse') {
+            setTimeout(() => {
+                if (typeof showPage === 'function') {
+                    showPage('listings');
+                }
+                // Remove the tab parameter from URL to prevent it from persisting on refresh
+                const newUrl = window.location.pathname + window.location.hash;
+                window.history.replaceState({}, document.title, newUrl);
+            }, 300);
+        }
 
         if (viewId) {
             // Wait just half a second for the Java data to load, then auto-open the property!

@@ -595,7 +595,7 @@
             </div>
             <!-- ── END NOTIFICATION BELL ── -->
 
-            <button class="btn btn-outline" onclick="window.location.href='properties'">🏠 Browse Properties</button>
+            <button class="btn btn-outline" onclick="window.location.href='properties?tab=browse'">🏠 Browse Properties</button>
             <form action="logout" method="post" style="display:inline;">
                 <button type="submit" class="btn" style="background: var(--red);">Logout</button>
             </form>
