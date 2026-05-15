@@ -223,16 +223,16 @@
         .btn-action:hover { border-color: var(--red); color: var(--red); }
 
         /* ── Bulk Remove Toolbar ── */
-        .bulk-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 10px 18px; background: var(--surface, #f8f8f8); border-bottom: 1px solid var(--line); gap: 12px; flex-wrap: wrap; }
+        .bulk-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 10px 18px; background: var(--bg); border-bottom: 1px solid var(--line); gap: 12px; flex-wrap: wrap; }
         .bulk-left { display: flex; align-items: center; gap: 12px; }
-        .bulk-select-all-label { display: flex; align-items: center; gap: 6px; font-size: 0.88rem; font-weight: 600; cursor: pointer; user-select: none; }
+        .bulk-select-all-label { display: flex; align-items: center; gap: 6px; font-size: 0.88rem; font-weight: 600; cursor: pointer; user-select: none; color: var(--ink); }
         .bulk-select-all-label input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; accent-color: var(--accent, #e63946); }
         .bulk-count { font-size: 0.82rem; color: var(--accent, #e63946); font-weight: 600; }
         .bulk-actions { display: flex; gap: 8px; }
         .btn-bulk-remove { background: var(--accent, #e63946); color: #fff; border: none; border-radius: 6px; padding: 7px 14px; font-size: 0.83rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
         .btn-bulk-remove:hover { opacity: 0.85; }
-        .btn-remove-all { background: none; border: 1.5px solid #e63946; color: #e63946; border-radius: 6px; padding: 7px 14px; font-size: 0.83rem; font-weight: 600; cursor: pointer; transition: 0.2s; margin-left: auto; }
-        .btn-remove-all:hover { background: #e63946; color: #fff; }
+        .btn-remove-all { background: none; border: 1.5px solid var(--red); color: var(--red); border-radius: 6px; padding: 7px 14px; font-size: 0.83rem; font-weight: 600; cursor: pointer; transition: 0.2s; margin-left: auto; }
+        .btn-remove-all:hover { background: var(--red); color: #fff; }
         .fav-row td:first-child { text-align: center; }
         .fav-checkbox { width: 16px; height: 16px; cursor: pointer; accent-color: var(--accent, #e63946); }
 
@@ -557,7 +557,7 @@
             </div>
             <!-- ── END NOTIFICATION BELL ── -->
 
-            <button class="btn btn-outline" onclick="window.location.href='properties'">🏠 Browse Properties</button>
+            <button class="btn btn-outline" onclick="window.location.href='properties?tab=browse'">🏠 Browse Properties</button>
             <form action="logout" method="post" style="display:inline;">
                 <button type="submit" class="btn" style="background: var(--red);">Logout</button>
             </form>
