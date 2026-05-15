@@ -10,28 +10,13 @@
     <style>
         /* ── PREMIUM NESTIQ VARIABLES ── */
         :root {
-            --bg: #ffffff; --bg2: #f7f8fa; --bg3: #eef0f4; --ink: #0f1117; --ink2: #2a2d35;
-            --ink3: #5a5f70; --ink4: #9198a8; --line: #e8eaee; --line2: #f2f4f7;
-            --accent: #1a56db; --accent2: #1041b0; --accent-l: #eff3fd;
-            --font-sans: 'Outfit', sans-serif; --r: 10px;
+            --bg: #ffffff; --bg2: #f7f8fa; --ink: #0f1117; --line: #e8eaee;
+            --accent: #1a56db; --font-sans: 'Outfit', sans-serif; --r: 10px;
             --green: #0d9e6e; --red: #e02828;
         }
-        /* ── PREMIUM DARK MODE ── */
         [data-theme="dark"] {
-            --bg:        #08091a;
-            --bg2:       #0f1225;
-            --bg3:       #181c34;
-            --ink:       #f0f4ff;
-            --ink2:      #d6dcf5;
-            --ink3:      #8892bb;
-            --ink4:      #4e5a80;
-            --line:      #1e2340;
-            --line2:     #262d4d;
-            --accent:    #4f8eff;
-            --accent2:   #2e6be0;
-            --accent-l:  rgba(79,142,255,.18);
-            --green:     #2dd4a8;
-            --red:       #f87171;
+            --bg: #111827; --bg2: #1f2937; --ink: #f9fafb; --line: #374151;
+            --accent: #3b82f6; --green: #10b981; --red: #ef4444;
         }
         body { font-family: var(--font-sans); background: var(--bg2); color: var(--ink); margin: 0; padding: 30px; transition: background 0.3s, color 0.3s; }
 
@@ -56,9 +41,8 @@
             overflow: hidden;
         }
         [data-theme="dark"] .stat-card {
-            background: linear-gradient(145deg, rgba(14,18,40,.97) 0%, rgba(10,13,28,.97) 100%);
-            box-shadow: 0 4px 24px rgba(0,0,0,.55), 0 0 0 1px rgba(79,142,255,.08), inset 0 1px 0 rgba(255,255,255,.025);
-            border-color: rgba(79,142,255,.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25), 0 0 0 1px rgba(255,255,255,0.03);
+            border-color: rgba(255,255,255,0.08);
         }
         .stat-card::before {
             content: '';
@@ -74,8 +58,8 @@
             box-shadow: 0 6px 20px rgba(0,0,0,.08);
         }
         [data-theme="dark"] .stat-card:hover {
-            box-shadow: 0 12px 36px rgba(0,0,0,.65), 0 0 0 1px rgba(79,142,255,.25), 0 0 20px rgba(79,142,255,.1);
-            border-color: rgba(79,142,255,.25);
+            box-shadow: 0 8px 28px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.12);
         }
         .stat-card.green::before { background: var(--green); }
         .stat-card.red::before { background: var(--red); }
@@ -122,16 +106,13 @@
             transition: box-shadow 0.3s ease, transform 0.3s ease;
         }
         [data-theme="dark"] .card {
-            background: linear-gradient(145deg, rgba(14,18,40,.97) 0%, rgba(10,13,28,.97) 100%);
-            box-shadow: 0 4px 24px rgba(0,0,0,.55), 0 0 0 1px rgba(79,142,255,.07), inset 0 1px 0 rgba(255,255,255,.025);
-            border-color: rgba(79,142,255,.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.05);
         }
         .card:hover {
             box-shadow: 0 6px 20px rgba(0,0,0,.08);
         }
         [data-theme="dark"] .card:hover {
-            box-shadow: 0 12px 40px rgba(0,0,0,.65), 0 0 0 1px rgba(79,142,255,.2), 0 0 24px rgba(79,142,255,.1);
-            border-color: rgba(79,142,255,.22);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.08);
         }
         .card-header {
             display: flex;
@@ -177,7 +158,7 @@
             font-size: 0.85rem;
         }
         [data-theme="dark"] .btn {
-            box-shadow: 0 2px 14px rgba(79,142,255,.35);
+            box-shadow: 0 2px 12px rgba(59,130,246,0.3);
         }
         .btn:hover {
             opacity: 0.9;
@@ -185,7 +166,7 @@
             box-shadow: 0 4px 12px rgba(26,86,219,0.3);
         }
         [data-theme="dark"] .btn:hover {
-            box-shadow: 0 6px 20px rgba(79,142,255,.5);
+            box-shadow: 0 4px 16px rgba(59,130,246,0.4);
         }
         .btn:active {
             transform: translateY(0);
@@ -217,10 +198,8 @@
             top: 0;
         }
         [data-theme="dark"] th {
-            background: rgba(10,13,32,.95);
-            opacity: 0.9;
-            border-bottom-color: rgba(79,142,255,.15);
-            color: rgba(160,180,255,.75);
+            background: rgba(31,41,55,0.8);
+            opacity: 0.85;
         }
         tbody tr {
             transition: background-color 0.15s ease;
@@ -229,9 +208,8 @@
             background-color: rgba(26,86,219,0.03);
         }
         [data-theme="dark"] tbody tr:hover {
-            background-color: rgba(79,142,255,.07);
+            background-color: rgba(59,130,246,0.08);
         }
-        [data-theme="dark"] td { border-bottom-color: rgba(79,142,255,.07); }
 
         /* Thumbnail Image for Saved Properties */
         .prop-thumb { width: 60px; height: 45px; border-radius: 4px; object-fit: cover; }
@@ -243,6 +221,20 @@
 
         .btn-action { background: none; border: 1px solid var(--line); color: var(--ink); padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 500; transition: 0.2s;}
         .btn-action:hover { border-color: var(--red); color: var(--red); }
+
+        /* ── Bulk Remove Toolbar ── */
+        .bulk-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 10px 18px; background: var(--surface, #f8f8f8); border-bottom: 1px solid var(--line); gap: 12px; flex-wrap: wrap; }
+        .bulk-left { display: flex; align-items: center; gap: 12px; }
+        .bulk-select-all-label { display: flex; align-items: center; gap: 6px; font-size: 0.88rem; font-weight: 600; cursor: pointer; user-select: none; }
+        .bulk-select-all-label input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; accent-color: var(--accent, #e63946); }
+        .bulk-count { font-size: 0.82rem; color: var(--accent, #e63946); font-weight: 600; }
+        .bulk-actions { display: flex; gap: 8px; }
+        .btn-bulk-remove { background: var(--accent, #e63946); color: #fff; border: none; border-radius: 6px; padding: 7px 14px; font-size: 0.83rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+        .btn-bulk-remove:hover { opacity: 0.85; }
+        .btn-remove-all { background: none; border: 1.5px solid #e63946; color: #e63946; border-radius: 6px; padding: 7px 14px; font-size: 0.83rem; font-weight: 600; cursor: pointer; transition: 0.2s; margin-left: auto; }
+        .btn-remove-all:hover { background: #e63946; color: #fff; }
+        .fav-row td:first-child { text-align: center; }
+        .fav-checkbox { width: 16px; height: 16px; cursor: pointer; accent-color: var(--accent, #e63946); }
 
         /* ── TELEGRAM STYLE THEME TOGGLE ── */
         .theme-switch {
@@ -256,38 +248,8 @@
             justify-content: center; font-size: 0.75rem;
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        [data-theme="dark"] .theme-switch { background-color: var(--accent); box-shadow: 0 0 12px rgba(79,142,255,.35); }
+        [data-theme="dark"] .theme-switch { background-color: var(--accent); }
         [data-theme="dark"] .theme-switch-thumb { transform: translateX(24px); background-color: var(--bg2); }
-        /* Dark mode: overall body & container premium feel */
-        [data-theme="dark"] body {
-            background: radial-gradient(ellipse at 20% 0%, rgba(79,142,255,.06) 0%, transparent 55%),
-                        radial-gradient(ellipse at 85% 80%, rgba(45,212,168,.04) 0%, transparent 50%),
-                        var(--bg2);
-        }
-        [data-theme="dark"] input, [data-theme="dark"] select, [data-theme="dark"] textarea {
-            background: rgba(14,18,40,.9);
-            border-color: rgba(79,142,255,.18);
-            color: var(--ink2);
-        }
-        [data-theme="dark"] input:focus, [data-theme="dark"] select:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(79,142,255,.2);
-        }
-        [data-theme="dark"] .replace-dropdown {
-            background: rgba(10,13,28,.98);
-            border-color: rgba(79,142,255,.18);
-            box-shadow: 0 16px 50px rgba(0,0,0,.65), 0 0 0 1px rgba(79,142,255,.1);
-        }
-        [data-theme="dark"] .replace-item:hover { background: rgba(79,142,255,.08); }
-        [data-theme="dark"] .replace-dropdown-header { background: rgba(79,142,255,.07); color: #7ab4ff; }
-        [data-theme="dark"] .chat-box {
-            background: linear-gradient(145deg, rgba(14,18,40,.98) 0%, rgba(10,13,28,.98) 100%);
-            border-color: rgba(79,142,255,.15);
-            box-shadow: 0 24px 80px rgba(0,0,0,.7), 0 0 0 1px rgba(79,142,255,.12);
-        }
-        [data-theme="dark"] .chat-left { background: rgba(10,13,28,.8); border-right-color: rgba(79,142,255,.12); }
-        [data-theme="dark"] .bubble-left { background: rgba(20,24,52,.9); border-color: rgba(79,142,255,.12); }
-        [data-theme="dark"] .bubble-right { background: rgba(79,142,255,.15); border-color: rgba(79,142,255,.25); }
 
         /* Container styling to match your dark theme */
         /* Container styling adapting to Light/Dark Mode */
@@ -595,7 +557,7 @@
             </div>
             <!-- ── END NOTIFICATION BELL ── -->
 
-            <button class="btn btn-outline" onclick="window.location.href='properties?tab=browse'">🏠 Browse Properties</button>
+            <button class="btn btn-outline" onclick="window.location.href='properties'">🏠 Browse Properties</button>
             <form action="logout" method="post" style="display:inline;">
                 <button type="submit" class="btn" style="background: var(--red);">Logout</button>
             </form>
@@ -642,10 +604,6 @@
 
             <button type="submit" id="saveProfileBtn" class="save-btn" style="display: none;">Save Changes</button>
         </form>
-
-        <c:if test="${param.profile == 'success'}">
-            <div class="flash-alert flash-success" style="margin-top: 15px; text-align: center;">✅ Profile credentials updated successfully!</div>
-        </c:if>
         <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--line); text-align: center;">
                     <form action="DeleteAccountServlet" method="POST" style="margin: 0;" onsubmit="return confirm('⚠️ WARNING: Are you absolutely sure you want to permanently delete your account? This action cannot be undone and you will lose all saved properties.');">
                         <input type="hidden" name="userEmail" value="<%= session.getAttribute("loggedEmail") %>">
@@ -718,9 +676,34 @@
             <div class="flash-alert flash-warn">⚠️ The selected property is sold or unavailable.</div>
         </c:if>
 
+        <%-- ── BULK ACTION TOOLBAR ── --%>
+        <c:if test="${not empty savedProperties}">
+        <div class="bulk-toolbar" id="bulkToolbar">
+            <div class="bulk-left">
+                <label class="bulk-select-all-label">
+                    <input type="checkbox" id="selectAllFavs" onchange="toggleSelectAll(this)">
+                    <span>Select All</span>
+                </label>
+                <span class="bulk-count" id="bulkCount" style="display:none;">0 selected</span>
+            </div>
+            <div class="bulk-actions" id="bulkActions" style="display:none;">
+                <button class="btn-bulk-remove" onclick="bulkRemoveSelected()">🗑️ Remove Selected</button>
+            </div>
+            <button class="btn-remove-all" onclick="bulkRemoveAll()">🗑️ Remove All</button>
+        </div>
+        </c:if>
+        <%-- ── END BULK TOOLBAR ── --%>
+
+        <%-- Hidden bulk-remove form submitted by JS --%>
+        <form id="bulkRemoveForm" action="bulkRemoveFavorite" method="post" style="display:none;">
+            <input type="hidden" name="mode" id="bulkMode" value="selected">
+            <div id="bulkHiddenIds"></div>
+        </form>
+
         <table>
             <thead>
                 <tr>
+                    <c:if test="${not empty savedProperties}"><th style="width:36px;"></th></c:if>
                     <th>Property</th>
                     <th>Location</th>
                     <th>Price</th>
@@ -734,7 +717,10 @@
                 <c:choose>
                     <c:when test="${not empty savedProperties}">
                         <c:forEach var="p" items="${savedProperties}">
-                            <tr>
+                            <tr class="fav-row" id="row-${p.id}">
+                                <td>
+                                    <input type="checkbox" class="fav-checkbox" value="${p.id}" onchange="updateBulkCount()">
+                                </td>
                                 <td class="prop-title-cell">
                                     <img src="${p.imageUrl}" class="prop-thumb" alt="House">
                                     <div>
@@ -743,7 +729,7 @@
                                     </div>
                                 </td>
                                 <td>📍 ${p.location}</td>
-                                <td style="font-weight: 600; color: var(--accent);">LKR <fmt:formatNumber value="${p.price}" pattern="#,##0.00" /><c:if test="${p.status == 'For Rent'}"><span style="font-size:0.75em; font-weight:400; opacity:0.65;">/day</span></c:if></td>
+                                <td style="font-weight: 600; color: var(--accent);">$<fmt:formatNumber value="${p.price}" pattern="#,##0.00" /><c:if test="${p.status == 'For Rent'}"><span style="font-size:0.75em; font-weight:400; opacity:0.65;">/day</span></c:if></td>
                                 <td>${p.type}</td>
                                 <td>${p.bedrooms}</td>
                                 <td>${p.bathrooms}</td>
@@ -756,7 +742,7 @@
                                                 class="btn-replace"
                                                 title="Replace this property"
                                                 onclick="toggleReplaceDropdown('${p.id}', event)">
-                                            &#x21C4;<%-- ⇄ two-sided arrow --%>
+                                            &#x21C4;
                                         </button>
 
                                         <div class="replace-dropdown" id="rd-${p.id}">
@@ -801,12 +787,64 @@
                         </c:forEach>
                     </c:when>
                     <c:otherwise>
-                        <tr><td colspan="7" style="text-align:center; padding: 40px; color: var(--ink); opacity: 0.6;">You haven't saved any properties yet. Go browse the listings!</td></tr>
+                        <tr><td colspan="8" style="text-align:center; padding: 40px; color: var(--ink); opacity: 0.6;">You haven't saved any properties yet. Go browse the listings!</td></tr>
                     </c:otherwise>
                 </c:choose>
             </tbody>
         </table>
     </div>
+
+    <%-- ── BULK REMOVE JS ── --%>
+    <script>
+        function toggleSelectAll(master) {
+            document.querySelectorAll('.fav-checkbox').forEach(cb => cb.checked = master.checked);
+            updateBulkCount();
+        }
+
+        function updateBulkCount() {
+            const checked = document.querySelectorAll('.fav-checkbox:checked');
+            const countEl = document.getElementById('bulkCount');
+            const actionsEl = document.getElementById('bulkActions');
+            const masterCb = document.getElementById('selectAllFavs');
+            const total = document.querySelectorAll('.fav-checkbox').length;
+
+            countEl.style.display = checked.length > 0 ? 'inline' : 'none';
+            countEl.textContent = checked.length + ' selected';
+            actionsEl.style.display = checked.length > 0 ? 'flex' : 'none';
+            masterCb.indeterminate = checked.length > 0 && checked.length < total;
+            masterCb.checked = checked.length === total;
+        }
+
+        function bulkRemoveSelected() {
+            const checked = document.querySelectorAll('.fav-checkbox:checked');
+            if (checked.length === 0) return;
+            if (!confirm('Remove ' + checked.length + ' selected propert' + (checked.length > 1 ? 'ies' : 'y') + ' from your saved list?')) return;
+
+            const form = document.getElementById('bulkRemoveForm');
+            const container = document.getElementById('bulkHiddenIds');
+            container.innerHTML = '';
+            document.getElementById('bulkMode').value = 'selected';
+
+            checked.forEach(cb => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'selectedIds';
+                input.value = cb.value;
+                container.appendChild(input);
+            });
+
+            form.submit();
+        }
+
+        function bulkRemoveAll() {
+            const total = document.querySelectorAll('.fav-checkbox').length;
+            if (!confirm('Remove all ' + total + ' saved propert' + (total > 1 ? 'ies' : 'y') + '? This cannot be undone.')) return;
+            document.getElementById('bulkMode').value = 'all';
+            document.getElementById('bulkHiddenIds').innerHTML = '';
+            document.getElementById('bulkRemoveForm').submit();
+        }
+    </script>
+    <%-- ── END BULK REMOVE JS ── --%>
 
     <div class="card">
         <div class="card-header">
@@ -927,12 +965,12 @@
                         <div style="font-weight:700;color:var(--red);font-size:0.95rem;margin-bottom:4px;">Overdue Penalty Active — "${bk.propertyTitle}"</div>
                         <div style="font-size:0.83rem;color:var(--ink);line-height:1.6;">
                             Your return date of <strong>${bk.returnDate}</strong> has passed.
-                            A penalty of <strong>LKR <fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" /> per day</strong>
+                            A penalty of <strong>$<fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" /> per day</strong>
                             (equal to the property's daily rental rate) is being charged for each overdue day.
                             <c:if test="${not empty bk.daysOverdue}">
                                 You are currently <strong>${bk.daysOverdue} day(s) overdue</strong>.
                             </c:if>
-                            Total penalty so far: <strong style="color:var(--red);">LKR <fmt:formatNumber value="${bk.penaltyFee}" pattern="#,##0.00" /></strong>.
+                            Total penalty so far: <strong style="color:var(--red);">$<fmt:formatNumber value="${bk.penaltyFee}" pattern="#,##0.00" /></strong>.
                             Please contact the seller <strong>${bk.sellerName}</strong> immediately to settle the outstanding amount.
                         </div>
                     </div>
@@ -994,7 +1032,7 @@
                                         </c:when>
                                         <c:otherwise>
                                             <div style="font-weight:600;color:var(--accent);">
-                                                LKR <fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" />/day
+                                                $<fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" />/day
                                             </div>
                                             <div style="font-size:0.72rem;opacity:0.6;margin-top:1px;">penalty rate</div>
                                         </c:otherwise>
@@ -1003,9 +1041,9 @@
                                 <td>
                                     <c:choose>
                                         <c:when test="${bk.penaltyFee != '0.00'}">
-                                            <div style="color:var(--red); font-weight:700;">LKR <fmt:formatNumber value="${bk.penaltyFee}" pattern="#,##0.00" /></div>
+                                            <div style="color:var(--red); font-weight:700;">$<fmt:formatNumber value="${bk.penaltyFee}" pattern="#,##0.00" /></div>
                                             <c:if test="${not empty bk.daysOverdue}">
-                                                <div style="font-size:0.72rem;color:var(--red);margin-top:2px;">${bk.daysOverdue} × LKR <fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" /></div>
+                                                <div style="font-size:0.72rem;color:var(--red);margin-top:2px;">${bk.daysOverdue} × $<fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" /></div>
                                             </c:if>
                                         </c:when>
                                         <c:otherwise>
