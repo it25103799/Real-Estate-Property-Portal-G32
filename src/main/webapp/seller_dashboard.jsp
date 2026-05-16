@@ -587,6 +587,16 @@
                 <div class="stat-value">${not empty analyticsViews ? analyticsViews : 0}</div>
                 <div class="stat-label">Total Listing Views</div>
             </div>
+            <div class="stat-card" style="--card-accent:#f59e0b;">
+                <div class="stat-icon" style="background:rgba(245,158,11,0.10);">📩</div>
+                <div class="stat-value">${not empty analyticsInquiries ? analyticsInquiries : 0}</div>
+                <div class="stat-label">Total Inquiries</div>
+            </div>
+            <div class="stat-card" style="--card-accent:#0d9e6e;">
+                <div class="stat-icon" style="background:rgba(13,158,110,0.10);">📋</div>
+                <div class="stat-value">${not empty analyticsBookings ? analyticsBookings : 0}</div>
+                <div class="stat-label">Total Bookings</div>
+            </div>
             <div class="stat-card" style="--card-accent:#ec4899;">
                 <div class="stat-icon" style="background:rgba(236,72,153,0.10);">❤️</div>
                 <div class="stat-value">${not empty analyticsFavorites ? analyticsFavorites : 0}</div>
@@ -776,113 +786,6 @@
         </div>
     </div>
 
-    <div class="card" id="reviews-section">
-        <h3 class="card-title">💬 Buyer Reviews</h3>
-        <p style="color: var(--ink); opacity: 0.7; font-size: 0.9rem; margin-top: -16px; margin-bottom: 24px;">
-            Reviews posted by buyers for your properties.
-        </p>
-
-        <c:choose>
-            <c:when test="${empty myProperties}">
-                <div style="text-align:center; padding: 40px; background: var(--bg2); border-radius: var(--r); border: 2px dashed var(--line);">
-                    <div style="font-size: 3rem; margin-bottom: 12px;">🏠</div>
-                    <div style="font-weight: 600; margin-bottom: 6px;">No Properties Yet</div>
-                    <div style="opacity: 0.7; font-size: 0.9rem;">Add a property to start receiving reviews from buyers.</div>
-                </div>
-            </c:when>
-            <c:otherwise>
-                <div style="display:flex; flex-direction:column; gap: 24px;">
-                    <c:forEach var="p" items="${myProperties}">
-                        <!-- Property Card -->
-                        <div style="border: 1px solid var(--line); border-radius: var(--r); background: var(--bg); overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: box-shadow 0.3s ease;"
-                             onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,0.08)'"
-                             onmouseout="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.04)'">
-
-                            <!-- Property Header -->
-                            <div style="background: linear-gradient(135deg, rgba(26,86,219,0.05) 0%, rgba(13,158,110,0.05) 100%); padding: 18px 20px; border-bottom: 1px solid var(--line);">
-                                <div style="display:flex; justify-content:space-between; align-items:center; gap: 12px; flex-wrap: wrap;">
-                                    <div>
-                                        <div style="font-weight: 800; font-size: 1.05rem; color: var(--ink);">${p.title}</div>
-                                        <div style="font-size: 0.82rem; opacity: 0.7; margin-top: 4px; display: flex; align-items: center; gap: 8px;">
-                                            <span>🆔 ${p.id}</span>
-                                            <span>•</span>
-                                            <span>📍 ${p.location}</span>
-                                            <span>•</span>
-                                            <span>🏷️ ${p.type}</span>
-                                        </div>
-                                    </div>
-                                    <c:set var="revList" value="${reviewsByProperty[p.id]}"/>
-                                    <div style="background: var(--accent); color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.78rem; font-weight: 700;">
-                                        ${not empty revList ? revList.size() : 0} Review${not empty revList && revList.size() != 1 ? 's' : ''}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Reviews List -->
-                            <div style="padding: 20px;">
-                                <c:choose>
-                                    <c:when test="${empty revList}">
-                                        <div style="text-align: center; padding: 32px 20px; background: var(--bg2); border-radius: 8px; border: 1px dashed var(--line);">
-                                            <div style="font-size: 2.5rem; margin-bottom: 10px;">⭐</div>
-                                            <div style="font-weight: 600; margin-bottom: 4px;">No Reviews Yet</div>
-                                            <div style="font-size: 0.85rem; opacity: 0.7;">Be patient! Buyers will leave reviews after viewing this property.</div>
-                                        </div>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <div style="display:flex; flex-direction:column; gap: 14px;">
-                                            <c:forEach var="r" items="${revList}">
-                                                <!-- Individual Review Card -->
-                                                <div style="padding: 16px 18px; border-radius: 10px; background: var(--bg2); border: 1.5px solid var(--line); transition: all 0.2s ease;"
-                                                     onmouseover="this.style.borderColor='var(--accent)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(26,86,219,0.1)'"
-                                                     onmouseout="this.style.borderColor='var(--line)'; this.style.transform='translateY(0)'; this.style.boxShadow='none'">
-
-                                                    <!-- Review Header -->
-                                                    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap: 12px; margin-bottom: 12px; flex-wrap: wrap;">
-                                                        <div style="display: flex; align-items: center; gap: 10px;">
-                                                            <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), #1041b0); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.1rem; flex-shrink: 0;">
-                                                                ${fn:substring(r.buyerName, 0, 1)}
-                                                            </div>
-                                                            <div>
-                                                                <div style="font-weight: 700; font-size: 0.95rem; color: var(--ink);"><c:out value="${r.buyerName}"/></div>
-                                                                <div style="font-size: 0.75rem; opacity: 0.6; margin-top: 2px;">Verified Buyer ✓</div>
-                                                            </div>
-                                                        </div>
-                                                        <div style="display: flex; align-items: center; gap: 12px;">
-                                                            <div style="display: flex; align-items: center; gap: 4px; background: rgba(217,119,6,0.1); padding: 6px 12px; border-radius: 20px; border: 1px solid rgba(217,119,6,0.2);">
-                                                                <span style="color: #d97706; letter-spacing: 1px; font-size: 0.95rem;">
-                                                                    <c:forEach begin="1" end="${r.rating}" var="i">★</c:forEach>
-                                                                    <c:forEach begin="1" end="${5 - r.rating}" var="i">☆</c:forEach>
-                                                                </span>
-                                                                <span style="font-weight: 700; color: #d97706; font-size: 0.85rem;">${r.rating}.0</span>
-                                                            </div>
-                                                            <form action="deleteReview" method="post" onsubmit="return confirm('Are you sure you want to delete this review? This action cannot be undone.');" style="margin: 0;">
-                                                                <input type="hidden" name="reviewId" value="${r.reviewID}">
-                                                                <button type="submit" class="btn-edit" style="color: var(--red); border-color: var(--red); padding: 6px 12px; font-size: 0.78rem;" title="Delete this review">
-                                                                    🗑️ Delete
-                                                                </button>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Review Comment -->
-                                                    <div style="background: var(--bg); padding: 14px 16px; border-radius: 8px; border-left: 3px solid var(--accent);">
-                                                        <div style="font-size: 0.88rem; line-height: 1.6; color: var(--ink); opacity: 0.9; white-space: pre-wrap;">
-                                                            <c:out value="${r.comment}"/>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </c:forEach>
-                                        </div>
-                                    </c:otherwise>
-                                </c:choose>
-                            </div>
-                        </div>
-                    </c:forEach>
-                </div>
-            </c:otherwise>
-        </c:choose>
-    </div>
-
     <!-- ── ACTIVE BOOKINGS ──────────────────────────────────────────────── -->
     <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
@@ -974,14 +877,14 @@
         </table>
         </div>
     </div>
-
+    
     <!-- ── COMPLETED BOOKINGS ───────────────────────────────────────────── -->
     <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
             <h3 class="card-title" style="margin:0;">Completed Transactions</h3>
             <span style="font-size:0.85rem; opacity:0.65;">${completedBookings.size()} completed</span>
         </div>
-
+    
         <c:if test="${param.delete == 'success'}">
             <div style="background:rgba(13,158,110,0.1);border:1px solid rgba(13,158,110,0.3);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:0.9rem;color:#0d9e6e;font-weight:600;">
                 ✅ Completed transaction removed successfully!
@@ -989,10 +892,10 @@
         </c:if>
         <c:if test="${param.delete == 'error'}">
             <div style="background:rgba(224,40,40,0.1);border:1px solid rgba(224,40,40,0.3);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:0.9rem;color:#c0392b;font-weight:600;">
-                ️ Failed to remove transaction. Please try again.
+                ⚠️ Failed to remove transaction. Please try again.
             </div>
         </c:if>
-
+    
         <div class="table-responsive">
         <table>
             <thead>
@@ -1055,6 +958,113 @@
             </tbody>
         </table>
         </div>
+    </div>
+    
+    <div class="card" id="reviews-section">
+        <h3 class="card-title">💬 Buyer Reviews</h3>
+        <p style="color: var(--ink); opacity: 0.7; font-size: 0.9rem; margin-top: -16px; margin-bottom: 24px;">
+            Reviews posted by buyers for your properties.
+        </p>
+    
+        <c:choose>
+            <c:when test="${empty myProperties}">
+                <div style="text-align:center; padding: 40px; background: var(--bg2); border-radius: var(--r); border: 2px dashed var(--line);">
+                    <div style="font-size: 3rem; margin-bottom: 12px;">🏠</div>
+                    <div style="font-weight: 600; margin-bottom: 6px;">No Properties Yet</div>
+                    <div style="opacity: 0.7; font-size: 0.9rem;">Add a property to start receiving reviews from buyers.</div>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <div style="display:flex; flex-direction:column; gap: 24px;">
+                    <c:forEach var="p" items="${myProperties}">
+                        <!-- Property Card -->
+                        <div style="border: 1px solid var(--line); border-radius: var(--r); background: var(--bg); overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: box-shadow 0.3s ease;"
+                             onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,0.08)'"
+                             onmouseout="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.04)'">
+    
+                            <!-- Property Header -->
+                            <div style="background: linear-gradient(135deg, rgba(26,86,219,0.05) 0%, rgba(13,158,110,0.05) 100%); padding: 18px 20px; border-bottom: 1px solid var(--line);">
+                                <div style="display:flex; justify-content:space-between; align-items:center; gap: 12px; flex-wrap: wrap;">
+                                    <div>
+                                        <div style="font-weight: 800; font-size: 1.05rem; color: var(--ink);">${p.title}</div>
+                                        <div style="font-size: 0.82rem; opacity: 0.7; margin-top: 4px; display: flex; align-items: center; gap: 8px;">
+                                            <span>🆔 ${p.id}</span>
+                                            <span>•</span>
+                                            <span>📍 ${p.location}</span>
+                                            <span>•</span>
+                                            <span>🏷️ ${p.type}</span>
+                                        </div>
+                                    </div>
+                                    <c:set var="revList" value="${reviewsByProperty[p.id]}"/>
+                                    <div style="background: var(--accent); color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.78rem; font-weight: 700;">
+                                        ${not empty revList ? revList.size() : 0} Review${not empty revList && revList.size() != 1 ? 's' : ''}
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <!-- Reviews List -->
+                            <div style="padding: 20px;">
+                                <c:choose>
+                                    <c:when test="${empty revList}">
+                                        <div style="text-align: center; padding: 32px 20px; background: var(--bg2); border-radius: 8px; border: 1px dashed var(--line);">
+                                            <div style="font-size: 2.5rem; margin-bottom: 10px;">⭐</div>
+                                            <div style="font-weight: 600; margin-bottom: 4px;">No Reviews Yet</div>
+                                            <div style="font-size: 0.85rem; opacity: 0.7;">Be patient! Buyers will leave reviews after viewing this property.</div>
+                                        </div>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <div style="display:flex; flex-direction:column; gap: 14px;">
+                                            <c:forEach var="r" items="${revList}">
+                                                <!-- Individual Review Card -->
+                                                <div style="padding: 16px 18px; border-radius: 10px; background: var(--bg2); border: 1.5px solid var(--line); transition: all 0.2s ease;"
+                                                     onmouseover="this.style.borderColor='var(--accent)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(26,86,219,0.1)'"
+                                                     onmouseout="this.style.borderColor='var(--line)'; this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+    
+                                                    <!-- Review Header -->
+                                                    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap: 12px; margin-bottom: 12px; flex-wrap: wrap;">
+                                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                                            <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), #1041b0); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.1rem; flex-shrink: 0;">
+                                                                ${fn:substring(r.buyerName, 0, 1)}
+                                                            </div>
+                                                            <div>
+                                                                <div style="font-weight: 700; font-size: 0.95rem; color: var(--ink);"><c:out value="${r.buyerName}"/></div>
+                                                                <div style="font-size: 0.75rem; opacity: 0.6; margin-top: 2px;">Verified Buyer ✓</div>
+                                                            </div>
+                                                        </div>
+                                                        <div style="display: flex; align-items: center; gap: 12px;">
+                                                            <div style="display: flex; align-items: center; gap: 4px; background: rgba(217,119,6,0.1); padding: 6px 12px; border-radius: 20px; border: 1px solid rgba(217,119,6,0.2);">
+                                                                <span style="color: #d97706; letter-spacing: 1px; font-size: 0.95rem;">
+                                                                    <c:forEach begin="1" end="${r.rating}" var="i">★</c:forEach>
+                                                                    <c:forEach begin="1" end="${5 - r.rating}" var="i">☆</c:forEach>
+                                                                </span>
+                                                                <span style="font-weight: 700; color: #d97706; font-size: 0.85rem;">${r.rating}.0</span>
+                                                            </div>
+                                                            <form action="deleteReview" method="post" onsubmit="return confirm('Are you sure you want to delete this review? This action cannot be undone.');" style="margin: 0;">
+                                                                <input type="hidden" name="reviewId" value="${r.reviewID}">
+                                                                <button type="submit" class="btn-edit" style="color: var(--red); border-color: var(--red); padding: 6px 12px; font-size: 0.78rem;" title="Delete this review">
+                                                                    🗑️ Delete
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+    
+                                                    <!-- Review Comment -->
+                                                    <div style="background: var(--bg); padding: 14px 16px; border-radius: 8px; border-left: 3px solid var(--accent);">
+                                                        <div style="font-size: 0.88rem; line-height: 1.6; color: var(--ink); opacity: 0.9; white-space: pre-wrap;">
+                                                            <c:out value="${r.comment}"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </c:forEach>
+                                        </div>
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </div>
+            </c:otherwise>
+        </c:choose>
     </div>
 
 </div>

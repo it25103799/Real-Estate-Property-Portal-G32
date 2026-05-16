@@ -453,6 +453,7 @@ public class SellerDashboardServlet extends HttpServlet {
         int totalViews     = 0;
         int totalInquiries = 0;
         int totalFavorites = 0;
+        int totalBookings  = 0;
 
         File viewsFile = new File(getServletContext().getRealPath("/WEB-INF/property_views.txt"));
         if (viewsFile.exists()) {
@@ -492,9 +493,27 @@ public class SellerDashboardServlet extends HttpServlet {
             } catch (Exception ignored) {}
         }
 
+        File bookingsFileAnalytics = new File(getServletContext().getRealPath("/WEB-INF/bookings.txt"));
+        if (bookingsFileAnalytics.exists()) {
+            try (BufferedReader bkBr = new BufferedReader(new InputStreamReader(
+                    Files.newInputStream(Paths.get(bookingsFileAnalytics.getAbsolutePath())), StandardCharsets.UTF_8))) {
+                String bkLine;
+                while ((bkLine = bkBr.readLine()) != null) {
+                    if (bkLine.trim().isEmpty() || bkLine.trim().startsWith("#")) continue;
+                    String[] bkd = bkLine.split("\\|", -1);
+                    // Format: bookingId|propertyId|propertyTitle|sellerName|...
+                    if (bkd.length >= 4 && loggedUser.equals(bkd[3].trim())) {
+                        String pid = bkd[1].trim();
+                        if (myPropIds.contains(pid)) totalBookings++;
+                    }
+                }
+            } catch (Exception ignored) {}
+        }
+
         request.setAttribute("analyticsViews",     totalViews);
         request.setAttribute("analyticsInquiries", totalInquiries);
         request.setAttribute("analyticsFavorites", totalFavorites);
+        request.setAttribute("analyticsBookings",  totalBookings);
         // ─────────────────────────────────────────────────────────────────────
 
         request.setAttribute("myProperties", myProperties);

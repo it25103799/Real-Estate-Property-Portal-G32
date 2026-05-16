@@ -1251,7 +1251,7 @@ function showPanel(name, btn) {
     document.getElementById('panel-' + name).classList.add('active');
     if (btn) btn.classList.add('active');
     document.getElementById('topbar-title').textContent = panelTitles[name] || name;
-    if (name === 'analytics' || name === 'overview') setTimeout(buildCharts, 80);
+    if (name === 'analytics' || name === 'overview') { rebuildCharts(); }
     if (name === 'overview') { buildActivityFeed(); buildTopSellers(); }
 }
 
@@ -1413,7 +1413,7 @@ function buildTopSellers() {
         const seller = row.cells[6].textContent.trim();
         if (seller) counts[seller] = (counts[seller] || 0) + 1;
     });
-    const sorted = Object.entries(counts).sort((a,b) => b[1]-a[1]).slice(0,6);
+    const sorted = Object.entries(counts).sort((a,b) => b[1]-a[1]); // show ALL sellers, no cap
     if (sorted.length === 0) { board.innerHTML = '<div style="opacity:0.4; text-align:center; padding:24px;">No seller data available</div>'; return; }
     const max = sorted[0][1];
     board.innerHTML = sorted.map(([name,cnt], i) =>
@@ -1472,7 +1472,8 @@ function buildCharts() {
         if (m) ratingCounts[m[1]+'★']++;
     });
 
-    const top5sellers = Object.entries(sellerCounts).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    const barPalette = ['#2563eb','#059669','#d97706','#7c3aed','#dc2626','#0891b2','#be185d','#65a30d','#ea580c','#6366f1','#0f766e','#b45309'];
+    const allSellers = Object.entries(sellerCounts).sort((a,b)=>b[1]-a[1]); // ALL sellers, no cap
     const opts = { responsive:true, maintainAspectRatio:true };
     const legendOpts = { labels: { color: textColor, font: { family: 'Outfit', size: 12 }, padding: 14 } };
     const scaleOpts = (axis) => ({ ticks: { color:textColor, font:{family:'Outfit'} }, grid: { color:gridColor } });
@@ -1501,8 +1502,8 @@ function buildCharts() {
     make('bookingStatusChart', { type:'doughnut', data:{ labels:['Completed','Reserved','Cancelled'], datasets:[{data:[completed, reserved, Math.max(0,cancelled)], backgroundColor:['#059669','#2563eb','#dc2626'], borderWidth:0}] }, options:{...opts, cutout:'60%', plugins:{legend:legendOpts}} });
     make('overviewBookingStatus', { type:'doughnut', data:{ labels:['Completed','Reserved','Cancelled'], datasets:[{data:[completed, reserved, Math.max(0,cancelled)], backgroundColor:['#059669','#2563eb','#dc2626'], borderWidth:0}] }, options:{...opts, cutout:'60%', plugins:{legend:legendOpts}} });
 
-    // 6 Top sellers bar (new)
-    make('topSellersChart', { type:'bar', data:{ labels:top5sellers.map(x=>x[0]), datasets:[{label:'Listings', data:top5sellers.map(x=>x[1]), backgroundColor:['#2563eb','#059669','#d97706','#7c3aed','#dc2626'], borderRadius:6}] }, options:{...opts, indexAxis:'y', plugins:{legend:{display:false}}, scales:{x:{...scaleOpts(), ticks:{...scaleOpts().ticks, stepSize:1}}, y:scaleOpts()}} });
+    // 6 Top sellers bar — shows every seller, no arbitrary cap
+    make('topSellersChart', { type:'bar', data:{ labels:allSellers.map(x=>x[0]), datasets:[{label:'Listings', data:allSellers.map(x=>x[1]), backgroundColor:allSellers.map((_,i)=>barPalette[i % barPalette.length]), borderRadius:6}] }, options:{...opts, indexAxis:'y', plugins:{legend:{display:false}}, scales:{x:{...scaleOpts(), ticks:{...scaleOpts().ticks, stepSize:1}}, y:scaleOpts()}} });
 }
 
 /* ─── MODAL HELPERS ─── */

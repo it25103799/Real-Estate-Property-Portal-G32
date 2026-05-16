@@ -194,7 +194,7 @@
                             </td>
                             <td>
                                 <strong style="color:var(--accent);">
-                                    $<fmt:formatNumber value="${row.price}" pattern="#,##0"/>
+                                    LKR <fmt:formatNumber value="${row.price}" pattern="#,##0"/>
                                 </strong>
                             </td>
                             <td>
