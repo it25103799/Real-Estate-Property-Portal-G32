@@ -151,6 +151,80 @@ public class PropertyServlet extends HttpServlet {
         }
         request.setAttribute("recentlySold", recentlySold);
 
+        // 2.6 COMPUTE MARKET STATS FOR "THIS WEEK" FLOATING CARD
+        // Reads sold_properties.txt, computes avg sale price this week and % change vs last week
+        try {
+            java.time.LocalDate today = java.time.LocalDate.now();
+            java.time.LocalDate weekStart = today.minusDays(6);        // last 7 days = "this week"
+            java.time.LocalDate prevWeekStart = today.minusDays(13);   // prior 7 days = "last week"
+
+            double thisWeekSum = 0; int thisWeekCount = 0;
+            double lastWeekSum = 0; int lastWeekCount = 0;
+
+            // Re-read sold_properties.txt for stats (soldFile already resolved above)
+            if (soldFile.exists()) {
+                try (java.io.BufferedReader br2 = new java.io.BufferedReader(
+                        new java.io.InputStreamReader(new java.io.FileInputStream(soldFile), "UTF-8"))) {
+                    String ln;
+                    java.time.format.DateTimeFormatter dtFmt =
+                            java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                    while ((ln = br2.readLine()) != null) {
+                        if (ln.trim().isEmpty() || ln.startsWith("#")) continue;
+                        String[] pts = ln.split("\\|", -1);
+                        if (pts.length < 4) continue;
+                        try {
+                            java.time.LocalDate saleDate = java.time.LocalDate.parse(
+                                    pts[0].trim().substring(0, 10));
+                            double price = Double.parseDouble(pts[3].trim());
+                            if (!saleDate.isBefore(weekStart) && !saleDate.isAfter(today)) {
+                                thisWeekSum += price; thisWeekCount++;
+                            } else if (!saleDate.isBefore(prevWeekStart) && saleDate.isBefore(weekStart)) {
+                                lastWeekSum += price; lastWeekCount++;
+                            }
+                        } catch (Exception ignored) {}
+                    }
+                }
+            }
+
+            double thisWeekAvg = thisWeekCount > 0 ? thisWeekSum / thisWeekCount : 0;
+            double lastWeekAvg = lastWeekCount > 0 ? lastWeekSum / lastWeekCount : 0;
+
+            // Format average as human-readable (e.g. LKR 4.2M, LKR 750K, LKR 56,000)
+            String avgFormatted;
+            if (thisWeekAvg >= 1_000_000) {
+                avgFormatted = String.format("LKR %.1fM", thisWeekAvg / 1_000_000.0);
+            } else if (thisWeekAvg >= 1_000) {
+                avgFormatted = String.format("LKR %.1fK", thisWeekAvg / 1_000.0);
+            } else if (thisWeekAvg > 0) {
+                avgFormatted = String.format("LKR %,.0f", thisWeekAvg);
+            } else {
+                avgFormatted = "LKR —";
+            }
+
+            // Percent change vs last week
+            String changeBadge;
+            if (thisWeekCount == 0) {
+                changeBadge = "No sales this week";
+            } else if (lastWeekCount == 0) {
+                changeBadge = thisWeekCount + " sale" + (thisWeekCount > 1 ? "s" : "") + " this week";
+            } else {
+                double pct = ((thisWeekAvg - lastWeekAvg) / lastWeekAvg) * 100.0;
+                String arrow = pct >= 0 ? "↑" : "↓";
+                changeBadge = String.format("%s %.1f%% vs last week", arrow, Math.abs(pct));
+            }
+
+            request.setAttribute("weekAvgPrice", avgFormatted);
+            request.setAttribute("weekChangeBadge", changeBadge);
+            request.setAttribute("weekIsUp", thisWeekCount > 0 && lastWeekCount > 0
+                    && thisWeekAvg >= lastWeekAvg);
+            request.setAttribute("weekHasSales", thisWeekCount > 0);
+        } catch (Exception e) {
+            request.setAttribute("weekAvgPrice", "LKR —");
+            request.setAttribute("weekChangeBadge", "No data");
+            request.setAttribute("weekIsUp", false);
+            request.setAttribute("weekHasSales", false);
+        }
+
         // 3. LOAD NOTIFICATIONS (inquiry messages -> bell icon)
         HttpSession session = request.getSession(false);
         String loggedUser = (session != null) ? (String) session.getAttribute("loggedUser") : null;

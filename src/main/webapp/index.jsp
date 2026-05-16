@@ -51,28 +51,28 @@
             --bg:       #ffffff;
             --bg2:      #f7f8fa;
             --bg3:      #eef0f4;
-            
+
             /* Premium Accent Colors - Royal Blue Palette */
             --accent:   #2563eb;
             --accent2:  #1d4ed8;
             --accent-l: #eff6ff;
             --accent-glow: rgba(37, 99, 235, 0.15);
-            
+
             /* Success Green - Emerald */
             --green:    #059669;
             --green-l:  #ecfdf5;
             --green-glow: rgba(5, 150, 105, 0.15);
-            
+
             /* Warning Amber - Golden */
             --amber:    #d97706;
             --amber-l:  #fffbeb;
             --amber-glow: rgba(217, 119, 6, 0.15);
-            
+
             /* Error Red - Rose */
             --red:      #dc2626;
             --red-l:    #fef2f2;
             --red-glow: rgba(220, 38, 38, 0.15);
-            
+
             /* Shadows & Effects */
             --r: 10px;
             --r2: 16px;
@@ -92,38 +92,38 @@
             --bg:        #0a0e1a;
             --bg2:       #111827;
             --bg3:       #1f2937;
-            
+
             /* Light Text on Dark */
             --ink:       #f9fafb;
             --ink2:      #e5e7eb;
             --ink3:      #9ca3af;
             --ink4:      #6b7280;
-            
+
             /* Subtle Borders */
             --line:      #1f2937;
             --line2:     #374151;
-            
+
             /* Premium Accent Colors - Vibrant Blue */
             --accent:    #3b82f6;
             --accent2:   #2563eb;
             --accent-l:  rgba(59, 130, 246, 0.15);
             --accent-glow: rgba(59, 130, 246, 0.25);
-            
+
             /* Success Green - Bright Emerald */
             --green:     #10b981;
             --green-l:   rgba(16, 185, 129, 0.15);
             --green-glow: rgba(16, 185, 129, 0.25);
-            
+
             /* Warning Amber - Vibrant Gold */
             --amber:     #f59e0b;
             --amber-l:   rgba(245, 158, 11, 0.15);
             --amber-glow: rgba(245, 158, 11, 0.25);
-            
+
             /* Error Red - Bright Rose */
             --red:       #ef4444;
             --red-l:     rgba(239, 68, 68, 0.15);
             --red-glow:  rgba(239, 68, 68, 0.25);
-            
+
             /* Enhanced Shadows for Depth */
             --shadow-sm: 0 1px 4px rgba(0,0,0,.5), 0 1px 2px rgba(0,0,0,.3);
             --shadow:    0 4px 20px rgba(0,0,0,.6), 0 1px 6px rgba(0,0,0,.35);
@@ -195,7 +195,7 @@
             transition: all var(--t);
             box-shadow: 0 1px 0 rgba(0,0,0,0.05);
         }
-        .navbar.scrolled { 
+        .navbar.scrolled {
             box-shadow: var(--shadow-lg), 0 0 0 1px var(--accent-glow);
             background: rgba(255,255,255,.98);
         }
@@ -228,15 +228,15 @@
             transition: all var(--t);
             backdrop-filter: blur(8px);
         }
-        .btn-ghost:hover { 
-            border-color: var(--accent); 
+        .btn-ghost:hover {
+            border-color: var(--accent);
             background: var(--accent-l);
             color: var(--accent);
             box-shadow: 0 2px 8px var(--accent-glow);
         }
         .btn-primary {
             font-size: .875rem; font-weight: 600;
-            color: #fff; 
+            color: #fff;
             background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
             padding: 8px 20px; border-radius: var(--r);
             border: 1.5px solid transparent;
@@ -244,9 +244,9 @@
             display: flex; align-items: center; gap: 6px;
             box-shadow: 0 4px 14px var(--accent-glow);
         }
-        .btn-primary:hover { 
+        .btn-primary:hover {
             background: linear-gradient(135deg, var(--accent2) 0%, var(--accent) 100%);
-            transform: translateY(-2px); 
+            transform: translateY(-2px);
             box-shadow: 0 6px 20px var(--accent-glow), 0 0 0 1px rgba(255,255,255,0.1) inset;
         }
         .btn-primary:active { transform: translateY(0); }
@@ -507,10 +507,10 @@
             text-transform: uppercase; color: var(--accent);
             display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
         }
-        .section-tag::before { 
-            content:''; 
-            width: 24px; 
-            height: 3px; 
+        .section-tag::before {
+            content:'';
+            width: 24px;
+            height: 3px;
             background: linear-gradient(90deg, var(--accent) 0%, var(--accent2) 100%);
             border-radius: 99px;
             box-shadow: 0 2px 6px var(--accent-glow);
@@ -1209,7 +1209,7 @@
         .pcp-specs { display: flex; gap: 8px; font-size: .72rem; color: var(--ink3); }
 
         /* ── WHY SECTION ── */
-        .why-section { 
+        .why-section {
             background: linear-gradient(135deg, #0f1117 0%, #1a1d27 100%);
             padding: 96px 40px;
             position: relative;
@@ -1234,7 +1234,7 @@
             border: 1px solid rgba(255,255,255,0.05);
             backdrop-filter: blur(10px);
         }
-        .why-card:hover { 
+        .why-card:hover {
             background: rgba(255,255,255,.08);
             border-color: rgba(59,130,246,0.3);
             box-shadow: 0 8px 32px rgba(0,0,0,0.3), 0 0 0 1px var(--accent-glow);
@@ -1261,7 +1261,7 @@
             border: 1.5px solid var(--line);
             box-shadow: var(--shadow-sm);
         }
-        .testi-card:hover { 
+        .testi-card:hover {
             box-shadow: var(--shadow-xl), 0 0 0 1px var(--accent-glow);
             transform: translateY(-4px) scale(1.02);
             background: linear-gradient(135deg, var(--bg) 0%, var(--bg2) 100%);
@@ -1279,7 +1279,7 @@
         .testi-role { font-size: .75rem; color: var(--ink4); margin-top: 1px; }
 
         /* ── FOOTER (PREMIUM DARK) ── */
-        .footer { 
+        .footer {
             background: linear-gradient(135deg, #0f1117 0%, #1a1d27 100%);
             border-top: 1px solid rgba(255,255,255,0.08);
             padding: 64px 40px 32px;
@@ -1309,9 +1309,9 @@
             transition: all var(--t); cursor: pointer;
             box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
-        .social-btn:hover { 
+        .social-btn:hover {
             background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
-            color: white; 
+            color: white;
             border-color: var(--accent);
             box-shadow: 0 4px 16px var(--accent-glow), 0 0 0 1px rgba(255,255,255,0.2) inset;
             transform: translateY(-2px);
@@ -2019,12 +2019,27 @@
                 </div>
             </div>
 
-            <!-- Floating Card 2: Market Stats -->
+            <!-- Floating Card 2: Market Stats (live from sold_properties.txt) -->
             <div class="hero-card-float hcf-2">
                 <div class="hcf-label">This Week</div>
-                <div class="hcf-value" style="font-size:1.4rem;font-family:var(--font-serif)">LKR 4.2M</div>
+                <div class="hcf-value" style="font-size:1.4rem;font-family:var(--font-serif)">
+                    <c:choose>
+                        <c:when test="${not empty weekAvgPrice}">${weekAvgPrice}</c:when>
+                        <c:otherwise>LKR —</c:otherwise>
+                    </c:choose>
+                </div>
                 <div class="hcf-sub">Avg. Sale Price</div>
-                <span class="hcf-badge badge-amber">↑ 12% vs last month</span>
+                <c:choose>
+                    <c:when test="${weekIsUp}">
+                        <span class="hcf-badge badge-amber">${weekChangeBadge}</span>
+                    </c:when>
+                    <c:when test="${not weekHasSales}">
+                        <span class="hcf-badge" style="background:#f1f5f9;color:#64748b;">${weekChangeBadge}</span>
+                    </c:when>
+                    <c:otherwise>
+                        <span class="hcf-badge" style="background:#fee2e2;color:#dc2626;">${weekChangeBadge}</span>
+                    </c:otherwise>
+                </c:choose>
             </div>
 
             <!-- Floating Card 3: Recently Sold -->
@@ -2206,7 +2221,7 @@
             <!-- Decorative Background Elements -->
             <div style="position: absolute; top: -50%; right: -10%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); border-radius: 50%;"></div>
             <div style="position: absolute; bottom: -30%; left: -5%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%); border-radius: 50%;"></div>
-            
+
             <div class="container" style="position: relative; z-index: 1;">
                 <div style="text-align: center; max-width: 700px; margin: 0 auto;">
                     <div style="font-size: 3rem; margin-bottom: 20px; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));">🏠✨</div>
