@@ -298,6 +298,7 @@
             align-items: center;
             gap: 16px;
             transition: all 0.3s ease;
+            min-height: 80px;
         }
         [data-theme="dark"] .stat-card {
             box-shadow: 0 4px 20px rgba(0,0,0,0.25), 0 0 0 1px rgba(255,255,255,0.03);
@@ -324,12 +325,14 @@
         .stat-icon.total   { background: rgba(26,86,219,0.10); }
         .stat-icon.booked  { background: rgba(245,158,11,0.12); }
         .stat-icon.done    { background: rgba(13,158,110,0.12); }
-        .stat-info { display: flex; flex-direction: column; gap: 2px; }
+        .stat-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
         .stat-value {
-            font-size: 1.7rem;
+            font-size: 1.5rem;
             font-weight: 700;
-            line-height: 1;
+            line-height: 1.2;
             color: var(--ink);
+            word-break: break-all;
+            overflow-wrap: break-word;
         }
         .stat-label {
             font-size: 0.78rem;
@@ -625,7 +628,7 @@
             <div class="form-group"><label id="add-price-label">Price (LKR)</label><input type="number" name="price" required></div>
             <div class="form-group"><label>Location / City</label><input type="text" name="location" required></div>
             <div class="form-group"><label>Type</label>
-                <select name="type"><option>Apartment</option><option>House</option><option>Villa</option><option>Studio</option></select>
+                <select name="type"><option>Apartment</option><option>House</option><option>Villa</option></select>
             </div>
             <div class="form-group"><label>Bed Rooms</label><input type="number" name="bedrooms" min="0" required></div>
             <div class="form-group"><label>Bath Tubs</label><input type="number" name="bathrooms" min="0" required></div>
@@ -1057,7 +1060,7 @@
             <div class="form-group"><label>Location</label><input type="text" name="location" id="edit-location" required></div>
             <div class="form-grid">
                 <div class="form-group"><label>Type</label>
-                    <select name="type" id="edit-type"><option>Apartment</option><option>House</option><option>Villa</option><option>Studio</option></select>
+                    <select name="type" id="edit-type"><option>Apartment</option><option>House</option><option>Villa</option></select>
                 </div>
                 <div class="form-group"><label>Bed Rooms</label><input type="number" name="bedrooms" id="edit-bedrooms" min="0" required></div>
                 <div class="form-group"><label>Bath Tubs</label><input type="number" name="bathrooms" id="edit-bathrooms" min="0" required></div>

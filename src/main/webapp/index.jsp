@@ -1975,7 +1975,6 @@
                         <option value="Apartment">Apartment</option>
                         <option value="House">House</option>
                         <option value="Villa">Villa</option>
-                        <option value="Studio">Studio</option>
                     </select>
                 </div>
 
@@ -2549,7 +2548,6 @@
                     <div class="filter-chip" onclick="toggleChip(this,'type','apartment')">Apartment</div>
                     <div class="filter-chip" onclick="toggleChip(this,'type','house')">House</div>
                     <div class="filter-chip" onclick="toggleChip(this,'type','villa')">Villa</div>
-                    <div class="filter-chip" onclick="toggleChip(this,'type','studio')">Studio</div>
                 </div>
             </div>
 
