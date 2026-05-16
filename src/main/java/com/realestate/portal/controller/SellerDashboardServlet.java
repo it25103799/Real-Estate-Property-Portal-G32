@@ -361,7 +361,7 @@ public class SellerDashboardServlet extends HttpServlet {
 
         // Calculate total earnings from sold properties
         double totalEarnings = 0.0;
-        
+
         // Method 1: From properties with "Sold" status in properties.txt
         for (Property p : myProperties) {
             if ("Sold".equals(p.getStatus())) {
@@ -425,12 +425,12 @@ public class SellerDashboardServlet extends HttpServlet {
                     if (annLine.trim().isEmpty()) continue;
                     String[] parts = annLine.split(",", 9); // Updated to 9 fields for new format
                     if (parts.length < 6) continue;
-                    
+
                     String annId = parts[0].trim();
-                    
+
                     // Skip if already read
                     if (readAnnIds.contains(annId)) continue;
-                    
+
                     // All announcements are shown to all users (no filtering by audience)
                     Map<String, String> n = new HashMap<>();
                     n.put("sender",    "System Administration");
@@ -447,6 +447,55 @@ public class SellerDashboardServlet extends HttpServlet {
                 System.err.println("Error reading announcements for seller: " + e.getMessage());
             }
         }
+
+
+        // ── ANALYTICS COUNTS (quick stats for dashboard) ─────────────────────
+        int totalViews     = 0;
+        int totalInquiries = 0;
+        int totalFavorites = 0;
+
+        File viewsFile = new File(getServletContext().getRealPath("/WEB-INF/property_views.txt"));
+        if (viewsFile.exists()) {
+            try (BufferedReader vBr = new BufferedReader(new InputStreamReader(
+                    Files.newInputStream(Paths.get(viewsFile.getAbsolutePath())), StandardCharsets.UTF_8))) {
+                String vLine;
+                while ((vLine = vBr.readLine()) != null) {
+                    if (vLine.trim().isEmpty()) continue;
+                    String[] vd = vLine.split("\\|", -1);
+                    if (vd.length >= 1 && myPropIds.contains(vd[0].trim())) totalViews++;
+                }
+            } catch (Exception ignored) {}
+        }
+
+        if (threadsFile.exists()) {
+            try (BufferedReader iBr = new BufferedReader(new InputStreamReader(
+                    Files.newInputStream(Paths.get(threadsFile.getAbsolutePath())), StandardCharsets.UTF_8))) {
+                String iLine;
+                while ((iLine = iBr.readLine()) != null) {
+                    if (iLine.trim().isEmpty()) continue;
+                    String[] id = iLine.split("\t", -1);
+                    if (id.length >= 4 && loggedUser.equals(id[3].trim())) totalInquiries++;
+                }
+            } catch (Exception ignored) {}
+        }
+
+        File favsFile = new File(getServletContext().getRealPath("/WEB-INF/favorites.txt"));
+        if (favsFile.exists()) {
+            try (BufferedReader fBr = new BufferedReader(new InputStreamReader(
+                    Files.newInputStream(Paths.get(favsFile.getAbsolutePath())), StandardCharsets.UTF_8))) {
+                String fLine;
+                while ((fLine = fBr.readLine()) != null) {
+                    if (fLine.trim().isEmpty()) continue;
+                    String[] fd = fLine.split(",", -1);
+                    if (fd.length >= 2 && myPropIds.contains(fd[1].trim())) totalFavorites++;
+                }
+            } catch (Exception ignored) {}
+        }
+
+        request.setAttribute("analyticsViews",     totalViews);
+        request.setAttribute("analyticsInquiries", totalInquiries);
+        request.setAttribute("analyticsFavorites", totalFavorites);
+        // ─────────────────────────────────────────────────────────────────────
 
         request.setAttribute("myProperties", myProperties);
         request.setAttribute("reviewsByProperty", reviewsByProperty);

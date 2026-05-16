@@ -30,7 +30,7 @@ public class SellerHomeServlet extends HttpServlet {
         String loggedUser = (session != null) ? (String) session.getAttribute("loggedUser") : null;
         String role = (session != null) ? (String) session.getAttribute("loggedRole") : null;
 
-        if (loggedUser == null || role == null || !"SELLER".equalsIgnoreCase(role)) {
+        if (loggedUser == null || role == null || !"SELLER".equalsIgnoreCase(role))  {
             response.sendRedirect("properties");
             return;
         }

@@ -489,6 +489,7 @@
                     </div>
                 </div>
 
+                <button class="btn" onclick="window.location.href='sellerAnalytics'" style="background: rgba(26,86,219,0.1); color: var(--accent); border-color: rgba(26,86,219,0.3);">📊 Analytics</button>
                 <button class="btn" onclick="window.location.href='properties'" style="background: var(--line); color: var(--ink);">🏠 Go to Homepage</button>
                 <form action="logout" method="post" style="display:inline;">
                     <button type="submit" class="btn" style="background: #e02828;">Logout</button>
@@ -580,6 +581,16 @@
                 <div class="stat-icon red">💰</div>
                 <div class="stat-value">LKR <fmt:formatNumber value="${not empty totalEarnings ? totalEarnings : 0}" pattern="#,##0"/></div>
                 <div class="stat-label">Total Earnings</div>
+            </div>
+            <div class="stat-card" style="--card-accent:#8b5cf6;">
+                <div class="stat-icon" style="background:rgba(139,92,246,0.10);">👁️</div>
+                <div class="stat-value">${not empty analyticsViews ? analyticsViews : 0}</div>
+                <div class="stat-label">Total Listing Views</div>
+            </div>
+            <div class="stat-card" style="--card-accent:#ec4899;">
+                <div class="stat-icon" style="background:rgba(236,72,153,0.10);">❤️</div>
+                <div class="stat-value">${not empty analyticsFavorites ? analyticsFavorites : 0}</div>
+                <div class="stat-label">Times Saved by Buyers</div>
             </div>
         </div>
 

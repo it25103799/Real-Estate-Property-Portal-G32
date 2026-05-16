@@ -619,6 +619,11 @@ function openDetail(id) {
     const p = (window.properties || []).find(prop => String(prop.id) === String(id));
     if (!p) { console.error("Property not found!"); return; }
 
+    fetch('trackView', {
+            method: 'POST',
+            body: new URLSearchParams({ propertyId: id })
+        }).catch(() => {});
+
     document.getElementById('detail-main-img').src = p.image;
     document.getElementById('detail-title').innerText = p.title;
     document.getElementById('detail-address-text').innerText = p.location;
