@@ -87,16 +87,35 @@ public class MarkAsSoldServlet extends HttpServlet {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             String timestamp = now.format(formatter);
             
-            // Append to sold properties file with timestamp
-            try (FileWriter fw = new FileWriter(soldFile, true);
-                 BufferedWriter bw = new BufferedWriter(fw);
-                 PrintWriter out = new PrintWriter(bw)) {
-                out.println(timestamp + "|" + propertyData);
+            // Check if property is already recorded to avoid duplicates
+            boolean alreadyRecorded = false;
+            if (soldFile.exists()) {
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(soldFile), "UTF-8"))) {
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        if (line.contains("|" + propertyData.split("\\|")[0] + "|")) {
+                            alreadyRecorded = true;
+                            break;
+                        }
+                    }
+                }
             }
             
-            System.out.println("🔴 SOLD PROPERTY RECORDED: " + propertyData);
+            // Only append if not already recorded
+            if (!alreadyRecorded) {
+                try (FileWriter fw = new FileWriter(soldFile, true);
+                     BufferedWriter bw = new BufferedWriter(fw);
+                     PrintWriter out = new PrintWriter(bw)) {
+                    out.println(timestamp + "|" + propertyData);
+                }
+                
+                System.out.println("🔴 SOLD PROPERTY RECORDED: " + propertyData);
+            } else {
+                System.out.println("⚠️ SOLD PROPERTY ALREADY RECORDED: " + propertyData);
+            }
         } catch (Exception e) {
             System.out.println("Error recording sold property: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
