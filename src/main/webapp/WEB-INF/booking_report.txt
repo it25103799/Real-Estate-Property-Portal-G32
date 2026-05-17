@@ -223,3 +223,18 @@
   Status        : RESERVED
   Penalty Rate  : $75000.00 / overdue day (= daily rental fee)
 
+=========================================================
+  NEW BOOKING — 2026-05-18
+=========================================================
+  Booking ID    : BK_1779046984727
+  Property      : Kawisigamuwa Cool Yard  [9f4e6bca]
+  Seller        : De Silva
+  Buyer Account : john william
+  Buyer Name    : john william
+  Buyer Email   : abcd123@gmail.com
+  Buyer Phone   : 0789876545
+  Booked On     : 2026-05-18
+  Return Date   : 2026-05-19
+  Status        : RESERVED
+  Penalty Rate  : $75000.00 / overdue day (= daily rental fee)
+

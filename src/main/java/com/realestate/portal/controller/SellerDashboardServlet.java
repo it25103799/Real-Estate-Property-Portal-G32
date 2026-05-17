@@ -43,6 +43,16 @@ public class SellerDashboardServlet extends HttpServlet {
             return;
         }
 
+        // ── Auto-restore expired rental properties ──────────────────────────
+        try {
+            RentalExpiryCheckerServlet expiryChecker = new RentalExpiryCheckerServlet();
+            expiryChecker.init(getServletConfig());
+            expiryChecker.runExpiryCheck(request);
+        } catch (Exception expiryEx) {
+            System.err.println("Expiry check warning: " + expiryEx.getMessage());
+        }
+        // ───────────────────────────────────────────────────────────────────
+
         List<Property> myProperties = new ArrayList<>();
         String filePath = getServletContext().getRealPath("/WEB-INF/properties.txt");
         File file = new File(filePath);

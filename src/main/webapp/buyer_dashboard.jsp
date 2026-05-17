@@ -272,68 +272,68 @@
         .stats-2x2-grid .stat-card {
             margin: 0;
         }
-                .profile-section {
-                    background: var(--bg); /* Automatically shifts between light/dark background */
-                    border: 1px solid var(--line); /* Adds a subtle, elegant outline */
-                    box-shadow: 0 4px 16px rgba(0,0,0,.04); /* Soft shadow to lift it off the page */
-                    padding: 25px;
-                    border-radius: var(--r);
-                    margin-bottom: 30px;
-                    color: var(--ink); /* Automatically shifts text color */
-                    max-width: 400px;
-                }
+        .profile-section {
+            background: var(--bg); /* Automatically shifts between light/dark background */
+            border: 1px solid var(--line); /* Adds a subtle, elegant outline */
+            box-shadow: 0 4px 16px rgba(0,0,0,.04); /* Soft shadow to lift it off the page */
+            padding: 25px;
+            border-radius: var(--r);
+            margin-bottom: 30px;
+            color: var(--ink); /* Automatically shifts text color */
+            max-width: 400px;
+        }
 
-                .profile-header {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    margin-bottom: 20px;
-                }
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
 
-                .profile-header h3 {
-                    margin: 0;
-                    font-size: 1.2rem;
-                }
+        .profile-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
 
-                /* Vertical stacking for the form */
-                .form-group {
-                    margin-bottom: 15px;
-                    display: flex;
-                    flex-direction: column;
-                }
+        /* Vertical stacking for the form */
+        .form-group {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
 
-                .form-group label {
-                    margin-bottom: 5px;
-                    color: var(--ink4); /* Adaptive gray */
-                    font-size: 0.85rem;
-                    text-transform: uppercase;
-                    letter-spacing: 0.5px;
-                }
+        .form-group label {
+            margin-bottom: 5px;
+            color: var(--ink4); /* Adaptive gray */
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
 
-                /* 1. How it looks normally (Read-Only) */
-                .readonly-input {
-                    background-color: transparent;
-                    border: 1px solid transparent;
-                    color: var(--ink); /* Adaptive text */
-                    font-size: 1rem;
-                    padding: 5px 0;
-                    outline: none;
-                }
+        /* 1. How it looks normally (Read-Only) */
+        .readonly-input {
+            background-color: transparent;
+            border: 1px solid transparent;
+            color: var(--ink); /* Adaptive text */
+            font-size: 1rem;
+            padding: 5px 0;
+            outline: none;
+        }
 
-                /* 2. How it looks when editing */
-                .editable-input {
-                    background-color: var(--bg2); /* Adaptive input background */
-                    border: 1px solid var(--line);
-                    border-radius: 4px;
-                    color: var(--ink); /* Adaptive text */
-                    padding: 10px;
-                    font-size: 1rem;
-                    outline: none;
-                }
+        /* 2. How it looks when editing */
+        .editable-input {
+            background-color: var(--bg2); /* Adaptive input background */
+            border: 1px solid var(--line);
+            border-radius: 4px;
+            color: var(--ink); /* Adaptive text */
+            padding: 10px;
+            font-size: 1rem;
+            outline: none;
+        }
 
-                .editable-input:focus {
-                    border-color: var(--accent); /* Nestiq Blue highlight when typing */
-                }
+        .editable-input:focus {
+            border-color: var(--accent); /* Nestiq Blue highlight when typing */
+        }
 
         /* Button Styling */
         .edit-btn, .save-btn {
@@ -568,29 +568,29 @@
     <div class="profile-stats-grid">
         <!-- Profile Section -->
         <div class="profile-section">
-        <div class="profile-header">
-            <h3>Personal Information</h3>
-            <button type="button" id="superEditBtn" class="edit-btn" onclick="toggleEditMode()">Edit</button>
-        </div>
-
-        <form action="UpdateProfileServlet" method="POST" id="profileForm">
-            <input type="hidden" name="oldEmail" value="<%= session.getAttribute("loggedEmail") %>">
-
-            <div class="form-group">
-                <label>NAME</label>
-                <input type="text" name="newName" value="<%= session.getAttribute("loggedUser") %>" readonly class="readonly-input">
+            <div class="profile-header">
+                <h3>Personal Information</h3>
+                <button type="button" id="superEditBtn" class="edit-btn" onclick="toggleEditMode()">Edit</button>
             </div>
 
-            <div class="form-group">
-                <label>EMAIL</label>
-                <input type="email" name="newEmail" value="<%= session.getAttribute("loggedEmail") %>" readonly class="readonly-input">
-            </div>
+            <form action="UpdateProfileServlet" method="POST" id="profileForm">
+                <input type="hidden" name="oldEmail" value="<%= session.getAttribute("loggedEmail") %>">
 
-            <div class="form-group" style="position: relative;">
-                <label>PASSWORD</label>
-                <input type="password" id="pwdInput" name="newPassword" value="<%= session.getAttribute("loggedPassword") %>" readonly class="readonly-input" style="padding-right: 35px;">
+                <div class="form-group">
+                    <label>NAME</label>
+                    <input type="text" name="newName" value="<%= session.getAttribute("loggedUser") %>" readonly class="readonly-input">
+                </div>
 
-                <span onclick="togglePassword()" style="position: absolute; right: 10px; top: 32px; cursor: pointer; color: #a0aabf; transition: 0.2s;">
+                <div class="form-group">
+                    <label>EMAIL</label>
+                    <input type="email" name="newEmail" value="<%= session.getAttribute("loggedEmail") %>" readonly class="readonly-input">
+                </div>
+
+                <div class="form-group" style="position: relative;">
+                    <label>PASSWORD</label>
+                    <input type="password" id="pwdInput" name="newPassword" value="<%= session.getAttribute("loggedPassword") %>" readonly class="readonly-input" style="padding-right: 35px;">
+
+                    <span onclick="togglePassword()" style="position: absolute; right: 10px; top: 32px; cursor: pointer; color: #a0aabf; transition: 0.2s;">
                     <svg id="eyeOpen" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                         <circle cx="12" cy="12" r="3"></circle>
@@ -600,19 +600,19 @@
                         <line x1="1" y1="1" x2="23" y2="23"></line>
                     </svg>
                 </span>
-            </div>
+                </div>
 
-            <button type="submit" id="saveProfileBtn" class="save-btn" style="display: none;">Save Changes</button>
-        </form>
-        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--line); text-align: center;">
-                    <form action="DeleteAccountServlet" method="POST" style="margin: 0;" onsubmit="return confirm('⚠️ WARNING: Are you absolutely sure you want to permanently delete your account? This action cannot be undone and you will lose all saved properties.');">
-                        <input type="hidden" name="userEmail" value="<%= session.getAttribute("loggedEmail") %>">
-                        <button type="submit" style="background: transparent; color: var(--red); border: none; font-size: 0.85rem; font-weight: 600; cursor: pointer; text-decoration: underline;">
-                            Delete My Account
-                        </button>
-                    </form>
+                <button type="submit" id="saveProfileBtn" class="save-btn" style="display: none;">Save Changes</button>
+            </form>
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--line); text-align: center;">
+                <form action="DeleteAccountServlet" method="POST" style="margin: 0;" onsubmit="return confirm('⚠️ WARNING: Are you absolutely sure you want to permanently delete your account? This action cannot be undone and you will lose all saved properties.');">
+                    <input type="hidden" name="userEmail" value="<%= session.getAttribute("loggedEmail") %>">
+                    <button type="submit" style="background: transparent; color: var(--red); border: none; font-size: 0.85rem; font-weight: 600; cursor: pointer; text-decoration: underline;">
+                        Delete My Account
+                    </button>
+                </form>
+            </div>
         </div>
-    </div>
 
         <!-- 2x2 Stat Cards Grid -->
         <div class="stats-2x2-grid">
@@ -678,19 +678,19 @@
 
         <%-- ── BULK ACTION TOOLBAR ── --%>
         <c:if test="${not empty savedProperties}">
-        <div class="bulk-toolbar" id="bulkToolbar">
-            <div class="bulk-left">
-                <label class="bulk-select-all-label">
-                    <input type="checkbox" id="selectAllFavs" onchange="toggleSelectAll(this)">
-                    <span>Select All</span>
-                </label>
-                <span class="bulk-count" id="bulkCount" style="display:none;">0 selected</span>
+            <div class="bulk-toolbar" id="bulkToolbar">
+                <div class="bulk-left">
+                    <label class="bulk-select-all-label">
+                        <input type="checkbox" id="selectAllFavs" onchange="toggleSelectAll(this)">
+                        <span>Select All</span>
+                    </label>
+                    <span class="bulk-count" id="bulkCount" style="display:none;">0 selected</span>
+                </div>
+                <div class="bulk-actions" id="bulkActions" style="display:none;">
+                    <button class="btn-bulk-remove" onclick="bulkRemoveSelected()">🗑️ Remove Selected</button>
+                </div>
+                <button class="btn-remove-all" onclick="bulkRemoveAll()">🗑️ Remove All</button>
             </div>
-            <div class="bulk-actions" id="bulkActions" style="display:none;">
-                <button class="btn-bulk-remove" onclick="bulkRemoveSelected()">🗑️ Remove Selected</button>
-            </div>
-            <button class="btn-remove-all" onclick="bulkRemoveAll()">🗑️ Remove All</button>
-        </div>
         </c:if>
         <%-- ── END BULK TOOLBAR ── --%>
 
@@ -702,94 +702,94 @@
 
         <table>
             <thead>
-                <tr>
-                    <c:if test="${not empty savedProperties}"><th style="width:36px;"></th></c:if>
-                    <th>Property</th>
-                    <th>Location</th>
-                    <th>Price</th>
-                    <th>Type</th>
-                    <th>Beds</th>
-                    <th>Baths</th>
-                    <th>Actions</th>
-                </tr>
+            <tr>
+                <c:if test="${not empty savedProperties}"><th style="width:36px;"></th></c:if>
+                <th>Property</th>
+                <th>Location</th>
+                <th>Price</th>
+                <th>Type</th>
+                <th>Beds</th>
+                <th>Baths</th>
+                <th>Actions</th>
+            </tr>
             </thead>
             <tbody>
-                <c:choose>
-                    <c:when test="${not empty savedProperties}">
-                        <c:forEach var="p" items="${savedProperties}">
-                            <tr class="fav-row" id="row-${p.id}">
-                                <td>
-                                    <input type="checkbox" class="fav-checkbox" value="${p.id}" onchange="updateBulkCount()">
-                                </td>
-                                <td class="prop-title-cell">
-                                    <img src="${p.imageUrl}" class="prop-thumb" alt="House">
-                                    <div>
-                                        <div style="font-weight: 600;">${p.title}</div>
-                                        <div style="font-size: 0.8rem; opacity: 0.7;">ID: ${p.id}</div>
-                                    </div>
-                                </td>
-                                <td>📍 ${p.location}</td>
-                                <td style="font-weight: 600; color: var(--accent);">$<fmt:formatNumber value="${p.price}" pattern="#,##0.00" /><c:if test="${p.status == 'For Rent'}"><span style="font-size:0.75em; font-weight:400; opacity:0.65;">/day</span></c:if></td>
-                                <td>${p.type}</td>
-                                <td>${p.bedrooms}</td>
-                                <td>${p.bathrooms}</td>
-                                <td style="display: flex; gap: 10px; align-items: center;">
-                                    <button class="btn" style="padding: 8px 15px; font-size: 0.85rem;" onclick="window.location.href='properties?viewId=${p.id}'">View</button>
+            <c:choose>
+                <c:when test="${not empty savedProperties}">
+                    <c:forEach var="p" items="${savedProperties}">
+                        <tr class="fav-row" id="row-${p.id}">
+                            <td>
+                                <input type="checkbox" class="fav-checkbox" value="${p.id}" onchange="updateBulkCount()">
+                            </td>
+                            <td class="prop-title-cell">
+                                <img src="${p.imageUrl}" class="prop-thumb" alt="House">
+                                <div>
+                                    <div style="font-weight: 600;">${p.title}</div>
+                                    <div style="font-size: 0.8rem; opacity: 0.7;">ID: ${p.id}</div>
+                                </div>
+                            </td>
+                            <td>📍 ${p.location}</td>
+                            <td style="font-weight: 600; color: var(--accent);">$<fmt:formatNumber value="${p.price}" pattern="#,##0.00" /><c:if test="${p.status == 'For Rent'}"><span style="font-size:0.75em; font-weight:400; opacity:0.65;">/day</span></c:if></td>
+                            <td>${p.type}</td>
+                            <td>${p.bedrooms}</td>
+                            <td>${p.bathrooms}</td>
+                            <td style="display: flex; gap: 10px; align-items: center;">
+                                <button class="btn" style="padding: 8px 15px; font-size: 0.85rem;" onclick="window.location.href='properties?viewId=${p.id}'">View</button>
 
                                     <%-- ── REPLACE BUTTON + DROPDOWN ── --%>
-                                    <div class="replace-wrapper" id="rw-${p.id}">
-                                        <button type="button"
-                                                class="btn-replace"
-                                                title="Replace this property"
-                                                onclick="toggleReplaceDropdown('${p.id}', event)">
-                                            &#x21C4;
-                                        </button>
+                                <div class="replace-wrapper" id="rw-${p.id}">
+                                    <button type="button"
+                                            class="btn-replace"
+                                            title="Replace this property"
+                                            onclick="toggleReplaceDropdown('${p.id}', event)">
+                                        &#x21C4;
+                                    </button>
 
-                                        <div class="replace-dropdown" id="rd-${p.id}">
-                                            <div class="replace-dropdown-header">Replace with…</div>
-                                            <div class="replace-dropdown-list">
-                                                <c:choose>
-                                                    <c:when test="${not empty availableProperties}">
-                                                        <c:forEach var="ap" items="${availableProperties}">
-                                                            <c:if test="${ap.id != p.id}">
-                                                                <form action="replaceFavorite" method="post" style="margin:0; padding:0;">
-                                                                    <input type="hidden" name="oldPropertyId" value="${p.id}">
-                                                                    <input type="hidden" name="newPropertyId" value="${ap.id}">
-                                                                    <button type="submit" class="replace-item">
-                                                                        <img src="${ap.imageUrl}" class="replace-item-thumb" alt="${ap.title}">
-                                                                        <div class="replace-item-info">
-                                                                            <div class="replace-item-title">${ap.title}</div>
-                                                                            <div class="replace-item-meta">📍 ${ap.location}</div>
-                                                                        </div>
-                                                                        <span class="replace-item-badge ${ap.status == 'For Sale' ? 'badge-forsale' : 'badge-forrent'}">
+                                    <div class="replace-dropdown" id="rd-${p.id}">
+                                        <div class="replace-dropdown-header">Replace with…</div>
+                                        <div class="replace-dropdown-list">
+                                            <c:choose>
+                                                <c:when test="${not empty availableProperties}">
+                                                    <c:forEach var="ap" items="${availableProperties}">
+                                                        <c:if test="${ap.id != p.id}">
+                                                            <form action="replaceFavorite" method="post" style="margin:0; padding:0;">
+                                                                <input type="hidden" name="oldPropertyId" value="${p.id}">
+                                                                <input type="hidden" name="newPropertyId" value="${ap.id}">
+                                                                <button type="submit" class="replace-item">
+                                                                    <img src="${ap.imageUrl}" class="replace-item-thumb" alt="${ap.title}">
+                                                                    <div class="replace-item-info">
+                                                                        <div class="replace-item-title">${ap.title}</div>
+                                                                        <div class="replace-item-meta">📍 ${ap.location}</div>
+                                                                    </div>
+                                                                    <span class="replace-item-badge ${ap.status == 'For Sale' ? 'badge-forsale' : 'badge-forrent'}">
                                                                             ${ap.status}
-                                                                        </span>
-                                                                    </button>
-                                                                </form>
-                                                            </c:if>
-                                                        </c:forEach>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <div class="replace-empty">No available properties.</div>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </div>
+                                                                    </span>
+                                                                </button>
+                                                            </form>
+                                                        </c:if>
+                                                    </c:forEach>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <div class="replace-empty">No available properties.</div>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </div>
                                     </div>
+                                </div>
                                     <%-- ── END REPLACE ── --%>
 
-                                    <form action="removeFavorite" method="post" style="margin: 0;">
-                                        <input type="hidden" name="propertyId" value="${p.id}">
-                                        <button type="submit" class="btn-action" style="padding: 8px 12px; font-size: 0.85rem; height: 100%;" onsubmit="return confirm('Remove this property from your saved list?');">❌ Remove</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                    </c:when>
-                    <c:otherwise>
-                        <tr><td colspan="8" style="text-align:center; padding: 40px; color: var(--ink); opacity: 0.6;">You haven't saved any properties yet. Go browse the listings!</td></tr>
-                    </c:otherwise>
-                </c:choose>
+                                <form action="removeFavorite" method="post" style="margin: 0;">
+                                    <input type="hidden" name="propertyId" value="${p.id}">
+                                    <button type="submit" class="btn-action" style="padding: 8px 12px; font-size: 0.85rem; height: 100%;" onsubmit="return confirm('Remove this property from your saved list?');">❌ Remove</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </c:when>
+                <c:otherwise>
+                    <tr><td colspan="8" style="text-align:center; padding: 40px; color: var(--ink); opacity: 0.6;">You haven't saved any properties yet. Go browse the listings!</td></tr>
+                </c:otherwise>
+            </c:choose>
             </tbody>
         </table>
     </div>
@@ -852,45 +852,45 @@
         </div>
         <table>
             <thead>
-                <tr>
-                    <th>Sent To</th>
-                    <th>Property Title</th>
-                    <th>Date Sent</th>
-                    <th>Status</th>
-                    <th>Chat</th>
-                </tr>
+            <tr>
+                <th>Sent To</th>
+                <th>Property Title</th>
+                <th>Date Sent</th>
+                <th>Status</th>
+                <th>Chat</th>
+            </tr>
             </thead>
             <tbody>
-                <c:choose>
-                    <c:when test="${not empty myInquiries}">
-                        <c:forEach var="inq" items="${myInquiries}">
-                            <tr>
-                                <td><span style="font-weight: 500;">${inq.agentName}</span></td>
-                                <td>${inq.propertyTitle}</td>
-                                <td>${inq.date}</td>
-                                <td>
-                                    <c:choose>
-                                        <c:when test="${inq.status == 'Pending'}"><span class="status-badge badge-pending">Pending Reply</span></c:when>
-                                        <c:otherwise><span class="status-badge badge-viewed">Agent Responded</span></c:otherwise>
-                                    </c:choose>
-                                </td>
-                                <td>
-                                    <c:choose>
-                                        <c:when test="${not empty inq.threadId}">
-                                            <button type="button" class="btn" style="padding: 8px 12px; font-size: 0.85rem;" onclick="openBuyerChat('${inq.threadId}')">Open</button>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <span style="opacity: 0.6;">—</span>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                    </c:when>
-                    <c:otherwise>
-                        <tr><td colspan="5" style="text-align:center; padding: 30px; color: var(--ink); opacity: 0.6;">No pending inquiries.</td></tr>
-                    </c:otherwise>
-                </c:choose>
+            <c:choose>
+                <c:when test="${not empty myInquiries}">
+                    <c:forEach var="inq" items="${myInquiries}">
+                        <tr>
+                            <td><span style="font-weight: 500;">${inq.agentName}</span></td>
+                            <td>${inq.propertyTitle}</td>
+                            <td>${inq.date}</td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${inq.status == 'Pending'}"><span class="status-badge badge-pending">Pending Reply</span></c:when>
+                                    <c:otherwise><span class="status-badge badge-viewed">Agent Responded</span></c:otherwise>
+                                </c:choose>
+                            </td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${not empty inq.threadId}">
+                                        <button type="button" class="btn" style="padding: 8px 12px; font-size: 0.85rem;" onclick="openBuyerChat('${inq.threadId}')">Open</button>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span style="opacity: 0.6;">—</span>
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </c:when>
+                <c:otherwise>
+                    <tr><td colspan="5" style="text-align:center; padding: 30px; color: var(--ink); opacity: 0.6;">No pending inquiries.</td></tr>
+                </c:otherwise>
+            </c:choose>
             </tbody>
         </table>
     </div>
@@ -918,9 +918,21 @@
             </div>
         </c:if>
         <c:if test="${param.cancel == 'success'}">
-            <div style="background: rgba(13,158,110,0.1); border: 1px solid #0d9e6e; color: #0d9e6e; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-weight: 600;">
-                ✅ Booking cancelled successfully! The seller has been notified.
-            </div>
+            <c:choose>
+                <c:when test="${not empty param.penaltyFee and param.penaltyFee != '0.00'}">
+                    <div style="background: rgba(224,40,40,0.1); border: 2px solid #e02828; color: #e02828; padding: 14px 18px; border-radius: 8px; margin-bottom: 16px; font-weight: 600;">
+                        ⚠️ Booking cancelled after the return date.
+                        A <strong>penalty fee of $${param.penaltyFee}</strong> applies
+                        (${param.penaltyDays} overdue day(s) × $${param.penaltyRate} / day).
+                        Please settle this amount with the seller directly.
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <div style="background: rgba(13,158,110,0.1); border: 1px solid #0d9e6e; color: #0d9e6e; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-weight: 600;">
+                        ✅ Booking cancelled successfully! The seller has been notified.
+                    </div>
+                </c:otherwise>
+            </c:choose>
         </c:if>
         <c:if test="${param.booking == 'success'}">
             <div style="background: rgba(13,158,110,0.1); border: 1px solid #0d9e6e; color: #0d9e6e; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-weight: 600;">
@@ -940,20 +952,20 @@
 
         <!-- ENHANCEMENT: Booking Statistics -->
         <c:if test="${not empty myBookings || not empty bookingHistory}">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px;">
-            <div style="background: rgba(26,86,219,0.08); padding: 16px; border-radius: 8px; text-align: center; border: 1px solid rgba(26,86,219,0.2);">
-                <div style="font-size: 1.8rem; font-weight: 700; color: var(--accent);">${totalBookings}</div>
-                <div style="font-size: 0.82rem; color: var(--ink3); margin-top: 4px;">Total Bookings</div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px;">
+                <div style="background: rgba(26,86,219,0.08); padding: 16px; border-radius: 8px; text-align: center; border: 1px solid rgba(26,86,219,0.2);">
+                    <div style="font-size: 1.8rem; font-weight: 700; color: var(--accent);">${totalBookings}</div>
+                    <div style="font-size: 0.82rem; color: var(--ink3); margin-top: 4px;">Total Bookings</div>
+                </div>
+                <div style="background: rgba(13,158,110,0.08); padding: 16px; border-radius: 8px; text-align: center; border: 1px solid rgba(13,158,110,0.2);">
+                    <div style="font-size: 1.8rem; font-weight: 700; color: #0d9e6e;">${activeBookings}</div>
+                    <div style="font-size: 0.82rem; color: var(--ink3); margin-top: 4px;">Active</div>
+                </div>
+                <div style="background: rgba(100,100,100,0.08); padding: 16px; border-radius: 8px; text-align: center; border: 1px solid rgba(100,100,100,0.2);">
+                    <div style="font-size: 1.8rem; font-weight: 700; color: #666;">${completedBookings}</div>
+                    <div style="font-size: 0.82rem; color: var(--ink3); margin-top: 4px;">Completed</div>
+                </div>
             </div>
-            <div style="background: rgba(13,158,110,0.08); padding: 16px; border-radius: 8px; text-align: center; border: 1px solid rgba(13,158,110,0.2);">
-                <div style="font-size: 1.8rem; font-weight: 700; color: #0d9e6e;">${activeBookings}</div>
-                <div style="font-size: 0.82rem; color: var(--ink3); margin-top: 4px;">Active</div>
-            </div>
-            <div style="background: rgba(100,100,100,0.08); padding: 16px; border-radius: 8px; text-align: center; border: 1px solid rgba(100,100,100,0.2);">
-                <div style="font-size: 1.8rem; font-weight: 700; color: #666;">${completedBookings}</div>
-                <div style="font-size: 0.82rem; color: var(--ink3); margin-top: 4px;">Completed</div>
-            </div>
-        </div>
         </c:if>
 
         <%-- ── OVERDUE GLOBAL WARNING BANNER ── --%>
@@ -980,101 +992,101 @@
 
         <table>
             <thead>
-                <tr>
-                    <th>Booking ID</th>
-                    <th>Property</th>
-                    <th>Seller</th>
-                    <th>Booked On</th>
-                    <th>Return Date</th>
-                    <th>Status</th>
-                    <th>Daily Rate</th>
-                    <th>Penalty Fee</th>
-                    <th>Actions</th>
-                </tr>
+            <tr>
+                <th>Booking ID</th>
+                <th>Property</th>
+                <th>Seller</th>
+                <th>Booked On</th>
+                <th>Return Date</th>
+                <th>Status</th>
+                <th>Daily Rate</th>
+                <th>Penalty Fee</th>
+                <th>Actions</th>
+            </tr>
             </thead>
             <tbody>
-                <c:choose>
-                    <c:when test="${not empty myBookings}">
-                        <c:forEach var="bk" items="${myBookings}">
-                            <tr style="${bk.status == 'OVERDUE' ? 'background:rgba(224,40,40,0.04);' : ''}">
-                                <td style="font-size:0.82rem; opacity:0.75;">${bk.bookingId}</td>
-                                <td>
-                                    <div style="font-weight:600;">${bk.propertyTitle}</div>
-                                    <div style="font-size:0.8rem; opacity:0.65;">ID: ${bk.propertyId}</div>
-                                </td>
-                                <td>${bk.sellerName}</td>
-                                <td>${bk.bookingDate}</td>
-                                <td>
-                                    <div>${bk.returnDate}</div>
-                                    <c:if test="${bk.status == 'OVERDUE'}">
-                                        <div style="font-size:0.75rem;color:var(--red);font-weight:600;margin-top:2px;">
-                                            ⏰ ${bk.daysOverdue} day(s) overdue
+            <c:choose>
+                <c:when test="${not empty myBookings}">
+                    <c:forEach var="bk" items="${myBookings}">
+                        <tr style="${bk.status == 'OVERDUE' ? 'background:rgba(224,40,40,0.04);' : ''}">
+                            <td style="font-size:0.82rem; opacity:0.75;">${bk.bookingId}</td>
+                            <td>
+                                <div style="font-weight:600;">${bk.propertyTitle}</div>
+                                <div style="font-size:0.8rem; opacity:0.65;">ID: ${bk.propertyId}</div>
+                            </td>
+                            <td>${bk.sellerName}</td>
+                            <td>${bk.bookingDate}</td>
+                            <td>
+                                <div>${bk.returnDate}</div>
+                                <c:if test="${bk.status == 'OVERDUE'}">
+                                    <div style="font-size:0.75rem;color:var(--red);font-weight:600;margin-top:2px;">
+                                        ⏰ ${bk.daysOverdue} day(s) overdue
+                                    </div>
+                                </c:if>
+                            </td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${bk.status == 'OVERDUE'}">
+                                        <span class="status-badge" style="background:rgba(224,40,40,0.12);color:var(--red);">⚠️ Overdue</span>
+                                    </c:when>
+                                    <c:when test="${bk.status == 'COMPLETED'}">
+                                        <span class="status-badge badge-viewed">✅ Completed</span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="status-badge badge-pending">🔵 Reserved</span>
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${bk.status == 'COMPLETED'}">
+                                        <span style="opacity:0.4;">—</span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <div style="font-weight:600;color:var(--accent);">
+                                            $<fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" />/day
                                         </div>
-                                    </c:if>
-                                </td>
-                                <td>
-                                    <c:choose>
-                                        <c:when test="${bk.status == 'OVERDUE'}">
-                                            <span class="status-badge" style="background:rgba(224,40,40,0.12);color:var(--red);">⚠️ Overdue</span>
-                                        </c:when>
-                                        <c:when test="${bk.status == 'COMPLETED'}">
-                                            <span class="status-badge badge-viewed">✅ Completed</span>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <span class="status-badge badge-pending">🔵 Reserved</span>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </td>
-                                <td>
-                                    <c:choose>
-                                        <c:when test="${bk.status == 'COMPLETED'}">
-                                            <span style="opacity:0.4;">—</span>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <div style="font-weight:600;color:var(--accent);">
-                                                $<fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" />/day
-                                            </div>
-                                            <div style="font-size:0.72rem;opacity:0.6;margin-top:1px;">penalty rate</div>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </td>
-                                <td>
-                                    <c:choose>
-                                        <c:when test="${bk.penaltyFee != '0.00'}">
-                                            <div style="color:var(--red); font-weight:700;">$<fmt:formatNumber value="${bk.penaltyFee}" pattern="#,##0.00" /></div>
-                                            <c:if test="${not empty bk.daysOverdue}">
-                                                <div style="font-size:0.72rem;color:var(--red);margin-top:2px;">${bk.daysOverdue} × $<fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" /></div>
-                                            </c:if>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <span style="opacity:0.5;">—</span>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </td>
-                                <td>
-                                    <c:if test="${bk.status != 'COMPLETED'}">
-                                        <div style="display: flex; gap: 8px;">
-                                            <button type="button" class="btn-action" style="color:var(--accent);"
-                                                    onclick="openEditBookingModal('${bk.bookingId}', '${bk.returnDate}')">
-                                                Edit
-                                            </button>
-                                            <form action="cancelBooking" method="post" style="margin:0;" onsubmit="return confirm('⚠️ Are you sure you want to cancel this booking?\n\nThis will permanently remove the booking from the system and notify the seller.');">
-                                                <input type="hidden" name="bookingId" value="${bk.bookingId}">
-                                                <button type="submit" class="btn-action" style="color:var(--red);">Cancel</button>
-                                            </form>
-                                        </div>
-                                    </c:if>
-                                    <c:if test="${bk.status == 'COMPLETED'}">
-                                        <span style="opacity:0.4; font-size:0.85rem;">—</span>
-                                    </c:if>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                    </c:when>
-                    <c:otherwise>
-                        <tr><td colspan="8" style="text-align:center; padding:40px; opacity:0.6;">You have no bookings yet.</td></tr>
-                    </c:otherwise>
-                </c:choose>
+                                        <div style="font-size:0.72rem;opacity:0.6;margin-top:1px;">penalty rate</div>
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${bk.penaltyFee != '0.00'}">
+                                        <div style="color:var(--red); font-weight:700;">$<fmt:formatNumber value="${bk.penaltyFee}" pattern="#,##0.00" /></div>
+                                        <c:if test="${not empty bk.daysOverdue}">
+                                            <div style="font-size:0.72rem;color:var(--red);margin-top:2px;">${bk.daysOverdue} × $<fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" /></div>
+                                        </c:if>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span style="opacity:0.5;">—</span>
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
+                            <td>
+                                <c:if test="${bk.status != 'COMPLETED'}">
+                                    <div style="display: flex; gap: 8px;">
+                                        <button type="button" class="btn-action" style="color:var(--accent);"
+                                                onclick="openEditBookingModal('${bk.bookingId}', '${bk.returnDate}')">
+                                            Edit
+                                        </button>
+                                        <form action="cancelBooking" method="post" style="margin:0;" onsubmit="return confirm('⚠️ Are you sure you want to cancel this booking?\n\nThis will permanently remove the booking from the system and notify the seller.');">
+                                            <input type="hidden" name="bookingId" value="${bk.bookingId}">
+                                            <button type="submit" class="btn-action" style="color:var(--red);">Cancel</button>
+                                        </form>
+                                    </div>
+                                </c:if>
+                                <c:if test="${bk.status == 'COMPLETED'}">
+                                    <span style="opacity:0.4; font-size:0.85rem;">—</span>
+                                </c:if>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </c:when>
+                <c:otherwise>
+                    <tr><td colspan="8" style="text-align:center; padding:40px; opacity:0.6;">You have no bookings yet.</td></tr>
+                </c:otherwise>
+            </c:choose>
             </tbody>
         </table>
     </div>
@@ -1118,24 +1130,24 @@
         }
     }
     // Show/Hide Password Toggle
-        function togglePassword() {
-            const pwdInput = document.getElementById('pwdInput');
-            const eyeOpen = document.getElementById('eyeOpen');
-            const eyeClosed = document.getElementById('eyeClosed');
+    function togglePassword() {
+        const pwdInput = document.getElementById('pwdInput');
+        const eyeOpen = document.getElementById('eyeOpen');
+        const eyeClosed = document.getElementById('eyeClosed');
 
-            // If it's currently hidden, reveal it!
-            if (pwdInput.type === 'password') {
-                pwdInput.type = 'text';
-                eyeOpen.style.display = 'none';
-                eyeClosed.style.display = 'block';
-            }
-            // If it's revealed, hide it!
-            else {
-                pwdInput.type = 'password';
-                eyeOpen.style.display = 'block';
-                eyeClosed.style.display = 'none';
-            }
+        // If it's currently hidden, reveal it!
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            eyeOpen.style.display = 'none';
+            eyeClosed.style.display = 'block';
         }
+        // If it's revealed, hide it!
+        else {
+            pwdInput.type = 'password';
+            eyeOpen.style.display = 'block';
+            eyeClosed.style.display = 'none';
+        }
+    }
 </script>
 
 <script src="app.js"></script>
@@ -1146,14 +1158,14 @@
     window.currentRole = "${sessionScope.loggedRole}";
     window.allNotifications = [];
     <c:forEach items="${allNotifications}" var="n">
-        window.allNotifications.push({
-            sender: "${n.sender}",
-            receiver: "${n.receiver}",
-            message: "${n.content}",
-            property: "${n.propTitle}",
-            type: "${n.type}",
-            threadId: "${n.threadId}"
-        });
+    window.allNotifications.push({
+        sender: "${n.sender}",
+        receiver: "${n.receiver}",
+        message: "${n.content}",
+        property: "${n.propTitle}",
+        type: "${n.type}",
+        threadId: "${n.threadId}"
+    });
     </c:forEach>
 
     console.log("window.allNotifications after JSP population:", window.allNotifications);
@@ -1213,14 +1225,14 @@
 <script>
     window.buyerThreads = {};
     <c:forEach var="t" items="${buyerThreads}">
-        window.buyerThreads["${t.id}"] = {
-            id: "${t.id}",
-            propertyId: "${t.propertyId}",
-            propertyTitle: "${t.propertyTitle}",
-            sellerName: "${t.sellerName}",
-            createdDate: "${t.createdDate}",
-            status: "${t.status}"
-        };
+    window.buyerThreads["${t.id}"] = {
+        id: "${t.id}",
+        propertyId: "${t.propertyId}",
+        propertyTitle: "${t.propertyTitle}",
+        sellerName: "${t.sellerName}",
+        createdDate: "${t.createdDate}",
+        status: "${t.status}"
+    };
     </c:forEach>
 
     function openBuyerChat(threadId) {
