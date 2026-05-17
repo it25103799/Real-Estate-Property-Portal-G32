@@ -620,9 +620,9 @@ function openDetail(id) {
     if (!p) { console.error("Property not found!"); return; }
 
     fetch('trackView', {
-            method: 'POST',
-            body: new URLSearchParams({ propertyId: id })
-        }).catch(() => {});
+        method: 'POST',
+        body: new URLSearchParams({ propertyId: id })
+    }).catch(() => {});
 
     document.getElementById('detail-main-img').src = p.image;
     document.getElementById('detail-title').innerText = p.title;
@@ -757,6 +757,28 @@ function openDetail(id) {
         console.log('Is Buyer:', isBuyer);
         console.log('Current Role:', window.currentRole);
 
+        // ── SOLD STATUS BANNER & INQUIRY FORM TOGGLE ──
+        const soldBanner = document.getElementById('sold-status-banner');
+        const inquiryWrapper = document.getElementById('inquiry-form-wrapper');
+        if (soldBanner && inquiryWrapper) {
+            if (isSold) {
+                // Show sold banner with seller info; hide inquiry form
+                soldBanner.style.display = 'block';
+                inquiryWrapper.style.display = 'none';
+                // Populate seller info inside the sold banner
+                const soldSellerImg = document.getElementById('sold-seller-img');
+                const soldSellerName = document.getElementById('sold-seller-name');
+                const soldSellerTitle = document.getElementById('sold-seller-title');
+                if (soldSellerImg) soldSellerImg.src = agent.img || '';
+                if (soldSellerName) soldSellerName.innerText = realSeller;
+                if (soldSellerTitle) soldSellerTitle.innerText = agent.title || 'Real Estate Professional';
+            } else {
+                // Not sold — hide banner, show inquiry form normally
+                soldBanner.style.display = 'none';
+                inquiryWrapper.style.display = 'block';
+            }
+        }
+
         if (bookingForm) {
             if (isRent && isBuyer) {
                 // Show booking form for "For Rent" properties AND logged-in BUYER users
@@ -806,17 +828,6 @@ function openDetail(id) {
             } else {
                 // Hide booking form for "For Sale" / "Sold" properties or if not a logged-in buyer
                 bookingForm.style.display = 'none';
-                // Show a "sold" notice if the property is sold
-                const soldNoticeId = 'sold-property-notice';
-                let existing = document.getElementById(soldNoticeId);
-                if (existing) existing.remove();
-                if (isSold) {
-                    const notice = document.createElement('div');
-                    notice.id = soldNoticeId;
-                    notice.innerHTML = '🏷️ <strong>This property has been sold.</strong> It is no longer available for booking or purchase.';
-                    notice.style.cssText = 'background:rgba(224,40,40,0.08);border:1px solid rgba(224,40,40,0.3);border-radius:8px;padding:14px 16px;font-size:0.88rem;color:#c0392b;line-height:1.5;margin-top:8px;';
-                    bookingForm.parentNode.insertBefore(notice, bookingForm.nextSibling);
-                }
                 console.log('❌ Booking form hidden - isRent:', isRent, 'isBuyer:', isBuyer, 'isSold:', isSold);
             }
         }

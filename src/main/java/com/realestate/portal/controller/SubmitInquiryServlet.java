@@ -30,6 +30,33 @@ public class SubmitInquiryServlet extends HttpServlet {
         String propertyTitle = request.getParameter("propertyTitle");
         String agentName = request.getParameter("agentName");
 
+        // ── SERVER-SIDE GUARD: block inquiries on sold properties ──
+        if (propertyId != null && !propertyId.trim().isEmpty()) {
+            String propPath = getServletContext().getRealPath("/WEB-INF/properties.txt");
+            File propFile = new File(propPath);
+            if (propFile.exists()) {
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(propFile), "UTF-8"))) {
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        if (line.trim().isEmpty()) continue;
+                        String[] data = line.split(",");
+                        if (data.length >= 6 && data[0].trim().equals(propertyId.trim())) {
+                            String propStatus = data[5].trim();
+                            if ("sold".equalsIgnoreCase(propStatus)) {
+                                // Property is sold — reject the inquiry silently and redirect
+                                response.sendRedirect("index?error=sold_property");
+                                return;
+                            }
+                            break;
+                        }
+                    }
+                } catch (IOException e) {
+                    // If we can't read the file, proceed cautiously (don't block)
+                }
+            }
+        }
+        // ── END SOLD GUARD ──
+
         // Grab the buyer-filled fields from the form
         String senderName = request.getParameter("senderName");
         String senderEmail = request.getParameter("senderEmail");
@@ -55,15 +82,15 @@ public class SubmitInquiryServlet extends HttpServlet {
 
         String threadRecord =
                 threadId + "\t" +
-                safePropertyId + "\t" +
-                safePropertyTitle + "\t" +
-                safeSellerName + "\t" +
-                safeBuyerAccount + "\t" +
-                safeBuyerName + "\t" +
-                safeBuyerEmail + "\t" +
-                safeBuyerPhone + "\t" +
-                date + "\t" +
-                status;
+                        safePropertyId + "\t" +
+                        safePropertyTitle + "\t" +
+                        safeSellerName + "\t" +
+                        safeBuyerAccount + "\t" +
+                        safeBuyerName + "\t" +
+                        safeBuyerEmail + "\t" +
+                        safeBuyerPhone + "\t" +
+                        date + "\t" +
+                        status;
 
         // messages.tsv format:
         // threadId \t timestamp \t senderRole \t senderName \t contentB64
@@ -71,10 +98,10 @@ public class SubmitInquiryServlet extends HttpServlet {
         String msgB64 = Base64.getEncoder().encodeToString(msgPlain.getBytes("UTF-8"));
         String messageRecord =
                 threadId + "\t" +
-                timestamp + "\t" +
-                "BUYER" + "\t" +
-                safeBuyerName + "\t" +
-                msgB64;
+                        timestamp + "\t" +
+                        "BUYER" + "\t" +
+                        safeBuyerName + "\t" +
+                        msgB64;
 
         String threadsPath = getServletContext().getRealPath("/WEB-INF/inquiry_threads.tsv");
         String messagesPath = getServletContext().getRealPath("/WEB-INF/inquiry_messages.tsv");

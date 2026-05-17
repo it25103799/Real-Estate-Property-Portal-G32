@@ -2708,19 +2708,40 @@
                     <button type="submit" class="btn-contact" style="margin-top: 15px; width: 100%; background: var(--green); font-weight: 700;">🔖 Reserve Now</button>
                 </form>
 
-                <!-- ── INQUIRY FORM (Always Visible) ── -->
-                <form action="submitInquiry" method="post" style="display: flex; flex-direction: column; gap: 10px;" onsubmit="return forceDataGrab();">
-                    <input type="hidden" name="propertyId" id="inq-prop-id">
-                    <input type="hidden" name="propertyTitle" id="inq-prop-title">
-                    <input type="hidden" name="agentName" id="inq-agent-name">
+                <!-- ── SOLD PROPERTY NOTICE (shown only for sold properties) ── -->
+                <div id="sold-status-banner" style="display:none; background:rgba(224,40,40,0.09); border:1.5px solid rgba(224,40,40,0.35); border-radius:10px; padding:16px 18px; margin-bottom:14px;">
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                        <span style="font-size:1.35rem;">🔴</span>
+                        <span style="font-weight:700; color:#c0392b; font-size:1rem; letter-spacing:.2px;">PROPERTY SOLD</span>
+                    </div>
+                    <p style="margin:0 0 12px 0; font-size:0.88rem; color:#c0392b; line-height:1.6;">
+                        This property has been sold and is <strong>no longer available</strong> for purchase or booking. Contact details have been disabled.
+                    </p>
+                    <div style="background:var(--bg2); border:1px solid var(--line); border-radius:8px; padding:12px 14px; display:flex; align-items:center; gap:12px;">
+                        <img id="sold-seller-img" src="" alt="" style="width:42px; height:42px; border-radius:50%; object-fit:cover; border:2px solid rgba(224,40,40,0.4);"/>
+                        <div>
+                            <div style="font-size:0.72rem; color:var(--ink4); text-transform:uppercase; letter-spacing:.6px; font-weight:600; margin-bottom:2px;">Property Owner</div>
+                            <div id="sold-seller-name" style="font-weight:700; font-size:0.97rem; color:var(--ink);"></div>
+                            <div id="sold-seller-title" style="font-size:0.8rem; color:var(--ink4);"></div>
+                        </div>
+                    </div>
+                </div>
 
-                    <input type="text" name="senderName" class="contact-form-input" placeholder="Your Name" required/>
-                    <input type="email" name="senderEmail" class="contact-form-input" placeholder="Email Address" required/>
-                    <input type="tel" name="senderPhone" class="contact-form-input" placeholder="Phone Number"/>
-                    <textarea name="message" class="contact-form-input" rows="3" placeholder="I'm interested in this property..." required></textarea>
+                <!-- ── INQUIRY FORM (hidden for sold properties) ── -->
+                <div id="inquiry-form-wrapper">
+                    <form action="submitInquiry" method="post" style="display: flex; flex-direction: column; gap: 10px;" onsubmit="return forceDataGrab();">
+                        <input type="hidden" name="propertyId" id="inq-prop-id">
+                        <input type="hidden" name="propertyTitle" id="inq-prop-title">
+                        <input type="hidden" name="agentName" id="inq-agent-name">
 
-                    <button type="submit" class="btn-contact">Send Message</button>
-                </form>
+                        <input type="text" name="senderName" class="contact-form-input" placeholder="Your Name" required/>
+                        <input type="email" name="senderEmail" class="contact-form-input" placeholder="Email Address" required/>
+                        <input type="tel" name="senderPhone" class="contact-form-input" placeholder="Phone Number"/>
+                        <textarea name="message" class="contact-form-input" rows="3" placeholder="I'm interested in this property..." required></textarea>
+
+                        <button type="submit" class="btn-contact">Send Message</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
