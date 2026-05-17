@@ -638,6 +638,15 @@ function openDetail(id) {
     const favInput = document.getElementById('fav-property-id');
     if (favInput) favInput.value = String(id);
 
+    // Hide "Save to Dashboard" button for sold properties
+    const saveBtnContainer = document.getElementById('fav-property-id');
+    if (saveBtnContainer) {
+        const saveForm = saveBtnContainer.closest('form');
+        if (saveForm) {
+            saveForm.style.display = isSoldDetail ? 'none' : 'block';
+        }
+    }
+
     // Set description
     const detailDescEl = document.getElementById('detail-desc');
     if (detailDescEl) {

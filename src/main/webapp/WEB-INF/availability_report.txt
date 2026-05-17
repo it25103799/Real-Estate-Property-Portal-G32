@@ -1,16 +1,13 @@
 =========================================================
   NESTIQ — PROPERTY AVAILABILITY REPORT
-  Seller  : De Silva
+  Seller  : Kavindi
   Date    : 2026-05-17
 =========================================================
-  Total Listed   : 10
-  Available      : 9
-  Reserved       : 1
+  Total Listed   : 3
+  Available      : 3
+  Reserved       : 0
 
------ ACTIVE RESERVATIONS (1) -----
-  [RESERVED] Kawisigamuwa Cool Yard | Buyer: Bhashi Navod | Return: 2026-05-18
+----- ACTIVE RESERVATIONS (0) -----
 
------ COMPLETED TRANSACTIONS (2) -----
-  Kaduwela Beach view | Buyer: Bhashi Navod | Booked: 2026-05-05 | Returned: 2026-05-07
-  Kaduwela Beach view | Buyer: Ralph Will | Booked: 2026-05-05 | Returned: 2026-05-08
+----- COMPLETED TRANSACTIONS (0) -----
 =========================================================
