@@ -697,16 +697,12 @@
                                     <td>
                                         <div style="font-weight: 600; color: var(--ink);">${p.title}</div>
                                         <c:if test="${p.status == 'Sold'}">
-                                            <c:choose>
-                                                <c:when test="${not empty propertyBookingEndDates[p.id]}">
-                                                    <div style="font-size: 0.75rem; color: #1a56db; margin-top: 3px; font-weight:600;">
-                                                        🔒 Booked until: ${propertyBookingEndDates[p.id]}
-                                                    </div>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <div style="font-size: 0.75rem; color: #0d9e6e; margin-top: 2px;">✓ Sold Property</div>
-                                                </c:otherwise>
-                                            </c:choose>
+                                            <c:if test="${not empty propertyBookingEndDates[p.id]}">
+                                                <div style="font-size: 0.75rem; color: #0d9e6e; margin-top: 2px;">✓ Sold Property</div>
+                                            </c:if>
+                                            <c:if test="${empty propertyBookingEndDates[p.id]}">
+                                                <div style="font-size: 0.75rem; color: #0d9e6e; margin-top: 2px;">✓ Sold Property</div>
+                                            </c:if>
                                         </c:if>
                                     </td>
                                     <td>
@@ -738,8 +734,8 @@
                                     <td>
                                         <c:choose>
                                             <c:when test="${p.status == 'Sold' and not empty propertyBookingEndDates[p.id]}">
-                                            <span class="badge-sold" style="font-size: 0.82rem; padding: 6px 14px; display: inline-flex; align-items: center; gap: 4px; background:rgba(26,86,219,0.12); color:#1a56db; border:1px solid rgba(26,86,219,0.3);">
-                                                🔒 RENTED
+                                            <span class="badge-sold" style="font-size: 0.82rem; padding: 6px 14px; display: inline-flex; align-items: center; gap: 4px; background:rgba(13,158,110,0.12); color:#0d9e6e; border:1px solid rgba(13,158,110,0.3);">
+                                                ✅ RENTED
                                             </span>
                                             </c:when>
                                             <c:when test="${p.status == 'Sold'}">
@@ -757,7 +753,7 @@
                                     <td>
                                         <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
                                             <c:choose>
-                                                <c:when test="${p.status != 'Sold'}">
+                                                <c:when test="${p.status != 'Sold' and p.status != 'For Rent'}">
                                                     <button class="btn-edit" onclick="openEditModal('${p.id}', '${p.title}', '${p.price}', '${p.location}', '${p.type}', '${p.status}', '${p.bedrooms}', '${p.bathrooms}', '${p.description}')"
                                                             style="padding: 6px 10px; font-size: 0.75rem;" title="Edit property details">
                                                         ✏️ Edit
@@ -768,6 +764,12 @@
                                                             🏷️ Sold
                                                         </button>
                                                     </form>
+                                                </c:when>
+                                                <c:when test="${p.status == 'For Rent'}">
+                                                    <button class="btn-edit" onclick="openEditModal('${p.id}', '${p.title}', '${p.price}', '${p.location}', '${p.type}', '${p.status}', '${p.bedrooms}', '${p.bathrooms}', '${p.description}')"
+                                                            style="padding: 6px 10px; font-size: 0.75rem;" title="Edit property details">
+                                                        ✏️ Edit
+                                                    </button>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <span style="opacity: 0.4; font-size: 0.82rem; padding: 6px 10px;">—</span>
@@ -955,7 +957,6 @@
                         <th>Booked On</th>
                         <th>Returned On</th>
                         <th>Booking Status</th>
-                        <th>Property Status</th>
                         <th style="width:100px;">Action</th>
                     </tr>
                     </thead>
@@ -977,19 +978,6 @@
                                     <td>${bk.returnDate}</td>
                                     <td><span class="status-badge" style="background:rgba(13,158,110,0.1);color:#0d9e6e;">Completed</span></td>
                                     <td>
-                                        <c:choose>
-                                            <c:when test="${bk.propertyStatus == 'Sold'}">
-                                                <span class="badge-sold">✅ Sold</span>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <form action="markAsSold" method="post" style="margin:0;" onsubmit="return confirm('Mark &quot;${bk.propertyTitle}&quot; as Sold? This will update the property status to Sold and display it in red color on the Browse tab.');">
-                                                    <input type="hidden" name="propertyId" value="${bk.propertyId}">
-                                                    <button type="submit" class="btn-edit" style="color: #0d9e6e; border-color: #0d9e6e; font-size: 0.78rem; padding: 6px 10px;">🏷️ Mark as Sold</button>
-                                                </form>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                    <td>
                                         <form action="deleteCompletedBooking" method="post" style="margin:0;" onsubmit="return confirm('Are you sure you want to delete this completed transaction? This action cannot be undone.');">
                                             <input type="hidden" name="bookingId" value="${bk.bookingId}">
                                             <button type="submit" class="btn-edit" style="color: #ef4444; border-color: #ef4444; font-size: 0.78rem; padding: 6px 10px;" title="Delete this completed transaction">
@@ -1001,7 +989,7 @@
                             </c:forEach>
                         </c:when>
                         <c:otherwise>
-                            <tr><td colspan="9" style="text-align:center; padding:36px; opacity:0.6;">No completed transactions yet.</td></tr>
+                            <tr><td colspan="8" style="text-align:center; padding:36px; opacity:0.6;">No completed transactions yet.</td></tr>
                         </c:otherwise>
                     </c:choose>
                     </tbody>

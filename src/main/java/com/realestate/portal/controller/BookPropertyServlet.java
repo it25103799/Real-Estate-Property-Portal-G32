@@ -127,8 +127,9 @@ public class BookPropertyServlet extends HttpServlet {
             out.println(record);
         }
 
-        // ── Mark rentable property as "Sold" for the booking period ─────────
-        markRentalPropertyAsSold(request, propertyId);
+        // ── Do NOT mark as sold when buyer books - only when seller confirms ──
+        // markRentalPropertyAsSold(request, propertyId);  // REMOVED
+        // Property stays "For Rent" until seller clicks "Confirm" in Active Bookings
         // ─────────────────────────────────────────────────────────────────────
 
         // ENHANCEMENT 2: Create notification for seller about new booking

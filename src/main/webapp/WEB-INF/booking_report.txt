@@ -238,3 +238,96 @@
   Status        : RESERVED
   Penalty Rate  : $75000.00 / overdue day (= daily rental fee)
 
+=========================================================
+  BOOKING COMPLETED — 2026-05-18
+=========================================================
+  Booking ID    : BK_1779046984727
+  Property      : Kawisigamuwa Cool Yard  [9f4e6bca]
+  Seller        : De Silva
+  Buyer Name    : john william
+  Rental Start  : 2026-05-18
+  Return Date   : 2026-05-19
+  Completed On  : 2026-05-18
+  Days Rented   : 1 day(s)
+  Daily Rate    : LKR 75000.00
+  ─────────────────────────────────────────────────────
+  TOTAL EARNED  : LKR 75000.00
+  Property Status → Restored to 'For Rent' (Available)
+
+=========================================================
+  NEW BOOKING — 2026-05-18
+=========================================================
+  Booking ID    : BK_1779051187915
+  Property      : Rantambe New Billet  [35f6f89d]
+  Seller        : De Silva
+  Buyer Account : john william
+  Buyer Name    : john william
+  Buyer Email   : abcd123@gmail.com
+  Buyer Phone   : 0770536894
+  Booked On     : 2026-05-18
+  Return Date   : 2026-05-19
+  Status        : RESERVED
+  Penalty Rate  : $4500.00 / overdue day (= daily rental fee)
+
+=========================================================
+  BOOKING COMPLETED — 2026-05-18
+=========================================================
+  Booking ID    : BK_1779051187915
+  Property      : Rantambe New Billet  [35f6f89d]
+  Seller        : De Silva
+  Buyer Name    : john william
+  Rental Start  : 2026-05-18
+  Return Date   : 2026-05-19
+  Completed On  : 2026-05-18
+  Days Rented   : 1 day(s)
+  Daily Rate    : LKR 4500.00
+  ─────────────────────────────────────────────────────
+  TOTAL EARNED  : LKR 4500.00
+  Property Status → Restored to 'For Rent' (Available)
+
+=========================================================
+  NEW BOOKING — 2026-05-18
+=========================================================
+  Booking ID    : BK_1779052406109
+  Property      : Anuradhapura River side  [8bb3ceaa]
+  Seller        : Dinesh
+  Buyer Account : Dinindu
+  Buyer Name    : Dinindu
+  Buyer Email   : samarakoondinindu@gmail.com
+  Buyer Phone   : 0756754534
+  Booked On     : 2026-05-18
+  Return Date   : 2026-05-20
+  Status        : RESERVED
+  Penalty Rate  : $7500.00 / overdue day (= daily rental fee)
+
+=========================================================
+  NEW BOOKING — 2026-05-18
+=========================================================
+  Booking ID    : BK_1779054206450
+  Property      : Ambewela Farm View  [4103559b]
+  Seller        : Dinesh
+  Buyer Account : Dinindu
+  Buyer Name    : Dinindu
+  Buyer Email   : samarakoondinindu@gmail.com
+  Buyer Phone   : 0756754534
+  Booked On     : 2026-05-18
+  Return Date   : 2026-05-21
+  Status        : RESERVED
+  Penalty Rate  : $9500.00 / overdue day (= daily rental fee)
+
+=========================================================
+  BOOKING COMPLETED — 2026-05-18
+=========================================================
+  Booking ID    : BK_1779054206450
+  Property      : Ambewela Farm View  [4103559b]
+  Seller        : Dinesh
+  Buyer Name    : Dinindu
+  Rental Start  : 2026-05-18
+  Return Date   : 2026-05-21
+  Completed On  : 2026-05-18
+  Days Rented   : 3 day(s)
+  Daily Rate    : LKR 9500.00
+  ─────────────────────────────────────────────────────
+  TOTAL EARNED  : LKR 28500.00
+  Property Status → Restored to 'For Rent' (Available)
+

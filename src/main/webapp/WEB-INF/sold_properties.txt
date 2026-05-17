@@ -14,3 +14,4 @@
 2026-05-17 00:00:05|0a22dc7a|Hegalla beach Villa|95000.0|Galle|assets/images/property-types/villa.jpg
 2026-05-17 00:00:06|3ea4a9d6|Kengalla Mount view|1000000|Kandy|assets/images/property-types/house.jpg
 2026-05-17 00:00:07|cfbc6b3c|Nittambuwa Smart Home|20000000.0|Gampaha|assets/images/property-types/apartment.jpg
+2026-05-18 02:38:07|04ef6ca1|Wadduwa Trophy |8500000.0|Wadduwa|assets/images/property-types/house.jpg
