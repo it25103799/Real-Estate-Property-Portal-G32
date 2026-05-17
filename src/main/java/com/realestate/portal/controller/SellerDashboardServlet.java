@@ -281,6 +281,8 @@ public class SellerDashboardServlet extends HttpServlet {
         List<Map<String, String>> activeBookings    = new ArrayList<>();
         List<Map<String, String>> completedBookings = new ArrayList<>();
         Set<String> reservedPropIds = new HashSet<>();
+        // Map: propertyId -> returnDate for active bookings (used to show "Booked until" on property cards)
+        java.util.Map<String, String> propertyBookingEndDates = new java.util.HashMap<>();
 
         String bookingsPath = getServletContext().getRealPath("/WEB-INF/bookings.txt");
         File bookingsFile   = new File(bookingsPath);
@@ -341,6 +343,8 @@ public class SellerDashboardServlet extends HttpServlet {
                     } else {
                         activeBookings.add(bk);
                         reservedPropIds.add(d[1]);
+                        // Track the return date so property cards can display "Booked until: DATE"
+                        propertyBookingEndDates.put(d[1].trim(), d[9].trim());
                     }
 
                     // Check for booking update notifications
@@ -372,12 +376,31 @@ public class SellerDashboardServlet extends HttpServlet {
         // Calculate total earnings from sold properties
         double totalEarnings = 0.0;
 
-        // Method 1: From properties with "Sold" status in properties.txt
+        // Method 1: From properties with "Sold" status in properties.txt (permanently sold)
         for (Property p : myProperties) {
-            if ("Sold".equals(p.getStatus())) {
+            if ("Sold".equals(p.getStatus()) && !reservedPropIds.contains(p.getId())) {
+                // Only count permanent sales; rental "Sold" properties are calculated per booking
                 totalEarnings += p.getPrice();
             }
         }
+
+        // Method 2: Rental earnings from completed bookings (days × daily rate)
+        double rentalEarnings = 0.0;
+        for (Map<String, String> bk : completedBookings) {
+            try {
+                String startStr = bk.get("bookingDate");
+                String endStr   = bk.get("returnDate");
+                double rate     = Double.parseDouble(bk.getOrDefault("dailyRate", "100.0"));
+                if (startStr != null && endStr != null) {
+                    java.time.LocalDate start = java.time.LocalDate.parse(startStr, dtf);
+                    java.time.LocalDate end   = java.time.LocalDate.parse(endStr,   dtf);
+                    long days = java.time.temporal.ChronoUnit.DAYS.between(start, end);
+                    if (days <= 0) days = 1;
+                    rentalEarnings += days * rate;
+                }
+            } catch (Exception ignored) {}
+        }
+        totalEarnings += rentalEarnings;
 
         // ── Write availability report to disk ─────────────────────────────────
         String reportPath = getServletContext().getRealPath("/WEB-INF/availability_report.txt");
@@ -415,13 +438,15 @@ public class SellerDashboardServlet extends HttpServlet {
         }
         // ─────────────────────────────────────────────────────────────────────
 
-        request.setAttribute("totalProperties",   totalProperties);
-        request.setAttribute("reservedCount",      reservedCount);
-        request.setAttribute("availableCount",     availableCount);
-        request.setAttribute("soldCount",          soldCount);
-        request.setAttribute("activeBookings",     activeBookings);
-        request.setAttribute("completedBookings",  completedBookings);
-        request.setAttribute("totalEarnings",      totalEarnings);
+        request.setAttribute("totalProperties",         totalProperties);
+        request.setAttribute("reservedCount",            reservedCount);
+        request.setAttribute("availableCount",           availableCount);
+        request.setAttribute("soldCount",                soldCount);
+        request.setAttribute("activeBookings",           activeBookings);
+        request.setAttribute("completedBookings",        completedBookings);
+        request.setAttribute("totalEarnings",            totalEarnings);
+        request.setAttribute("rentalEarnings",           rentalEarnings);
+        request.setAttribute("propertyBookingEndDates",  propertyBookingEndDates);
         // ─────────────────────────────────────────────────────────────────────────
 
 
