@@ -1,10 +1,10 @@
 =========================================================
   NESTIQ — PROPERTY AVAILABILITY REPORT
-  Seller  : Tharwa Broo
-  Date    : 2026-05-17
+  Seller  : Tharusha dilsara
+  Date    : 2026-05-19
 =========================================================
-  Total Listed   : 2
-  Available      : 2
+  Total Listed   : 1
+  Available      : 1
   Reserved       : 0
 
 ----- ACTIVE RESERVATIONS (0) -----

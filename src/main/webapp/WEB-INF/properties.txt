@@ -20,3 +20,4 @@ ca8d1b41,Galle resort,75000,Galle,Villa,Sold,jack william,assets/images/property
 8c209711,Kurunegala Mount's Top,85000,Kurunegala,Villa,For Rent,De Silva,assets/images/property-types/villa.jpg,0,0,
 50c5b2e3,Weerakodiyana,20000,Dummalasoriya,House,For Rent,Tharwa Broo,assets/images/property-types/house.jpg,2,1,1 Bath tub with 2 bed room From dummalasoriya Werakodiyana
 ff992024,Chilaw Hotel rooms,250000,Chilaw,House,For Sale,Tharwa Broo,assets/images/property-types/house.jpg,5,2,With  5 Bed Room And 2 Bath tubs With Chilaw hotel room
+6c102e23,Dummalasoriya Maha gedara Hotel,20000.0,Dummalasoriya,Apartment,For Sale,Tharusha dilsara,assets/images/property-types/apartment.jpg,8,4,Dommalasoriya Mahagedara Hotel Room with all fasilites 
