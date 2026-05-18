@@ -646,6 +646,9 @@
             padding: 20px;
             text-align: center;
         }
+        .sold-img-overlay.booked-overlay {
+            background: rgba(16,185,129,.45);
+        }
         .sold-img-overlay .sold-title {
             font-size: 2rem;
             font-weight: 900;
@@ -2088,31 +2091,47 @@
                 <c:choose>
                     <c:when test="${not empty propertyList}">
                         <c:forEach var="p" items="${propertyList}">
-                            <div class="prop-card${p.status.trim() == 'Sold' ? ' prop-card--sold' : ''}" onclick="openDetail('${p.id}')" style="cursor: pointer;" title="View details for ${p.title}">
+                            <%-- Use displayStatusMap for display: For Rent + active booking = Sold --%>
+                            <c:set var="displayStatus" value="${displayStatusMap[p.id]}"/>
+                            <%-- Check if this is a booked rental (has active booking end date) --%>
+                            <c:set var="isBookedRental" value="${not empty propertyBookingEndDates[p.id]}"/>
+                            <div class="prop-card${displayStatus == 'Sold' ? ' prop-card--sold' : ''}" onclick="openDetail('${p.id}')" style="cursor: pointer;" title="View details for ${p.title}">
                                 <div class="prop-img-wrap">
                                     <img src="${p.imageUrl}" alt="${p.title}" loading="lazy"/>
                                     <div class="prop-tags">
                                         <c:choose>
-                                            <c:when test="${p.status.trim() == 'Sold'}">
+                                            <c:when test="${isBookedRental}">
+                                                <span class="prop-tag" style="background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.3);">Booked</span>
+                                            </c:when>
+                                            <c:when test="${displayStatus == 'Sold'}">
                                                 <span class="prop-tag tag-sold">Sold</span>
                                             </c:when>
-                                            <c:when test="${p.status.trim() == 'For Rent'}">
-                                                <span class="prop-tag tag-rent">${p.status}</span>
+                                            <c:when test="${displayStatus == 'For Rent'}">
+                                                <span class="prop-tag tag-rent">${displayStatus}</span>
                                             </c:when>
                                             <c:otherwise>
-                                                <span class="prop-tag tag-sale">${p.status}</span>
+                                                <span class="prop-tag tag-sale">${displayStatus}</span>
                                             </c:otherwise>
                                         </c:choose>
                                     </div>
-                                    <c:if test="${p.status.trim() == 'Sold'}">
-                                        <div class="sold-img-overlay">
-                                            <div class="sold-title">SOLD</div>
-                                            <div class="sold-message">This property has been sold and is no longer available</div>
+                                    <c:if test="${displayStatus == 'Sold'}">
+                                        <div class="sold-img-overlay${isBookedRental ? ' booked-overlay' : ''}">
+                                            <c:choose>
+                                                <c:when test="${isBookedRental}">
+                                                    <div class="sold-title">BOOKED</div>
+                                                    <div class="sold-message">This property has been booked until <strong style="color:#fff;font-size:1.1rem;">${propertyBookingEndDates[p.id]}</strong></div>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <div class="sold-title">SOLD</div>
+                                                    <div class="sold-message">This property has been sold and is no longer available</div>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </div>
                                     </c:if>
                                 </div>
                                 <div class="prop-body">
-                                    <c:if test="${p.status.trim() == 'Sold'}"><span class="sold-tape">🔴 Sold</span></c:if>
+                                    <c:if test="${isBookedRental}"><span class="sold-tape" style="background:rgba(16,185,129,0.15);color:#10b981;border-bottom:2px solid #10b981;"> ✅ Booked</span></c:if>
+                                    <c:if test="${displayStatus == 'Sold' and not isBookedRental}"><span class="sold-tape">  Sold</span></c:if>
                                     <div class="prop-price">LKR <fmt:formatNumber value="${p.price}" pattern="#,##0.00" /><c:if test="${p.status.trim() == 'For Rent'}"><span style="font-size:0.58em;font-weight:400;color:var(--ink3)">/day</span></c:if></div>
                                     <div class="prop-name">${p.title}</div>
                                     <div class="prop-loc">
@@ -2528,6 +2547,7 @@
                 <div class="filter-chips">
                     <div class="filter-chip active" onclick="toggleChip(this,'soldStatus','all')">All</div>
                     <div class="filter-chip" onclick="toggleChip(this,'soldStatus','available')">Available</div>
+                    <div class="filter-chip" onclick="toggleChip(this,'soldStatus','booked')">Booked</div>
                     <div class="filter-chip" onclick="toggleChip(this,'soldStatus','sold')">Sold</div>
                 </div>
             </div>
@@ -2708,13 +2728,13 @@
                     <button type="submit" class="btn-contact" style="margin-top: 15px; width: 100%; background: var(--green); font-weight: 700;">🔖 Reserve Now</button>
                 </form>
 
-                <!-- ── SOLD PROPERTY NOTICE (shown only for sold properties) ── -->
+                <!-- ── SOLD/RENTED PROPERTY NOTICE (shown for sold or confirmed rental properties) ── -->
                 <div id="sold-status-banner" style="display:none; background:rgba(224,40,40,0.09); border:1.5px solid rgba(224,40,40,0.35); border-radius:10px; padding:16px 18px; margin-bottom:14px;">
                     <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
-                        <span style="font-size:1.35rem;">🔴</span>
-                        <span style="font-weight:700; color:#c0392b; font-size:1rem; letter-spacing:.2px;">PROPERTY SOLD</span>
+                        <span id="sold-icon" style="font-size:1.35rem;">🔴</span>
+                        <span id="sold-title-text" style="font-weight:700; color:#c0392b; font-size:1rem; letter-spacing:.2px;">PROPERTY SOLD</span>
                     </div>
-                    <p style="margin:0 0 12px 0; font-size:0.88rem; color:#c0392b; line-height:1.6;">
+                    <p id="sold-message" style="margin:0 0 12px 0; font-size:0.88rem; color:#c0392b; line-height:1.6;">
                         This property has been sold and is <strong>no longer available</strong> for purchase or booking. Contact details have been disabled.
                     </p>
                     <div style="background:var(--bg2); border:1px solid var(--line); border-radius:8px; padding:12px 14px; display:flex; align-items:center; gap:12px;">
@@ -2938,6 +2958,13 @@
         })("${p.id}")
     });
     </c:forEach>
+
+    // 2.3 Property Booking End Dates Bridge (for "Booked until" display)
+    window.propertyBookingEndDates = {};
+    <c:forEach items="${propertyBookingEndDates}" var="entry">
+    window.propertyBookingEndDates["${entry.key}"] = "${entry.value}";
+    </c:forEach>
+    console.log("📅 Booking End Dates:", window.propertyBookingEndDates);
 
     // Build price range dropdown after properties are loaded
     if (typeof buildPriceRangeDropdown === 'function') {

@@ -33,6 +33,16 @@ public class BuyerDashboardServlet extends HttpServlet {
             return;
         }
 
+        // ── Auto-restore expired rental properties ──────────────────────────
+        try {
+            RentalExpiryCheckerServlet expiryChecker = new RentalExpiryCheckerServlet();
+            expiryChecker.init(getServletConfig());
+            expiryChecker.runExpiryCheck(request);
+        } catch (Exception expiryEx) {
+            System.err.println("Expiry check warning: " + expiryEx.getMessage());
+        }
+        // ───────────────────────────────────────────────────────────────────
+
         List<String> myFavIds = new ArrayList<>();
         List<Property> savedProperties = new ArrayList<>();
 
@@ -355,12 +365,12 @@ public class BuyerDashboardServlet extends HttpServlet {
                     if (line.trim().isEmpty()) continue;
                     String[] parts = line.split(",", 9); // Updated to 9 fields for new format
                     if (parts.length < 6) continue;
-                    
+
                     String annId = parts[0].trim();
-                    
+
                     // Skip if already read
                     if (readAnnIds.contains(annId)) continue;
-                    
+
                     // All announcements are shown to all users (no filtering by audience)
                     Map<String, String> n = new HashMap<>();
                     n.put("sender",    "System Administration");

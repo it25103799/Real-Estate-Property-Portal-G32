@@ -432,98 +432,98 @@
         .chat-msgs::-webkit-scrollbar-thumb { background: rgba(145,152,168,.75); border-radius: 10px; }
         .chat-msgs::-webkit-scrollbar-thumb:hover { background: rgba(145,152,168,.95); }
 
-       /* ── TELEGRAM STYLE THEME TOGGLE ── */
-               .theme-switch {
-                   position: relative; width: 54px; height: 30px; background-color: var(--line);
-                   border-radius: 30px; cursor: pointer; display: flex; align-items: center;
-                   padding: 4px; transition: background-color 0.4s ease; box-sizing: border-box;
-               }
-               .theme-switch-thumb {
-                   width: 22px; height: 22px; background-color: white; border-radius: 50%;
-                   box-shadow: 0 2px 5px rgba(0,0,0,0.2); display: flex; align-items: center;
-                   justify-content: center; font-size: 0.75rem;
-                   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-               }
-               [data-theme="dark"] .theme-switch { background-color: var(--accent); }
-               [data-theme="dark"] .theme-switch-thumb { transform: translateX(24px); background-color: var(--bg2); }
+        /* ── TELEGRAM STYLE THEME TOGGLE ── */
+        .theme-switch {
+            position: relative; width: 54px; height: 30px; background-color: var(--line);
+            border-radius: 30px; cursor: pointer; display: flex; align-items: center;
+            padding: 4px; transition: background-color 0.4s ease; box-sizing: border-box;
+        }
+        .theme-switch-thumb {
+            width: 22px; height: 22px; background-color: white; border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); display: flex; align-items: center;
+            justify-content: center; font-size: 0.75rem;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        [data-theme="dark"] .theme-switch { background-color: var(--accent); }
+        [data-theme="dark"] .theme-switch-thumb { transform: translateX(24px); background-color: var(--bg2); }
     </style>
 </head>
 <body data-theme="light" id="body-theme">
 
 <div class="dashboard-container">
     <div class="header">
-            <h2>👋 Welcome, ${sessionScope.loggedUser}</h2>
-            <div style="display: flex; align-items: center; gap: 15px;">
+        <h2>👋 Welcome, ${sessionScope.loggedUser}</h2>
+        <div style="display: flex; align-items: center; gap: 15px;">
 
-                <div class="theme-switch" onclick="toggleTheme()" title="Toggle Dark Mode">
-                    <div class="theme-switch-thumb" id="theme-toggle">🌙</div>
-                </div>
+            <div class="theme-switch" onclick="toggleTheme()" title="Toggle Dark Mode">
+                <div class="theme-switch-thumb" id="theme-toggle">🌙</div>
+            </div>
 
-                <!-- ── ANNOUNCEMENTS BUTTON ── -->
-                <div style="position: relative; display: inline-flex;">
-                    <button class="btn" onclick="window.location.href='announcements'"
-                            id="announcements-tab-btn"
-                            title="View Official Announcements"
-                            style="background:var(--line); color:var(--ink); display:flex; align-items:center; gap:6px;
+            <!-- ── ANNOUNCEMENTS BUTTON ── -->
+            <div style="position: relative; display: inline-flex;">
+                <button class="btn" onclick="window.location.href='announcements'"
+                        id="announcements-tab-btn"
+                        title="View Official Announcements"
+                        style="background:var(--line); color:var(--ink); display:flex; align-items:center; gap:6px;
                                    transition: all 0.2s;">
-                        📢 Announcements
-                    </button>
-                    <span id="ann-tab-count"
-                          style="position: absolute; top: -6px; right: -6px; background: #e02828;
+                    📢 Announcements
+                </button>
+                <span id="ann-tab-count"
+                      style="position: absolute; top: -6px; right: -6px; background: #e02828;
                                  color: white; border-radius: 50%; font-size: 0.65rem; font-weight: 700;
                                  min-width: 18px; height: 18px; display: none; align-items: center;
                                  justify-content: center; padding: 0 4px; line-height: 1;
                                  pointer-events: none; box-shadow: 0 2px 8px rgba(224,40,40,0.3);"></span>
-                </div>
-
-                <!-- Bell Notifications (same as homepage) -->
-                <div class="nav-notif" id="bell-container" onclick="toggleNotif(event)" style="position: relative; cursor: pointer; margin-right: 2px; display:flex; align-items:center;">
-                    <span class="notif-icon" style="font-size: 1.5rem;">🔔</span>
-                    <div id="notif-count" class="notif-badge" style="position:absolute; top:-5px; right:-5px; background:#e02828; color:white; font-size:0.65rem; padding:2px 6px; border-radius:10px; font-weight:bold; border:2px solid var(--bg); display:none;">0</div>
-                    <div class="notif-panel" id="notif-panel" style="position:absolute; top:120%; right:0; width:320px; background:var(--bg); border:1px solid var(--line); border-radius:16px; box-shadow:0 32px 80px rgba(0,0,0,.16); display:none; z-index:2000; overflow:hidden;">
-                        <div class="notif-header" style="padding:16px; border-bottom:1px solid var(--line); font-weight:700; font-size:0.95rem; background:var(--bg2);">Notifications</div>
-                        <div id="notif-list" style="max-height:350px; overflow-y:auto;">
-                            <p style="padding: 20px; text-align: center; color: rgba(0,0,0,.45); font-size: 0.85rem;">No new messages</p>
-                        </div>
-                        <div class="notif-footer" style="padding:12px; text-align:center; font-size:0.8rem; color:var(--accent); background:var(--bg2); border-top:1px solid var(--line);">Nestiq Secure Messaging</div>
-                    </div>
-                </div>
-
-                <button class="btn" onclick="window.location.href='sellerAnalytics'" style="background: rgba(26,86,219,0.1); color: var(--accent); border-color: rgba(26,86,219,0.3);">📊 Analytics</button>
-                <button class="btn" onclick="window.location.href='properties'" style="background: var(--line); color: var(--ink);">🏠 Go to Homepage</button>
-                <form action="logout" method="post" style="display:inline;">
-                    <button type="submit" class="btn" style="background: #e02828;">Logout</button>
-                </form>
             </div>
+
+            <!-- Bell Notifications (same as homepage) -->
+            <div class="nav-notif" id="bell-container" onclick="toggleNotif(event)" style="position: relative; cursor: pointer; margin-right: 2px; display:flex; align-items:center;">
+                <span class="notif-icon" style="font-size: 1.5rem;">🔔</span>
+                <div id="notif-count" class="notif-badge" style="position:absolute; top:-5px; right:-5px; background:#e02828; color:white; font-size:0.65rem; padding:2px 6px; border-radius:10px; font-weight:bold; border:2px solid var(--bg); display:none;">0</div>
+                <div class="notif-panel" id="notif-panel" style="position:absolute; top:120%; right:0; width:320px; background:var(--bg); border:1px solid var(--line); border-radius:16px; box-shadow:0 32px 80px rgba(0,0,0,.16); display:none; z-index:2000; overflow:hidden;">
+                    <div class="notif-header" style="padding:16px; border-bottom:1px solid var(--line); font-weight:700; font-size:0.95rem; background:var(--bg2);">Notifications</div>
+                    <div id="notif-list" style="max-height:350px; overflow-y:auto;">
+                        <p style="padding: 20px; text-align: center; color: rgba(0,0,0,.45); font-size: 0.85rem;">No new messages</p>
+                    </div>
+                    <div class="notif-footer" style="padding:12px; text-align:center; font-size:0.8rem; color:var(--accent); background:var(--bg2); border-top:1px solid var(--line);">Nestiq Secure Messaging</div>
+                </div>
+            </div>
+
+            <button class="btn" onclick="window.location.href='sellerAnalytics'" style="background: rgba(26,86,219,0.1); color: var(--accent); border-color: rgba(26,86,219,0.3);">📊 Analytics</button>
+            <button class="btn" onclick="window.location.href='properties'" style="background: var(--line); color: var(--ink);">🏠 Go to Homepage</button>
+            <form action="logout" method="post" style="display:inline;">
+                <button type="submit" class="btn" style="background: #e02828;">Logout</button>
+            </form>
+        </div>
     </div>
 
     <!-- ── SELLER TOP ROW: Personal Info + Stats Cards ── -->
     <div class="seller-top-row">
 
-    <div class="profile-section">
-        <div class="profile-header">
-            <h3>Personal Information</h3>
-            <button type="button" id="superEditBtn" class="edit-btn" onclick="toggleEditMode()">Edit</button>
-        </div>
-
-        <form action="UpdateProfileServlet" method="POST" id="profileForm">
-            <input type="hidden" name="oldEmail" value="<%= session.getAttribute("loggedEmail") %>">
-
-            <div class="form-group">
-                <label style="color: var(--ink); opacity: 0.6; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;">NAME</label>
-                <input type="text" name="newName" value="<%= session.getAttribute("loggedUser") %>" readonly class="readonly-input">
+        <div class="profile-section">
+            <div class="profile-header">
+                <h3>Personal Information</h3>
+                <button type="button" id="superEditBtn" class="edit-btn" onclick="toggleEditMode()">Edit</button>
             </div>
 
-            <div class="form-group" style="margin-top: 15px;">
-                <label style="color: var(--ink); opacity: 0.6; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;">EMAIL</label>
-                <input type="email" name="newEmail" value="<%= session.getAttribute("loggedEmail") %>" readonly class="readonly-input">
-            </div>
+            <form action="UpdateProfileServlet" method="POST" id="profileForm">
+                <input type="hidden" name="oldEmail" value="<%= session.getAttribute("loggedEmail") %>">
 
-            <div class="form-group" style="position: relative; margin-top: 15px;">
-                <label style="color: var(--ink); opacity: 0.6; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;">PASSWORD</label>
-                <input type="password" id="pwdInput" name="newPassword" value="<%= session.getAttribute("loggedPassword") %>" readonly class="readonly-input" style="padding-right: 35px; width: 100%; box-sizing: border-box;">
+                <div class="form-group">
+                    <label style="color: var(--ink); opacity: 0.6; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;">NAME</label>
+                    <input type="text" name="newName" value="<%= session.getAttribute("loggedUser") %>" readonly class="readonly-input">
+                </div>
 
-                <span onclick="togglePassword()" style="position: absolute; right: 10px; top: 32px; cursor: pointer; color: #a0aabf; transition: 0.2s;">
+                <div class="form-group" style="margin-top: 15px;">
+                    <label style="color: var(--ink); opacity: 0.6; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;">EMAIL</label>
+                    <input type="email" name="newEmail" value="<%= session.getAttribute("loggedEmail") %>" readonly class="readonly-input">
+                </div>
+
+                <div class="form-group" style="position: relative; margin-top: 15px;">
+                    <label style="color: var(--ink); opacity: 0.6; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;">PASSWORD</label>
+                    <input type="password" id="pwdInput" name="newPassword" value="<%= session.getAttribute("loggedPassword") %>" readonly class="readonly-input" style="padding-right: 35px; width: 100%; box-sizing: border-box;">
+
+                    <span onclick="togglePassword()" style="position: absolute; right: 10px; top: 32px; cursor: pointer; color: #a0aabf; transition: 0.2s;">
                     <svg id="eyeOpen" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                         <circle cx="12" cy="12" r="3"></circle>
@@ -533,609 +533,646 @@
                         <line x1="1" y1="1" x2="23" y2="23"></line>
                     </svg>
                 </span>
-            </div>
+                </div>
 
-            <button type="submit" id="saveProfileBtn" class="save-btn" style="display: none;">Save Changes</button>
-        </form>
+                <button type="submit" id="saveProfileBtn" class="save-btn" style="display: none;">Save Changes</button>
+            </form>
 
-        <c:if test="${param.profile == 'success'}">
-            <div style="background: rgba(13,158,110,0.1); border: 1px solid #0d9e6e; color: #0d9e6e; padding: 12px 16px; border-radius: 8px; margin-top: 15px; font-weight: 600; text-align: center;">
-                ✅ Profile credentials updated successfully!
-            </div>
-        </c:if>
-        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--line); text-align: center;">
-                    <form action="DeleteAccountServlet" method="POST" style="margin: 0;" onsubmit="return confirm('⚠️ WARNING: Are you absolutely sure you want to permanently delete your account? This action cannot be undone and you will lose all saved properties.');">
-                        <input type="hidden" name="userEmail" value="<%= session.getAttribute("loggedEmail") %>">
-                        <button type="submit" style="background: transparent; color: var(--red); border: none; font-size: 0.85rem; font-weight: 600; cursor: pointer; text-decoration: underline;">
-                            Delete My Account
-                        </button>
-                    </form>
-        </div>
-    </div>
-    <!-- end .profile-section -->
-
-    <!-- ── STATS + INQUIRIES ROW ─────────────────────────────────────── -->
-    <div class="stats-inquiries-row" style="grid-template-columns: 1fr 400px; gap: 20px; margin-bottom: 24px;">
-
-        <!-- Left: Stat Cards -->
-        <div class="stats-grid" style="margin-bottom: 0;">
-            <div class="stat-card">
-                <div class="stat-icon blue">🏠</div>
-                <div class="stat-value">${not empty myProperties ? myProperties.size() : 0}</div>
-                <div class="stat-label">Total Properties</div>
-            </div>
-
-            <div class="stat-card amber">
-                <div class="stat-icon amber">📋</div>
-                <div class="stat-value">${not empty activeBookings ? activeBookings.size() : 0}</div>
-                <div class="stat-label">Active Bookings</div>
-            </div>
-
-            <div class="stat-card green">
-                <div class="stat-icon green">✅</div>
-                <div class="stat-value">${not empty soldCount ? soldCount : 0}</div>
-                <div class="stat-label">Sold Properties</div>
-            </div>
-
-            <div class="stat-card red">
-                <div class="stat-icon red">💰</div>
-                <div class="stat-value">LKR <fmt:formatNumber value="${not empty totalEarnings ? totalEarnings : 0}" pattern="#,##0"/></div>
-                <div class="stat-label">Total Earnings</div>
-            </div>
-            <div class="stat-card" style="--card-accent:#8b5cf6;">
-                <div class="stat-icon" style="background:rgba(139,92,246,0.10);">👁️</div>
-                <div class="stat-value">${not empty analyticsViews ? analyticsViews : 0}</div>
-                <div class="stat-label">Total Listing Views</div>
-            </div>
-            <div class="stat-card" style="--card-accent:#f59e0b;">
-                <div class="stat-icon" style="background:rgba(245,158,11,0.10);">📩</div>
-                <div class="stat-value">${not empty analyticsInquiries ? analyticsInquiries : 0}</div>
-                <div class="stat-label">Total Inquiries</div>
-            </div>
-            <div class="stat-card" style="--card-accent:#0d9e6e;">
-                <div class="stat-icon" style="background:rgba(13,158,110,0.10);">📋</div>
-                <div class="stat-value">${not empty analyticsBookings ? analyticsBookings : 0}</div>
-                <div class="stat-label">Total Bookings</div>
-            </div>
-            <div class="stat-card" style="--card-accent:#ec4899;">
-                <div class="stat-icon" style="background:rgba(236,72,153,0.10);">❤️</div>
-                <div class="stat-value">${not empty analyticsFavorites ? analyticsFavorites : 0}</div>
-                <div class="stat-label">Times Saved by Buyers</div>
+            <c:if test="${param.profile == 'success'}">
+                <div style="background: rgba(13,158,110,0.1); border: 1px solid #0d9e6e; color: #0d9e6e; padding: 12px 16px; border-radius: 8px; margin-top: 15px; font-weight: 600; text-align: center;">
+                    ✅ Profile credentials updated successfully!
+                </div>
+            </c:if>
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--line); text-align: center;">
+                <form action="DeleteAccountServlet" method="POST" style="margin: 0;" onsubmit="return confirm('⚠️ WARNING: Are you absolutely sure you want to permanently delete your account? This action cannot be undone and you will lose all saved properties.');">
+                    <input type="hidden" name="userEmail" value="<%= session.getAttribute("loggedEmail") %>">
+                    <button type="submit" style="background: transparent; color: var(--red); border: none; font-size: 0.85rem; font-weight: 600; cursor: pointer; text-decoration: underline;">
+                        Delete My Account
+                    </button>
+                </form>
             </div>
         </div>
+        <!-- end .profile-section -->
 
-        <!-- Right: Buyer Inquiries Card -->
-        <div class="card" style="margin-bottom: 0; margin-top: 20px; padding: 20px;">
-            <h3 class="card-title" style="font-size: 1.1rem; margin-bottom: 16px; padding-bottom: 12px;">📩 Buyer Inquiries</h3>
+        <!-- ── STATS + INQUIRIES ROW ─────────────────────────────────────── -->
+        <div class="stats-inquiries-row" style="display: grid; grid-template-columns: 1fr 400px; gap: 20px; margin-bottom: 24px;">
 
-            <div style="display: flex; flex-direction: column; gap: 12px;">
-                <select id="inqSelect" style="width: 100%; min-width: unset;">
-                    <option value="">Select an inquiry...</option>
-                    <c:forEach var="t" items="${sellerThreads}">
-                        <option value="${t.id}">${t.buyerName} — ${t.propertyTitle}</option>
-                    </c:forEach>
-                </select>
+            <!-- Left: Stat Cards -->
+            <div class="stats-grid" style="margin-bottom: 0;">
+                <div class="stat-card">
+                    <div class="stat-icon blue">🏠</div>
+                    <div class="stat-value">${not empty myProperties ? myProperties.size() : 0}</div>
+                    <div class="stat-label">Total Properties</div>
+                </div>
 
-                <button class="btn" type="button" onclick="openInquiryFromSelect()" style="width: 100%;">Open Inquiry</button>
+                <div class="stat-card amber">
+                    <div class="stat-icon amber">📋</div>
+                    <div class="stat-value">${not empty activeBookings ? activeBookings.size() : 0}</div>
+                    <div class="stat-label">Active Bookings</div>
+                </div>
 
-                <div style="margin-top: 8px; color: var(--ink); opacity: 0.7; font-size: 0.82rem; line-height: 1.5;">
-                    <c:choose>
-                        <c:when test="${empty sellerThreads}">
-                            <div style="text-align: center; padding: 16px 0; opacity: 0.6;">
-                                <div style="font-size: 2rem; margin-bottom: 8px;">💬</div>
-                                <div>No inquiries yet</div>
-                            </div>
-                        </c:when>
-                        <c:otherwise>
-                            <div style="padding: 10px; background: var(--bg2); border-radius: 6px; border-left: 3px solid var(--accent);">
-                                💡 Tip: Select an inquiry above to view the conversation and reply to buyers.
-                            </div>
-                        </c:otherwise>
-                    </c:choose>
+                <div class="stat-card green">
+                    <div class="stat-icon green">✅</div>
+                    <div class="stat-value">${not empty soldCount ? soldCount : 0}</div>
+                    <div class="stat-label">Sold Properties</div>
+                </div>
+
+                <div class="stat-card red">
+                    <div class="stat-icon red">💰</div>
+                    <div class="stat-value">LKR <fmt:formatNumber value="${not empty totalEarnings ? totalEarnings : 0}" pattern="#,##0"/></div>
+                    <div class="stat-label">Total Earnings</div>
+                </div>
+                <div class="stat-card" style="--card-accent:#8b5cf6;">
+                    <div class="stat-icon" style="background:rgba(139,92,246,0.10);">👁️</div>
+                    <div class="stat-value">${not empty analyticsViews ? analyticsViews : 0}</div>
+                    <div class="stat-label">Total Listing Views</div>
+                </div>
+                <div class="stat-card" style="--card-accent:#f59e0b;">
+                    <div class="stat-icon" style="background:rgba(245,158,11,0.10);">📩</div>
+                    <div class="stat-value">${not empty analyticsInquiries ? analyticsInquiries : 0}</div>
+                    <div class="stat-label">Total Inquiries</div>
+                </div>
+                <div class="stat-card" style="--card-accent:#0d9e6e;">
+                    <div class="stat-icon" style="background:rgba(13,158,110,0.10);">📋</div>
+                    <div class="stat-value">${not empty analyticsBookings ? analyticsBookings : 0}</div>
+                    <div class="stat-label">Total Bookings</div>
+                </div>
+                <div class="stat-card" style="--card-accent:#ec4899;">
+                    <div class="stat-icon" style="background:rgba(236,72,153,0.10);">❤️</div>
+                    <div class="stat-value">${not empty analyticsFavorites ? analyticsFavorites : 0}</div>
+                    <div class="stat-label">Times Saved by Buyers</div>
                 </div>
             </div>
-        </div>
-    </div>
-    <!-- ─────────────────────────────────────────────────────────────── -->
 
-    <!-- Clearfix for flex row -->
-    <div style="clear: both; width: 100%;"></div>
+            <!-- Right: Buyer Inquiries Card -->
+            <div class="card" style="margin-bottom: 0; padding: 20px;">
+                <h3 class="card-title" style="font-size: 1.1rem; margin-bottom: 16px; padding-bottom: 12px;">📩 Buyer Inquiries</h3>
 
-    <div class="card">
-        <h3 class="card-title">List a New Property</h3>
-        <p style="color: #0d9e6e; font-weight: bold;">${successMessage}</p>
-        <form action="addProperty" method="post" class="form-grid">
-            <div class="form-group"><label>Property Title</label><input type="text" name="title" required></div>
-            <div class="form-group"><label id="add-price-label">Price (LKR)</label><input type="number" name="price" required></div>
-            <div class="form-group"><label>Location / City</label><input type="text" name="location" required></div>
-            <div class="form-group"><label>Type</label>
-                <select name="type"><option>Apartment</option><option>House</option><option>Villa</option></select>
-            </div>
-            <div class="form-group"><label>Bed Rooms</label><input type="number" name="bedrooms" min="0" required></div>
-            <div class="form-group"><label>Bath Tubs</label><input type="number" name="bathrooms" min="0" required></div>
-            <div class="form-group"><label>Status</label>
-                <select name="status" id="add-status-select" onchange="updatePriceLabel('add')">
-                    <option>For Sale</option>
-                    <option>For Rent</option>
-                </select>
-            </div>
-            <div class="form-group"><label>Description</label><textarea name="description" rows="3"></textarea></div>
-            <div class="form-group" style="display: flex; align-items: flex-end;">
-                <button type="submit" class="btn" style="width: 100%;">➕ Add Property</button>
-            </div>
-        </form>
-    </div>
-
-    <div class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 2px solid var(--line);">
-            <h3 class="card-title" style="margin:0; padding-bottom: 0; border-bottom: none;">🏠 My Managed Properties</h3>
-            <span style="font-size:0.85rem; opacity:0.65; background: var(--bg2); padding: 6px 14px; border-radius: 20px; border: 1px solid var(--line);">
-                ${not empty myProperties ? myProperties.size() : 0} Total Properties
-            </span>
-        </div>
-        <div class="table-responsive">
-        <table>
-            <thead>
-                <tr>
-                    <th style="width: 60px;">ID</th>
-                    <th>Title</th>
-                    <th style="width: 120px;">Price</th>
-                    <th>Location</th>
-                    <th style="width: 100px;">Type</th>
-                    <th style="width: 70px;">Beds</th>
-                    <th style="width: 70px;">Baths</th>
-                    <th style="width: 120px;">Status</th>
-                    <th style="width: 280px;">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:choose>
-                    <c:when test="${not empty myProperties}">
-                        <c:forEach var="p" items="${myProperties}">
-                            <tr style="${p.status == 'Sold' ? 'opacity: 0.7; background: rgba(13,158,110,0.05);' : ''}">
-                                <td><small style="opacity: 0.6; font-weight: 600;">#${p.id}</small></td>
-                                <td>
-                                    <div style="font-weight: 600; color: var(--ink);">${p.title}</div>
-                                    <c:if test="${p.status == 'Sold'}">
-                                        <div style="font-size: 0.75rem; color: #0d9e6e; margin-top: 2px;">✓ Sold Property</div>
-                                    </c:if>
-                                </td>
-                                <td>
-                                    <div style="font-weight: 700; color: ${p.status == 'Sold' ? '#0d9e6e' : 'var(--accent)'}; font-size: 0.95rem;">
-                                        LKR <fmt:formatNumber value="${p.price}" pattern="#,##0.##"/>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="display: flex; align-items: center; gap: 4px;">
-                                        <span style="font-size: 0.85rem;">📍</span>
-                                        <span>${p.location}</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span style="background: var(--bg2); padding: 4px 10px; border-radius: 6px; font-size: 0.82rem; font-weight: 600; border: 1px solid var(--line);">
-                                        ${p.type}
-                                    </span>
-                                </td>
-                                <td style="text-align: center;">
-                                    <span style="background: rgba(26,86,219,0.08); padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; color: var(--accent);">
-                                        ${p.bedrooms}
-                                    </span>
-                                </td>
-                                <td style="text-align: center;">
-                                    <span style="background: rgba(13,158,110,0.08); padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; color: var(--green);">
-                                        ${p.bathrooms}
-                                    </span>
-                                </td>
-                                <td>
-                                    <c:choose>
-                                        <c:when test="${p.status == 'Sold'}">
-                                            <span class="badge-sold" style="font-size: 0.82rem; padding: 6px 14px; display: inline-flex; align-items: center; gap: 4px;">
-                                                ✅ SOLD
-                                            </span>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <span style="display: inline-block; background: rgba(26,86,219,0.10); color: var(--accent); border: 1px solid rgba(26,86,219,0.35); padding: 6px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; white-space: nowrap;">
-                                                🏷️ ${p.status}
-                                            </span>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </td>
-                                 <td>
-                                    <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
-                                        <c:choose>
-                                            <c:when test="${p.status != 'Sold'}">
-                                                <button class="btn-edit" onclick="openEditModal('${p.id}', '${p.title}', '${p.price}', '${p.location}', '${p.type}', '${p.status}', '${p.bedrooms}', '${p.bathrooms}', '${p.description}')"
-                                                        style="padding: 6px 10px; font-size: 0.75rem;" title="Edit property details">
-                                                    ✏️ Edit
-                                                </button>
-                                                <form action="markAsSold" method="post" style="margin: 0;" onsubmit="return confirm('Mark &quot;${p.title}&quot; as Sold? This will update the property status to Sold and move it to the Completed Transactions section.');">
-                                                    <input type="hidden" name="propertyId" value="${p.id}">
-                                                    <button type="submit" class="btn-edit" style="color: #0d9e6e; border-color: #0d9e6e; padding: 6px 10px; font-size: 0.75rem;" title="Mark this property as sold">
-                                                        🏷️ Sold
-                                                    </button>
-                                                </form>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <span style="opacity: 0.4; font-size: 0.82rem; padding: 6px 10px;">—</span>
-                                            </c:otherwise>
-                                        </c:choose>
-
-                                        <form action="deleteProperty" method="post" style="margin: 0;" onsubmit="return confirm('Are you absolutely sure you want to delete this property? This cannot be undone!');">
-                                            <input type="hidden" name="propertyId" value="${p.id}">
-                                            <button type="submit" class="btn-edit" style="color: var(--red); border-color: var(--red); padding: 6px 10px; font-size: 0.75rem;" title="Delete this property permanently">
-                                                🗑️ Delete
-                                            </button>
-                                        </form>
-                                    </div>
-                                 </td>
-                            </tr>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <select id="inqSelect" style="width: 100%; min-width: unset;">
+                        <option value="">Select an inquiry...</option>
+                        <c:forEach var="t" items="${sellerThreads}">
+                            <option value="${t.id}">${t.buyerName} — ${t.propertyTitle}</option>
                         </c:forEach>
-                    </c:when>
-                    <c:otherwise>
-                        <tr>
-                            <td colspan="9" style="text-align:center; padding: 40px 20px;">
-                                <div style="font-size: 3rem; margin-bottom: 12px;">🏠</div>
-                                <div style="font-weight: 600; margin-bottom: 6px; color: var(--ink);">No Properties Listed Yet</div>
-                                <div style="opacity: 0.7; font-size: 0.9rem;">Start by adding your first property above!</div>
-                            </td>
-                        </tr>
-                    </c:otherwise>
-                </c:choose>
-            </tbody>
-        </table>
-        </div>
-    </div>
+                    </select>
 
-    <!-- ── ACTIVE BOOKINGS ──────────────────────────────────────────────── -->
-    <div class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h3 class="card-title" style="margin:0;"> Active Bookings</h3>
-            <span style="font-size:0.85rem; opacity:0.65;">${reservedCount} property(s) currently reserved</span>
-        </div>
-        <div class="table-responsive">
-        <table>
-            <thead>
-                <tr>
-                    <th>Booking ID</th>
-                    <th>Property</th>
-                    <th>Buyer</th>
-                    <th>Contact</th>
-                    <th>Booked On</th>
-                    <th>Return Date</th>
-                    <th>Status</th>
-                    <th>Penalty</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:choose>
-                    <c:when test="${not empty activeBookings}">
-                        <c:forEach var="bk" items="${activeBookings}">
-                            <tr>
-                                <td style="font-size:0.8rem; opacity:0.7;">${bk.bookingId}</td>
-                                <td>
-                                    <div style="font-weight:600;">${bk.propertyTitle}</div>
-                                    <div style="font-size:0.78rem; opacity:0.6;">ID: ${bk.propertyId}</div>
-                                </td>
-                                <td>
-                                    <div style="font-weight:500;">${bk.buyerName}</div>
-                                    <div style="font-size:0.78rem; opacity:0.65;">${bk.buyerUsername}</div>
-                                </td>
-                                <td>
-                                    <div style="font-size:0.85rem;">${bk.buyerEmail}</div>
-                                    <div style="font-size:0.85rem; opacity:0.7;">${bk.buyerPhone}</div>
-                                </td>
-                                <td>${bk.bookingDate}</td>
-                                <td>${bk.returnDate}</td>
-                                <td>
-                                    <c:choose>
-                                        <c:when test="${bk.status == 'OVERDUE'}">
-                                            <span class="status-badge" style="background:rgba(224,40,40,0.12);color:#e02828;">&#9888; Overdue</span>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <span class="status-badge" style="background:rgba(26,86,219,0.1);color:var(--accent);">Reserved</span>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </td>
-                                <td>
-                                    <c:choose>
-                                        <c:when test="${bk.penaltyFee != '0.00'}">
-                                            <div style="color:#e02828; font-weight:700;">LKR <fmt:formatNumber value="${bk.penaltyFee}" pattern="#,##0.00" /></div>
-                                            <c:if test="${not empty bk.daysOverdue}">
-                                                <div style="font-size:0.72rem;color:#e02828;margin-top:2px;">${bk.daysOverdue} × LKR <fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" />/day</div>
-                                            </c:if>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <div style="opacity:0.4;">&#8212;</div>
-                                            <c:if test="${not empty bk.dailyRate}">
-                                                <div style="font-size:0.72rem;opacity:0.55;margin-top:2px;">Rate: LKR <fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" />/day</div>
-                                            </c:if>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </td>
-                                <td>
-                                    <c:choose>
-                                        <c:when test="${bk.status != 'COMPLETED'}">
-                                            <form action="completeBooking" method="post" style="margin:0;" onsubmit="return confirm('Mark this booking as completed?');">
-                                                <input type="hidden" name="bookingId" value="${bk.bookingId}">
-                                                <button type="submit" class="btn" style="padding:7px 14px; font-size:0.82rem; background:#0d9e6e;">Complete</button>
-                                            </form>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <span style="opacity:0.4; font-size:0.85rem;">—</span>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                    </c:when>
-                    <c:otherwise>
-                        <tr><td colspan="9" style="text-align:center; padding:36px; opacity:0.6;">No active bookings at the moment.</td></tr>
-                    </c:otherwise>
-                </c:choose>
-            </tbody>
-        </table>
-        </div>
-    </div>
-    
-    <!-- ── COMPLETED BOOKINGS ───────────────────────────────────────────── -->
-    <div class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h3 class="card-title" style="margin:0;">Completed Transactions</h3>
-            <span style="font-size:0.85rem; opacity:0.65;">${completedBookings.size()} completed</span>
-        </div>
-    
-        <c:if test="${param.delete == 'success'}">
-            <div style="background:rgba(13,158,110,0.1);border:1px solid rgba(13,158,110,0.3);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:0.9rem;color:#0d9e6e;font-weight:600;">
-                ✅ Completed transaction removed successfully!
-            </div>
-        </c:if>
-        <c:if test="${param.delete == 'error'}">
-            <div style="background:rgba(224,40,40,0.1);border:1px solid rgba(224,40,40,0.3);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:0.9rem;color:#c0392b;font-weight:600;">
-                ⚠️ Failed to remove transaction. Please try again.
-            </div>
-        </c:if>
-    
-        <div class="table-responsive">
-        <table>
-            <thead>
-                <tr>
-                    <th>Booking ID</th>
-                    <th>Property</th>
-                    <th>Buyer</th>
-                    <th>Booked On</th>
-                    <th>Returned On</th>
-                    <th>Booking Status</th>
-                    <th>Property Status</th>
-                    <th style="width:100px;">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:choose>
-                    <c:when test="${not empty completedBookings}">
-                        <c:forEach var="bk" items="${completedBookings}">
-                            <tr>
-                                <td style="font-size:0.8rem; opacity:0.7;">${bk.bookingId}</td>
-                                <td>
-                                    <div style="font-weight:600;">${bk.propertyTitle}</div>
-                                    <div style="font-size:0.78rem; opacity:0.6;">ID: ${bk.propertyId}</div>
-                                </td>
-                                <td>
-                                    <div style="font-weight:500;">${bk.buyerName}</div>
-                                    <div style="font-size:0.78rem; opacity:0.65;">${bk.buyerEmail}</div>
-                                </td>
-                                <td>${bk.bookingDate}</td>
-                                <td>${bk.returnDate}</td>
-                                <td><span class="status-badge" style="background:rgba(13,158,110,0.1);color:#0d9e6e;">Completed</span></td>
-                                <td>
-                                    <c:choose>
-                                        <c:when test="${bk.propertyStatus == 'Sold'}">
-                                            <span class="badge-sold">✅ Sold</span>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <form action="markAsSold" method="post" style="margin:0;" onsubmit="return confirm('Mark &quot;${bk.propertyTitle}&quot; as Sold? This will update the property status to Sold and display it in red color on the Browse tab.');">
-                                                <input type="hidden" name="propertyId" value="${bk.propertyId}">
-                                                <button type="submit" class="btn-edit" style="color: #0d9e6e; border-color: #0d9e6e; font-size: 0.78rem; padding: 6px 10px;">🏷️ Mark as Sold</button>
-                                            </form>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </td>
-                                <td>
-                                    <form action="deleteCompletedBooking" method="post" style="margin:0;" onsubmit="return confirm('Are you sure you want to delete this completed transaction? This action cannot be undone.');">
-                                        <input type="hidden" name="bookingId" value="${bk.bookingId}">
-                                        <button type="submit" class="btn-edit" style="color: #ef4444; border-color: #ef4444; font-size: 0.78rem; padding: 6px 10px;" title="Delete this completed transaction">
-                                            🗑️ Delete
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                    </c:when>
-                    <c:otherwise>
-                        <tr><td colspan="9" style="text-align:center; padding:36px; opacity:0.6;">No completed transactions yet.</td></tr>
-                    </c:otherwise>
-                </c:choose>
-            </tbody>
-        </table>
-        </div>
-    </div>
-    
-    <div class="card" id="reviews-section">
-        <h3 class="card-title">💬 Buyer Reviews</h3>
-        <p style="color: var(--ink); opacity: 0.7; font-size: 0.9rem; margin-top: -16px; margin-bottom: 24px;">
-            Reviews posted by buyers for your properties.
-        </p>
-    
-        <c:choose>
-            <c:when test="${empty myProperties}">
-                <div style="text-align:center; padding: 40px; background: var(--bg2); border-radius: var(--r); border: 2px dashed var(--line);">
-                    <div style="font-size: 3rem; margin-bottom: 12px;">🏠</div>
-                    <div style="font-weight: 600; margin-bottom: 6px;">No Properties Yet</div>
-                    <div style="opacity: 0.7; font-size: 0.9rem;">Add a property to start receiving reviews from buyers.</div>
-                </div>
-            </c:when>
-            <c:otherwise>
-                <div style="display:flex; flex-direction:column; gap: 24px;">
-                    <c:forEach var="p" items="${myProperties}">
-                        <!-- Property Card -->
-                        <div style="border: 1px solid var(--line); border-radius: var(--r); background: var(--bg); overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: box-shadow 0.3s ease;"
-                             onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,0.08)'"
-                             onmouseout="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.04)'">
-    
-                            <!-- Property Header -->
-                            <div style="background: linear-gradient(135deg, rgba(26,86,219,0.05) 0%, rgba(13,158,110,0.05) 100%); padding: 18px 20px; border-bottom: 1px solid var(--line);">
-                                <div style="display:flex; justify-content:space-between; align-items:center; gap: 12px; flex-wrap: wrap;">
-                                    <div>
-                                        <div style="font-weight: 800; font-size: 1.05rem; color: var(--ink);">${p.title}</div>
-                                        <div style="font-size: 0.82rem; opacity: 0.7; margin-top: 4px; display: flex; align-items: center; gap: 8px;">
-                                            <span>🆔 ${p.id}</span>
-                                            <span>•</span>
-                                            <span>📍 ${p.location}</span>
-                                            <span>•</span>
-                                            <span>🏷️ ${p.type}</span>
-                                        </div>
-                                    </div>
-                                    <c:set var="revList" value="${reviewsByProperty[p.id]}"/>
-                                    <div style="background: var(--accent); color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.78rem; font-weight: 700;">
-                                        ${not empty revList ? revList.size() : 0} Review${not empty revList && revList.size() != 1 ? 's' : ''}
-                                    </div>
+                    <button class="btn" type="button" onclick="openInquiryFromSelect()" style="width: 100%;">Open Inquiry</button>
+
+                    <div style="margin-top: 8px; color: var(--ink); opacity: 0.7; font-size: 0.82rem; line-height: 1.5;">
+                        <c:choose>
+                            <c:when test="${empty sellerThreads}">
+                                <div style="text-align: center; padding: 16px 0; opacity: 0.6;">
+                                    <div style="font-size: 2rem; margin-bottom: 8px;">💬</div>
+                                    <div>No inquiries yet</div>
                                 </div>
-                            </div>
-    
-                            <!-- Reviews List -->
-                            <div style="padding: 20px;">
-                                <c:choose>
-                                    <c:when test="${empty revList}">
-                                        <div style="text-align: center; padding: 32px 20px; background: var(--bg2); border-radius: 8px; border: 1px dashed var(--line);">
-                                            <div style="font-size: 2.5rem; margin-bottom: 10px;">⭐</div>
-                                            <div style="font-weight: 600; margin-bottom: 4px;">No Reviews Yet</div>
-                                            <div style="font-size: 0.85rem; opacity: 0.7;">Be patient! Buyers will leave reviews after viewing this property.</div>
-                                        </div>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <div style="display:flex; flex-direction:column; gap: 14px;">
-                                            <c:forEach var="r" items="${revList}">
-                                                <!-- Individual Review Card -->
-                                                <div style="padding: 16px 18px; border-radius: 10px; background: var(--bg2); border: 1.5px solid var(--line); transition: all 0.2s ease;"
-                                                     onmouseover="this.style.borderColor='var(--accent)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(26,86,219,0.1)'"
-                                                     onmouseout="this.style.borderColor='var(--line)'; this.style.transform='translateY(0)'; this.style.boxShadow='none'">
-    
-                                                    <!-- Review Header -->
-                                                    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap: 12px; margin-bottom: 12px; flex-wrap: wrap;">
-                                                        <div style="display: flex; align-items: center; gap: 10px;">
-                                                            <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), #1041b0); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.1rem; flex-shrink: 0;">
-                                                                ${fn:substring(r.buyerName, 0, 1)}
-                                                            </div>
-                                                            <div>
-                                                                <div style="font-weight: 700; font-size: 0.95rem; color: var(--ink);"><c:out value="${r.buyerName}"/></div>
-                                                                <div style="font-size: 0.75rem; opacity: 0.6; margin-top: 2px;">Verified Buyer ✓</div>
-                                                            </div>
-                                                        </div>
-                                                        <div style="display: flex; align-items: center; gap: 12px;">
-                                                            <div style="display: flex; align-items: center; gap: 4px; background: rgba(217,119,6,0.1); padding: 6px 12px; border-radius: 20px; border: 1px solid rgba(217,119,6,0.2);">
-                                                                <span style="color: #d97706; letter-spacing: 1px; font-size: 0.95rem;">
-                                                                    <c:forEach begin="1" end="${r.rating}" var="i">★</c:forEach>
-                                                                    <c:forEach begin="1" end="${5 - r.rating}" var="i">☆</c:forEach>
-                                                                </span>
-                                                                <span style="font-weight: 700; color: #d97706; font-size: 0.85rem;">${r.rating}.0</span>
-                                                            </div>
-                                                            <form action="deleteReview" method="post" onsubmit="return confirm('Are you sure you want to delete this review? This action cannot be undone.');" style="margin: 0;">
-                                                                <input type="hidden" name="reviewId" value="${r.reviewID}">
-                                                                <button type="submit" class="btn-edit" style="color: var(--red); border-color: var(--red); padding: 6px 12px; font-size: 0.78rem;" title="Delete this review">
-                                                                    🗑️ Delete
-                                                                </button>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-    
-                                                    <!-- Review Comment -->
-                                                    <div style="background: var(--bg); padding: 14px 16px; border-radius: 8px; border-left: 3px solid var(--accent);">
-                                                        <div style="font-size: 0.88rem; line-height: 1.6; color: var(--ink); opacity: 0.9; white-space: pre-wrap;">
-                                                            <c:out value="${r.comment}"/>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </c:forEach>
-                                        </div>
-                                    </c:otherwise>
-                                </c:choose>
-                            </div>
-                        </div>
-                    </c:forEach>
+                            </c:when>
+                            <c:otherwise>
+                                <div style="padding: 10px; background: var(--bg2); border-radius: 6px; border-left: 3px solid var(--accent);">
+                                    💡 Tip: Select an inquiry above to view the conversation and reply to buyers.
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
                 </div>
-            </c:otherwise>
-        </c:choose>
-    </div>
+            </div>
+        </div>
+        <!-- ─────────────────────────────────────────────────────────────── -->
 
-</div>
+        <!-- Clearfix for flex row -->
+        <div style="clear: both; width: 100%;"></div>
 
-<div class="modal-overlay" id="editModal">
-    <div class="modal-box">
-        <span class="close-btn" onclick="closeEditModal()">×</span>
-        <h3 class="card-title">Update Property</h3>
-        <form action="updateProperty" method="post" style="display: flex; flex-direction: column; gap: 16px;">
-            <input type="hidden" name="propertyId" id="edit-id">
-
-            <div class="form-group"><label>Title</label><input type="text" name="title" id="edit-title" required></div>
-            <div class="form-group"><label id="edit-price-label">Price (LKR)</label><input type="number" name="price" id="edit-price" required></div>
-            <div class="form-group"><label>Location</label><input type="text" name="location" id="edit-location" required></div>
-            <div class="form-grid">
+        <div class="card">
+            <h3 class="card-title">List a New Property</h3>
+            <p style="color: #0d9e6e; font-weight: bold;">${successMessage}</p>
+            <form action="addProperty" method="post" class="form-grid">
+                <div class="form-group"><label>Property Title</label><input type="text" name="title" required></div>
+                <div class="form-group"><label id="add-price-label">Price (LKR)</label><input type="number" name="price" required></div>
+                <div class="form-group"><label>Location / City</label><input type="text" name="location" required></div>
                 <div class="form-group"><label>Type</label>
-                    <select name="type" id="edit-type"><option>Apartment</option><option>House</option><option>Villa</option></select>
+                    <select name="type"><option>Apartment</option><option>House</option><option>Villa</option></select>
                 </div>
-                <div class="form-group"><label>Bed Rooms</label><input type="number" name="bedrooms" id="edit-bedrooms" min="0" required></div>
-                <div class="form-group"><label>Bath Tubs</label><input type="number" name="bathrooms" id="edit-bathrooms" min="0" required></div>
+                <div class="form-group"><label>Bed Rooms</label><input type="number" name="bedrooms" min="0" required></div>
+                <div class="form-group"><label>Bath Tubs</label><input type="number" name="bathrooms" min="0" required></div>
                 <div class="form-group"><label>Status</label>
-                    <select name="status" id="edit-status-select" onchange="updatePriceLabel('edit')">
+                    <select name="status" id="add-status-select" onchange="updatePriceLabel('add')">
                         <option>For Sale</option>
                         <option>For Rent</option>
                     </select>
                 </div>
+                <div class="form-group"><label>Description</label><textarea name="description" rows="3"></textarea></div>
+                <div class="form-group" style="display: flex; align-items: flex-end;">
+                    <button type="submit" class="btn" style="width: 100%;">➕ Add Property</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 2px solid var(--line);">
+                <h3 class="card-title" style="margin:0; padding-bottom: 0; border-bottom: none;">🏠 My Managed Properties</h3>
+                <span style="font-size:0.85rem; opacity:0.65; background: var(--bg2); padding: 6px 14px; border-radius: 20px; border: 1px solid var(--line);">
+                ${not empty myProperties ? myProperties.size() : 0} Total Properties
+            </span>
             </div>
-            <div class="form-group"><label>Description</label><textarea name="description" id="edit-description" rows="3"></textarea></div>
-            <button type="submit" class="btn">💾 Save Changes</button>
-        </form>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                    <tr>
+                        <th style="width: 60px;">ID</th>
+                        <th>Title</th>
+                        <th style="width: 120px;">Price</th>
+                        <th>Location</th>
+                        <th style="width: 100px;">Type</th>
+                        <th style="width: 70px;">Beds</th>
+                        <th style="width: 70px;">Baths</th>
+                        <th style="width: 120px;">Status</th>
+                        <th style="width: 280px;">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:choose>
+                        <c:when test="${not empty myProperties}">
+                            <c:forEach var="p" items="${myProperties}">
+                                <tr style="${p.status == 'Sold' ? 'opacity: 0.7; background: rgba(13,158,110,0.05);' : ''}">
+                                    <td><small style="opacity: 0.6; font-weight: 600;">#${p.id}</small></td>
+                                    <td>
+                                        <div style="font-weight: 600; color: var(--ink);">${p.title}</div>
+                                        <c:if test="${p.status == 'Sold'}">
+                                            <c:if test="${not empty propertyBookingEndDates[p.id]}">
+                                                <div style="font-size: 0.75rem; color: #0d9e6e; margin-top: 2px;">✓ Sold Property</div>
+                                            </c:if>
+                                            <c:if test="${empty propertyBookingEndDates[p.id]}">
+                                                <div style="font-size: 0.75rem; color: #0d9e6e; margin-top: 2px;">✓ Sold Property</div>
+                                            </c:if>
+                                        </c:if>
+                                    </td>
+                                    <td>
+                                        <div style="font-weight: 700; color: ${p.status == 'Sold' ? '#0d9e6e' : 'var(--accent)'}; font-size: 0.95rem;">
+                                            LKR <fmt:formatNumber value="${p.price}" pattern="#,##0.##"/>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: 4px;">
+                                            <span style="font-size: 0.85rem;">📍</span>
+                                            <span>${p.location}</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                    <span style="background: var(--bg2); padding: 4px 10px; border-radius: 6px; font-size: 0.82rem; font-weight: 600; border: 1px solid var(--line);">
+                                            ${p.type}
+                                    </span>
+                                    </td>
+                                    <td style="text-align: center;">
+                                    <span style="background: rgba(26,86,219,0.08); padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; color: var(--accent);">
+                                            ${p.bedrooms}
+                                    </span>
+                                    </td>
+                                    <td style="text-align: center;">
+                                    <span style="background: rgba(13,158,110,0.08); padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; color: var(--green);">
+                                            ${p.bathrooms}
+                                    </span>
+                                    </td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${p.status == 'Sold' and not empty propertyBookingEndDates[p.id]}">
+                                            <span class="badge-sold" style="font-size: 0.82rem; padding: 6px 14px; display: inline-flex; align-items: center; gap: 4px; background:rgba(13,158,110,0.12); color:#0d9e6e; border:1px solid rgba(13,158,110,0.3);">
+                                                ✅ RENTED
+                                            </span>
+                                            </c:when>
+                                            <c:when test="${p.status == 'Sold'}">
+                                            <span class="badge-sold" style="font-size: 0.82rem; padding: 6px 14px; display: inline-flex; align-items: center; gap: 4px;">
+                                                ✅ SOLD
+                                            </span>
+                                            </c:when>
+                                            <c:otherwise>
+                                            <span style="display: inline-block; background: rgba(26,86,219,0.10); color: var(--accent); border: 1px solid rgba(26,86,219,0.35); padding: 6px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; white-space: nowrap;">
+                                                🏷️ ${p.status}
+                                            </span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td>
+                                        <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+                                            <c:choose>
+                                                <c:when test="${p.status != 'Sold' and p.status != 'For Rent'}">
+                                                    <button class="btn-edit" onclick="openEditModal('${p.id}', '${p.title}', '${p.price}', '${p.location}', '${p.type}', '${p.status}', '${p.bedrooms}', '${p.bathrooms}', '${p.description}')"
+                                                            style="padding: 6px 10px; font-size: 0.75rem;" title="Edit property details">
+                                                        ✏️ Edit
+                                                    </button>
+                                                    <form action="markAsSold" method="post" style="margin: 0;" onsubmit="return confirm('Mark &quot;${p.title}&quot; as Sold? This will update the property status to Sold and move it to the Completed Transactions section.');">
+                                                        <input type="hidden" name="propertyId" value="${p.id}">
+                                                        <button type="submit" class="btn-edit" style="color: #0d9e6e; border-color: #0d9e6e; padding: 6px 10px; font-size: 0.75rem;" title="Mark this property as sold">
+                                                            🏷️ Sold
+                                                        </button>
+                                                    </form>
+                                                </c:when>
+                                                <c:when test="${p.status == 'For Rent'}">
+                                                    <button class="btn-edit" onclick="openEditModal('${p.id}', '${p.title}', '${p.price}', '${p.location}', '${p.type}', '${p.status}', '${p.bedrooms}', '${p.bathrooms}', '${p.description}')"
+                                                            style="padding: 6px 10px; font-size: 0.75rem;" title="Edit property details">
+                                                        ✏️ Edit
+                                                    </button>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <span style="opacity: 0.4; font-size: 0.82rem; padding: 6px 10px;">—</span>
+                                                </c:otherwise>
+                                            </c:choose>
+
+                                            <form action="deleteProperty" method="post" style="margin: 0;" onsubmit="return confirm('Are you absolutely sure you want to delete this property? This cannot be undone!');">
+                                                <input type="hidden" name="propertyId" value="${p.id}">
+                                                <button type="submit" class="btn-edit" style="color: var(--red); border-color: var(--red); padding: 6px 10px; font-size: 0.75rem;" title="Delete this property permanently">
+                                                    🗑️ Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <tr>
+                                <td colspan="9" style="text-align:center; padding: 40px 20px;">
+                                    <div style="font-size: 3rem; margin-bottom: 12px;">🏠</div>
+                                    <div style="font-weight: 600; margin-bottom: 6px; color: var(--ink);">No Properties Listed Yet</div>
+                                    <div style="opacity: 0.7; font-size: 0.9rem;">Start by adding your first property above!</div>
+                                </td>
+                            </tr>
+                        </c:otherwise>
+                    </c:choose>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ── ACTIVE BOOKINGS ──────────────────────────────────────────────── -->
+        <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 class="card-title" style="margin:0;"> Active Bookings</h3>
+                <span style="font-size:0.85rem; opacity:0.65;">${reservedCount} property(s) currently reserved</span>
+            </div>
+
+            <c:if test="${param.confirmed == 'success'}">
+                <div style="background:rgba(26,86,219,0.08);border:1px solid rgba(26,86,219,0.3);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:0.9rem;color:#1a56db;font-weight:600;">
+                    ✅ Booking confirmed! The property is now marked as <strong>Sold</strong> for the rental period.
+                </div>
+            </c:if>
+            <c:if test="${param.completed == 'success'}">
+                <div style="background:rgba(13,158,110,0.08);border:1px solid rgba(13,158,110,0.3);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:0.9rem;color:#0d9e6e;font-weight:600;">
+                    🏁 Booking completed! The property has been restored to <strong>Available (For Rent)</strong> and rental earnings have been recorded.
+                </div>
+            </c:if>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Property</th>
+                        <th>Buyer</th>
+                        <th>Contact</th>
+                        <th>Booked On</th>
+                        <th>Return Date</th>
+                        <th>Status</th>
+                        <th>Penalty</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:choose>
+                        <c:when test="${not empty activeBookings}">
+                            <c:forEach var="bk" items="${activeBookings}">
+                                <tr>
+                                    <td style="font-size:0.8rem; opacity:0.7;">${bk.bookingId}</td>
+                                    <td>
+                                        <div style="font-weight:600;">${bk.propertyTitle}</div>
+                                        <div style="font-size:0.78rem; opacity:0.6;">ID: ${bk.propertyId}</div>
+                                    </td>
+                                    <td>
+                                        <div style="font-weight:500;">${bk.buyerName}</div>
+                                        <div style="font-size:0.78rem; opacity:0.65;">${bk.buyerUsername}</div>
+                                    </td>
+                                    <td>
+                                        <div style="font-size:0.85rem;">${bk.buyerEmail}</div>
+                                        <div style="font-size:0.85rem; opacity:0.7;">${bk.buyerPhone}</div>
+                                    </td>
+                                    <td>${bk.bookingDate}</td>
+                                    <td>${bk.returnDate}</td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${bk.status == 'OVERDUE'}">
+                                                <span class="status-badge" style="background:rgba(224,40,40,0.12);color:#e02828;">&#9888; Overdue</span>
+                                            </c:when>
+                                            <c:when test="${bk.status == 'CONFIRMED'}">
+                                                <span class="status-badge" style="background:rgba(13,158,110,0.12);color:#0d9e6e;">✅ Confirmed</span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="status-badge" style="background:rgba(26,86,219,0.1);color:var(--accent);">Reserved</span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${bk.penaltyFee != '0.00'}">
+                                                <div style="color:#e02828; font-weight:700;">LKR <fmt:formatNumber value="${bk.penaltyFee}" pattern="#,##0.00" /></div>
+                                                <c:if test="${not empty bk.daysOverdue}">
+                                                    <div style="font-size:0.72rem;color:#e02828;margin-top:2px;">${bk.daysOverdue} × LKR <fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" />/day</div>
+                                                </c:if>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <div style="opacity:0.4;">&#8212;</div>
+                                                <c:if test="${not empty bk.dailyRate}">
+                                                    <div style="font-size:0.72rem;opacity:0.55;margin-top:2px;">Rate: LKR <fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" />/day</div>
+                                                </c:if>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td>
+                                        <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+                                                <%-- Show CONFIRM button only for RESERVED bookings --%>
+                                            <c:if test="${bk.status == 'RESERVED'}">
+                                                <form action="confirmBooking" method="post" style="margin:0;"
+                                                      onsubmit="return confirm('Confirm this booking? The property will be shown as Sold until the return date.');">
+                                                    <input type="hidden" name="bookingId" value="${bk.bookingId}">
+                                                    <button type="submit" class="btn"
+                                                            style="padding:7px 14px; font-size:0.82rem; background:#1a56db; display:flex; align-items:center; gap:5px;">
+                                                        ✅ Confirm
+                                                    </button>
+                                                </form>
+                                            </c:if>
+                                                <%-- Show COMPLETE button for CONFIRMED or OVERDUE bookings --%>
+                                            <c:if test="${bk.status == 'CONFIRMED' or bk.status == 'OVERDUE'}">
+                                                <form action="completeBooking" method="post" style="margin:0;"
+                                                      onsubmit="return confirm('Mark this booking as completed? The property will be restored to Available and rental earnings will be calculated.');">
+                                                    <input type="hidden" name="bookingId" value="${bk.bookingId}">
+                                                    <button type="submit" class="btn"
+                                                            style="padding:7px 14px; font-size:0.82rem; background:#0d9e6e; display:flex; align-items:center; gap:5px;">
+                                                        🏁 Complete
+                                                    </button>
+                                                </form>
+                                            </c:if>
+                                                <%-- If still RESERVED (not yet confirmed), show greyed Complete --%>
+                                            <c:if test="${bk.status == 'RESERVED'}">
+                                                <button type="button" class="btn"
+                                                        style="padding:7px 14px; font-size:0.82rem; background:#9ca3af; cursor:not-allowed; opacity:0.55;"
+                                                        title="Confirm the booking first before completing it" disabled>
+                                                    🏁 Complete
+                                                </button>
+                                            </c:if>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <tr><td colspan="9" style="text-align:center; padding:36px; opacity:0.6;">No active bookings at the moment.</td></tr>
+                        </c:otherwise>
+                    </c:choose>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ── COMPLETED BOOKINGS ───────────────────────────────────────────── -->
+        <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 class="card-title" style="margin:0;">Completed Transactions</h3>
+                <span style="font-size:0.85rem; opacity:0.65;">${completedBookings.size()} completed</span>
+            </div>
+
+            <c:if test="${param.delete == 'success'}">
+                <div style="background:rgba(13,158,110,0.1);border:1px solid rgba(13,158,110,0.3);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:0.9rem;color:#0d9e6e;font-weight:600;">
+                    ✅ Completed transaction removed successfully!
+                </div>
+            </c:if>
+            <c:if test="${param.delete == 'error'}">
+                <div style="background:rgba(224,40,40,0.1);border:1px solid rgba(224,40,40,0.3);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:0.9rem;color:#c0392b;font-weight:600;">
+                    ⚠️ Failed to remove transaction. Please try again.
+                </div>
+            </c:if>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Property</th>
+                        <th>Buyer</th>
+                        <th>Booked On</th>
+                        <th>Returned On</th>
+                        <th>Booking Status</th>
+                        <th style="width:100px;">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:choose>
+                        <c:when test="${not empty completedBookings}">
+                            <c:forEach var="bk" items="${completedBookings}">
+                                <tr>
+                                    <td style="font-size:0.8rem; opacity:0.7;">${bk.bookingId}</td>
+                                    <td>
+                                        <div style="font-weight:600;">${bk.propertyTitle}</div>
+                                        <div style="font-size:0.78rem; opacity:0.6;">ID: ${bk.propertyId}</div>
+                                    </td>
+                                    <td>
+                                        <div style="font-weight:500;">${bk.buyerName}</div>
+                                        <div style="font-size:0.78rem; opacity:0.65;">${bk.buyerEmail}</div>
+                                    </td>
+                                    <td>${bk.bookingDate}</td>
+                                    <td>${bk.returnDate}</td>
+                                    <td><span class="status-badge" style="background:rgba(13,158,110,0.1);color:#0d9e6e;">Completed</span></td>
+                                    <td>
+                                        <form action="deleteCompletedBooking" method="post" style="margin:0;" onsubmit="return confirm('Are you sure you want to delete this completed transaction? This action cannot be undone.');">
+                                            <input type="hidden" name="bookingId" value="${bk.bookingId}">
+                                            <button type="submit" class="btn-edit" style="color: #ef4444; border-color: #ef4444; font-size: 0.78rem; padding: 6px 10px;" title="Delete this completed transaction">
+                                                🗑️ Delete
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <tr><td colspan="8" style="text-align:center; padding:36px; opacity:0.6;">No completed transactions yet.</td></tr>
+                        </c:otherwise>
+                    </c:choose>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card" id="reviews-section">
+            <h3 class="card-title">💬 Buyer Reviews</h3>
+            <p style="color: var(--ink); opacity: 0.7; font-size: 0.9rem; margin-top: -16px; margin-bottom: 24px;">
+                Reviews posted by buyers for your properties.
+            </p>
+
+            <c:choose>
+                <c:when test="${empty myProperties}">
+                    <div style="text-align:center; padding: 40px; background: var(--bg2); border-radius: var(--r); border: 2px dashed var(--line);">
+                        <div style="font-size: 3rem; margin-bottom: 12px;">🏠</div>
+                        <div style="font-weight: 600; margin-bottom: 6px;">No Properties Yet</div>
+                        <div style="opacity: 0.7; font-size: 0.9rem;">Add a property to start receiving reviews from buyers.</div>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <div style="display:flex; flex-direction:column; gap: 24px;">
+                        <c:forEach var="p" items="${myProperties}">
+                            <!-- Property Card -->
+                            <div style="border: 1px solid var(--line); border-radius: var(--r); background: var(--bg); overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: box-shadow 0.3s ease;"
+                                 onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,0.08)'"
+                                 onmouseout="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.04)'">
+
+                                <!-- Property Header -->
+                                <div style="background: linear-gradient(135deg, rgba(26,86,219,0.05) 0%, rgba(13,158,110,0.05) 100%); padding: 18px 20px; border-bottom: 1px solid var(--line);">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; gap: 12px; flex-wrap: wrap;">
+                                        <div>
+                                            <div style="font-weight: 800; font-size: 1.05rem; color: var(--ink);">${p.title}</div>
+                                            <div style="font-size: 0.82rem; opacity: 0.7; margin-top: 4px; display: flex; align-items: center; gap: 8px;">
+                                                <span>🆔 ${p.id}</span>
+                                                <span>•</span>
+                                                <span>📍 ${p.location}</span>
+                                                <span>•</span>
+                                                <span>🏷️ ${p.type}</span>
+                                            </div>
+                                        </div>
+                                        <c:set var="revList" value="${reviewsByProperty[p.id]}"/>
+                                        <div style="background: var(--accent); color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.78rem; font-weight: 700;">
+                                                ${not empty revList ? revList.size() : 0} Review${not empty revList && revList.size() != 1 ? 's' : ''}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Reviews List -->
+                                <div style="padding: 20px;">
+                                    <c:choose>
+                                        <c:when test="${empty revList}">
+                                            <div style="text-align: center; padding: 32px 20px; background: var(--bg2); border-radius: 8px; border: 1px dashed var(--line);">
+                                                <div style="font-size: 2.5rem; margin-bottom: 10px;">⭐</div>
+                                                <div style="font-weight: 600; margin-bottom: 4px;">No Reviews Yet</div>
+                                                <div style="font-size: 0.85rem; opacity: 0.7;">Be patient! Buyers will leave reviews after viewing this property.</div>
+                                            </div>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <div style="display:flex; flex-direction:column; gap: 14px;">
+                                                <c:forEach var="r" items="${revList}">
+                                                    <!-- Individual Review Card -->
+                                                    <div style="padding: 16px 18px; border-radius: 10px; background: var(--bg2); border: 1.5px solid var(--line); transition: all 0.2s ease;"
+                                                         onmouseover="this.style.borderColor='var(--accent)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(26,86,219,0.1)'"
+                                                         onmouseout="this.style.borderColor='var(--line)'; this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+
+                                                        <!-- Review Header -->
+                                                        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap: 12px; margin-bottom: 12px; flex-wrap: wrap;">
+                                                            <div style="display: flex; align-items: center; gap: 10px;">
+                                                                <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), #1041b0); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.1rem; flex-shrink: 0;">
+                                                                        ${fn:substring(r.buyerName, 0, 1)}
+                                                                </div>
+                                                                <div>
+                                                                    <div style="font-weight: 700; font-size: 0.95rem; color: var(--ink);"><c:out value="${r.buyerName}"/></div>
+                                                                    <div style="font-size: 0.75rem; opacity: 0.6; margin-top: 2px;">Verified Buyer ✓</div>
+                                                                </div>
+                                                            </div>
+                                                            <div style="display: flex; align-items: center; gap: 12px;">
+                                                                <div style="display: flex; align-items: center; gap: 4px; background: rgba(217,119,6,0.1); padding: 6px 12px; border-radius: 20px; border: 1px solid rgba(217,119,6,0.2);">
+                                                                <span style="color: #d97706; letter-spacing: 1px; font-size: 0.95rem;">
+                                                                    <c:forEach begin="1" end="${r.rating}" var="i">★</c:forEach>
+                                                                    <c:forEach begin="1" end="${5 - r.rating}" var="i">☆</c:forEach>
+                                                                </span>
+                                                                    <span style="font-weight: 700; color: #d97706; font-size: 0.85rem;">${r.rating}.0</span>
+                                                                </div>
+                                                                <form action="deleteReview" method="post" onsubmit="return confirm('Are you sure you want to delete this review? This action cannot be undone.');" style="margin: 0;">
+                                                                    <input type="hidden" name="reviewId" value="${r.reviewID}">
+                                                                    <button type="submit" class="btn-edit" style="color: var(--red); border-color: var(--red); padding: 6px 12px; font-size: 0.78rem;" title="Delete this review">
+                                                                        🗑️ Delete
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Review Comment -->
+                                                        <div style="background: var(--bg); padding: 14px 16px; border-radius: 8px; border-left: 3px solid var(--accent);">
+                                                            <div style="font-size: 0.88rem; line-height: 1.6; color: var(--ink); opacity: 0.9; white-space: pre-wrap;">
+                                                                <c:out value="${r.comment}"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </c:forEach>
+                                            </div>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </div>
+                </c:otherwise>
+            </c:choose>
+        </div>
+
     </div>
-</div>
 
-<script src="app.js"></script>
+    <div class="modal-overlay" id="editModal">
+        <div class="modal-box">
+            <span class="close-btn" onclick="closeEditModal()">×</span>
+            <h3 class="card-title">Update Property</h3>
+            <form action="updateProperty" method="post" style="display: flex; flex-direction: column; gap: 16px;">
+                <input type="hidden" name="propertyId" id="edit-id">
 
-<script>
-    // Bulletproof direct function - customized for superEditBtn and emoji-free text!
-    function toggleEditMode() {
-        const btn = document.getElementById('superEditBtn'); // Ensure ID matches!
-        const inputs = document.querySelectorAll('#profileForm input[type="text"], #profileForm input[type="email"], #profileForm input[type="password"]');
-        const saveBtn = document.getElementById('saveProfileBtn');
+                <div class="form-group"><label>Title</label><input type="text" name="title" id="edit-title" required></div>
+                <div class="form-group"><label id="edit-price-label">Price (LKR)</label><input type="number" name="price" id="edit-price" required></div>
+                <div class="form-group"><label>Location</label><input type="text" name="location" id="edit-location" required></div>
+                <div class="form-grid">
+                    <div class="form-group"><label>Type</label>
+                        <select name="type" id="edit-type"><option>Apartment</option><option>House</option><option>Villa</option></select>
+                    </div>
+                    <div class="form-group"><label>Bed Rooms</label><input type="number" name="bedrooms" id="edit-bedrooms" min="0" required></div>
+                    <div class="form-group"><label>Bath Tubs</label><input type="number" name="bathrooms" id="edit-bathrooms" min="0" required></div>
+                    <div class="form-group"><label>Status</label>
+                        <select name="status" id="edit-status-select" onchange="updatePriceLabel('edit')">
+                            <option>For Sale</option>
+                            <option>For Rent</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group"><label>Description</label><textarea name="description" id="edit-description" rows="3"></textarea></div>
+                <button type="submit" class="btn">💾 Save Changes</button>
+            </form>
+        </div>
+    </div>
 
-        // Check if the save button is currently visible
-        const isEditing = saveBtn.style.display === 'block';
+    <script src="app.js"></script>
 
-        if (!isEditing) {
-            // Switch TO Edit Mode
-            inputs.forEach(input => {
-                input.removeAttribute('readonly');
-                input.classList.remove('readonly-input');
-                input.classList.add('editable-input');
-            });
-            saveBtn.style.display = 'block';
-            btn.innerHTML = 'Cancel'; // Emoji-free text!
-            btn.style.backgroundColor = '#ef4444'; // Make button red
-        } else {
-            // Switch BACK to Read-Only Mode
-            inputs.forEach(input => {
-                input.setAttribute('readonly', true);
-                input.classList.remove('editable-input');
-                input.classList.add('readonly-input');
-            });
-            saveBtn.style.display = 'none';
-            btn.innerHTML = 'Edit'; // Emoji-free text!
-            btn.style.backgroundColor = '#3b82f6'; // Make button blue
+    <script>
+        // Bulletproof direct function - customized for superEditBtn and emoji-free text!
+        function toggleEditMode() {
+            const btn = document.getElementById('superEditBtn'); // Ensure ID matches!
+            const inputs = document.querySelectorAll('#profileForm input[type="text"], #profileForm input[type="email"], #profileForm input[type="password"]');
+            const saveBtn = document.getElementById('saveProfileBtn');
 
-            // Revert changes if they click cancel without saving
-            document.getElementById('profileForm').reset();
+            // Check if the save button is currently visible
+            const isEditing = saveBtn.style.display === 'block';
+
+            if (!isEditing) {
+                // Switch TO Edit Mode
+                inputs.forEach(input => {
+                    input.removeAttribute('readonly');
+                    input.classList.remove('readonly-input');
+                    input.classList.add('editable-input');
+                });
+                saveBtn.style.display = 'block';
+                btn.innerHTML = 'Cancel'; // Emoji-free text!
+                btn.style.backgroundColor = '#ef4444'; // Make button red
+            } else {
+                // Switch BACK to Read-Only Mode
+                inputs.forEach(input => {
+                    input.setAttribute('readonly', true);
+                    input.classList.remove('editable-input');
+                    input.classList.add('readonly-input');
+                });
+                saveBtn.style.display = 'none';
+                btn.innerHTML = 'Edit'; // Emoji-free text!
+                btn.style.backgroundColor = '#3b82f6'; // Make button blue
+
+                // Revert changes if they click cancel without saving
+                document.getElementById('profileForm').reset();
+            }
         }
-    }
-    // Show/Hide Password Toggle
+        // Show/Hide Password Toggle
         function togglePassword() {
             const pwdInput = document.getElementById('pwdInput');
             const eyeOpen = document.getElementById('eyeOpen');
@@ -1154,14 +1191,14 @@
                 eyeClosed.style.display = 'none';
             }
         }
-</script>
+    </script>
 
-<script>
-    // Identity bridge for notifications on this page too
-    window.currentUser = "${sessionScope.loggedUser}";
-    window.currentRole = "${sessionScope.loggedRole}";
-    window.allNotifications = [];
-    <c:forEach items="${allNotifications}" var="n">
+    <script>
+        // Identity bridge for notifications on this page too
+        window.currentUser = "${sessionScope.loggedUser}";
+        window.currentRole = "${sessionScope.loggedRole}";
+        window.allNotifications = [];
+        <c:forEach items="${allNotifications}" var="n">
         window.allNotifications.push({
             sender: "${n.sender}",
             receiver: "${n.receiver}",
@@ -1172,107 +1209,107 @@
             threadId: "${n.threadId}",
             timestamp: "${n.timestamp}"
         });
-    </c:forEach>
-</script>
-<script>
-    function openEditModal(id, title, price, location, type, status, bedrooms, bathrooms, description) {
-        document.getElementById('edit-id').value = id;
-        document.getElementById('edit-title').value = title;
-        document.getElementById('edit-price').value = price;
-        document.getElementById('edit-location').value = location;
-        document.getElementById('edit-type').value = type;
-        document.getElementById('edit-status-select').value = status; // Set status first
-        document.getElementById('edit-bedrooms').value = bedrooms;
-        document.getElementById('edit-bathrooms').value = bathrooms;
-        document.getElementById('edit-description').value = description;
+        </c:forEach>
+    </script>
+    <script>
+        function openEditModal(id, title, price, location, type, status, bedrooms, bathrooms, description) {
+            document.getElementById('edit-id').value = id;
+            document.getElementById('edit-title').value = title;
+            document.getElementById('edit-price').value = price;
+            document.getElementById('edit-location').value = location;
+            document.getElementById('edit-type').value = type;
+            document.getElementById('edit-status-select').value = status; // Set status first
+            document.getElementById('edit-bedrooms').value = bedrooms;
+            document.getElementById('edit-bathrooms').value = bathrooms;
+            document.getElementById('edit-description').value = description;
 
-        updatePriceLabel('edit'); // Call to update label based on status
-        document.getElementById('editModal').classList.add('open');
-    }
+            updatePriceLabel('edit'); // Call to update label based on status
+            document.getElementById('editModal').classList.add('open');
+        }
 
-    function closeEditModal() {
-        document.getElementById('editModal').classList.remove('open');
-    }
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('open');
+        }
 
-    function updatePriceLabel(formType) {
-        let statusSelectId = formType === 'add' ? 'add-status-select' : 'edit-status-select';
-        let priceLabelId = formType === 'add' ? 'add-price-label' : 'edit-price-label';
+        function updatePriceLabel(formType) {
+            let statusSelectId = formType === 'add' ? 'add-status-select' : 'edit-status-select';
+            let priceLabelId = formType === 'add' ? 'add-price-label' : 'edit-price-label';
 
-        let statusSelect = document.getElementById(statusSelectId);
-        let priceLabel = document.getElementById(priceLabelId);
+            let statusSelect = document.getElementById(statusSelectId);
+            let priceLabel = document.getElementById(priceLabelId);
 
-        if (statusSelect && priceLabel) {
-            if (statusSelect.value === 'For Rent') {
-                priceLabel.innerText = 'Daily Price (LKR)';
-            } else {
-                priceLabel.innerText = 'Price (LKR)';
+            if (statusSelect && priceLabel) {
+                if (statusSelect.value === 'For Rent') {
+                    priceLabel.innerText = 'Daily Price (LKR)';
+                } else {
+                    priceLabel.innerText = 'Price (LKR)';
+                }
             }
         }
-    }
 
-    // Initial call for add form on page load
-    document.addEventListener('DOMContentLoaded', () => {
-        updatePriceLabel('add');
-    });
-</script>
+        // Initial call for add form on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            updatePriceLabel('add');
+        });
+    </script>
 
-<!-- Inquiry Chat Modal -->
-<div class="chat-overlay" id="chatOverlay" onclick="closeChatIfOutside(event)">
-    <div class="chat-box" onclick="event.stopPropagation()">
-        <div class="chat-left">
-            <div style="font-weight: 800; margin-bottom: 12px;">Inquiry Details</div>
-            <div style="display:flex; flex-direction:column; gap: 10px;">
-                <div>
-                    <div style="font-size:0.75rem; opacity:0.7; text-transform: uppercase; letter-spacing: .6px;">Buyer</div>
-                    <div id="chatBuyerName" style="font-weight:700;"></div>
-                </div>
-                <div>
-                    <div style="font-size:0.75rem; opacity:0.7; text-transform: uppercase; letter-spacing: .6px;">Email</div>
-                    <div id="chatBuyerEmail"></div>
-                </div>
-                <div>
-                    <div style="font-size:0.75rem; opacity:0.7; text-transform: uppercase; letter-spacing: .6px;">Phone</div>
-                    <div id="chatBuyerPhone"></div>
-                </div>
-                <div style="padding-top: 10px; border-top: 1px solid var(--line);">
-                    <div style="font-size:0.75rem; opacity:0.7; text-transform: uppercase; letter-spacing: .6px;">Property</div>
-                    <div id="chatPropTitle" style="font-weight:700;"></div>
-                    <div id="chatPropId" style="font-size:0.85rem; opacity:0.8;"></div>
-                </div>
-                <div style="padding-top: 10px; border-top: 1px solid var(--line);">
-                    <div style="font-size:0.75rem; opacity:0.7; text-transform: uppercase; letter-spacing: .6px;">Thread</div>
-                    <div id="chatThreadId" style="font-size:0.85rem; opacity:0.85; word-break: break-all;"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="chat-right">
-            <div class="chat-top">
-                <div class="chat-peer">
-                    <div class="avatar">👤</div>
+    <!-- Inquiry Chat Modal -->
+    <div class="chat-overlay" id="chatOverlay" onclick="closeChatIfOutside(event)">
+        <div class="chat-box" onclick="event.stopPropagation()">
+            <div class="chat-left">
+                <div style="font-weight: 800; margin-bottom: 12px;">Inquiry Details</div>
+                <div style="display:flex; flex-direction:column; gap: 10px;">
                     <div>
-                        <div class="peer-name" id="chatHeaderName">Buyer</div>
-                        <div class="peer-sub" id="chatHeaderSub">Inquiry chat</div>
+                        <div style="font-size:0.75rem; opacity:0.7; text-transform: uppercase; letter-spacing: .6px;">Buyer</div>
+                        <div id="chatBuyerName" style="font-weight:700;"></div>
+                    </div>
+                    <div>
+                        <div style="font-size:0.75rem; opacity:0.7; text-transform: uppercase; letter-spacing: .6px;">Email</div>
+                        <div id="chatBuyerEmail"></div>
+                    </div>
+                    <div>
+                        <div style="font-size:0.75rem; opacity:0.7; text-transform: uppercase; letter-spacing: .6px;">Phone</div>
+                        <div id="chatBuyerPhone"></div>
+                    </div>
+                    <div style="padding-top: 10px; border-top: 1px solid var(--line);">
+                        <div style="font-size:0.75rem; opacity:0.7; text-transform: uppercase; letter-spacing: .6px;">Property</div>
+                        <div id="chatPropTitle" style="font-weight:700;"></div>
+                        <div id="chatPropId" style="font-size:0.85rem; opacity:0.8;"></div>
+                    </div>
+                    <div style="padding-top: 10px; border-top: 1px solid var(--line);">
+                        <div style="font-size:0.75rem; opacity:0.7; text-transform: uppercase; letter-spacing: .6px;">Thread</div>
+                        <div id="chatThreadId" style="font-size:0.85rem; opacity:0.85; word-break: break-all;"></div>
                     </div>
                 </div>
-                <button class="btn" type="button" style="background: var(--line); color: var(--ink);" onclick="closeChat()">Close</button>
             </div>
 
-            <div class="chat-msgs" id="chatMsgs"></div>
+            <div class="chat-right">
+                <div class="chat-top">
+                    <div class="chat-peer">
+                        <div class="avatar">👤</div>
+                        <div>
+                            <div class="peer-name" id="chatHeaderName">Buyer</div>
+                            <div class="peer-sub" id="chatHeaderSub">Inquiry chat</div>
+                        </div>
+                    </div>
+                    <button class="btn" type="button" style="background: var(--line); color: var(--ink);" onclick="closeChat()">Close</button>
+                </div>
 
-            <form class="chat-compose" id="chatForm" action="replyInquiry" method="post">
-                <input type="hidden" name="threadId" id="chatThreadIdInput">
-                <textarea class="chat-input" name="message" id="chatInput" placeholder="Type a reply..." required></textarea>
-                <button class="chat-send" type="submit">Send</button>
-            </form>
+                <div class="chat-msgs" id="chatMsgs"></div>
+
+                <form class="chat-compose" id="chatForm" action="replyInquiry" method="post">
+                    <input type="hidden" name="threadId" id="chatThreadIdInput">
+                    <textarea class="chat-input" name="message" id="chatInput" placeholder="Type a reply..." required></textarea>
+                    <button class="chat-send" type="submit">Send</button>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
-<script>
-    // Build a JS map of seller threads from server-side data
-    window.sellerThreads = {};
-    <c:forEach var="t" items="${sellerThreads}">
+    <script>
+        // Build a JS map of seller threads from server-side data
+        window.sellerThreads = {};
+        <c:forEach var="t" items="${sellerThreads}">
         window.sellerThreads["${t.id}"] = {
             id: "${t.id}",
             propertyId: "${t.propertyId}",
@@ -1283,139 +1320,139 @@
             createdDate: "${t.createdDate}",
             status: "${t.status}"
         };
-    </c:forEach>
+        </c:forEach>
 
-    function openInquiryFromSelect() {
-        const sel = document.getElementById('inqSelect');
-        if (!sel || !sel.value) return;
-        openChat(sel.value);
-    }
-
-    function openChat(threadId) {
-        const t = window.sellerThreads ? window.sellerThreads[threadId] : null;
-        if (!t) return;
-
-        // --- Populate Chat UI ---
-        document.getElementById('chatBuyerName').innerText = t.buyerName || '(No name)';
-        document.getElementById('chatBuyerEmail').innerText = t.buyerEmail || '(No email)';
-        document.getElementById('chatBuyerPhone').innerText = t.buyerPhone || '(No phone)';
-        document.getElementById('chatPropTitle').innerText = t.propertyTitle || '(No title)';
-        document.getElementById('chatPropId').innerText = t.propertyId ? ('Property ID: ' + t.propertyId) : '';
-        document.getElementById('chatThreadId').innerText = t.id;
-        document.getElementById('chatHeaderName').innerText = t.buyerName || 'Buyer';
-        document.getElementById('chatHeaderSub').innerText = (t.createdDate ? ('Created: ' + t.createdDate) : 'Inquiry chat');
-        document.getElementById('chatThreadIdInput').value = t.id;
-
-        const msgs = document.getElementById('chatMsgs');
-        const container = document.getElementById('thread-msgs-' + t.id);
-        msgs.innerHTML = container ? container.innerHTML : '';
-
-        // --- Show Modal & Focus ---
-        document.getElementById('chatOverlay').classList.add('open');
-        setTimeout(() => { msgs.scrollTop = msgs.scrollHeight; }, 50);
-        setTimeout(() => { document.getElementById('chatInput').focus(); }, 80);
-
-        // --- Mark as Read & Update UI ---
-        // 1. Find the notification in the global array
-        const notifIndex = window.allNotifications.findIndex(n => n.threadId === threadId);
-
-        // 2. If it exists, remove it from the array and re-render the bell
-        if (notifIndex > -1) {
-            window.allNotifications.splice(notifIndex, 1);
-            if (typeof renderNotifications === 'function') {
-                renderNotifications();
-            }
+        function openInquiryFromSelect() {
+            const sel = document.getElementById('inqSelect');
+            if (!sel || !sel.value) return;
+            openChat(sel.value);
         }
 
-        // 3. Send the "mark as read" request to the server in the background
-        fetch('markInquiryRead', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: 'threadId=' + encodeURIComponent(threadId)
-        }).catch(err => console.error("Failed to mark as read on server:", err));
-    }
+        function openChat(threadId) {
+            const t = window.sellerThreads ? window.sellerThreads[threadId] : null;
+            if (!t) return;
 
+            // --- Populate Chat UI ---
+            document.getElementById('chatBuyerName').innerText = t.buyerName || '(No name)';
+            document.getElementById('chatBuyerEmail').innerText = t.buyerEmail || '(No email)';
+            document.getElementById('chatBuyerPhone').innerText = t.buyerPhone || '(No phone)';
+            document.getElementById('chatPropTitle').innerText = t.propertyTitle || '(No title)';
+            document.getElementById('chatPropId').innerText = t.propertyId ? ('Property ID: ' + t.propertyId) : '';
+            document.getElementById('chatThreadId').innerText = t.id;
+            document.getElementById('chatHeaderName').innerText = t.buyerName || 'Buyer';
+            document.getElementById('chatHeaderSub').innerText = (t.createdDate ? ('Created: ' + t.createdDate) : 'Inquiry chat');
+            document.getElementById('chatThreadIdInput').value = t.id;
 
-    function closeChat() {
-        document.getElementById('chatOverlay').classList.remove('open');
-        document.getElementById('chatInput').value = '';
-    }
+            const msgs = document.getElementById('chatMsgs');
+            const container = document.getElementById('thread-msgs-' + t.id);
+            msgs.innerHTML = container ? container.innerHTML : '';
 
-    function closeChatIfOutside(event) {
-        if (event.target && event.target.id === 'chatOverlay') closeChat();
-    }
+            // --- Show Modal & Focus ---
+            document.getElementById('chatOverlay').classList.add('open');
+            setTimeout(() => { msgs.scrollTop = msgs.scrollHeight; }, 50);
+            setTimeout(() => { document.getElementById('chatInput').focus(); }, 80);
 
-    // Auto-open from notification bell routing & attach form listener
-    document.addEventListener("DOMContentLoaded", () => {
-        const params = new URLSearchParams(window.location.search);
-        const threadId = params.get('threadId');
-        if (threadId) {
-            setTimeout(() => openChat(threadId), 150);
-        }
+            // --- Mark as Read & Update UI ---
+            // 1. Find the notification in the global array
+            const notifIndex = window.allNotifications.findIndex(n => n.threadId === threadId);
 
-        const chatForm = document.getElementById('chatForm');
-        if (chatForm) {
-            chatForm.addEventListener('submit', (e) => handleChatSubmit(e, 'SELLER', chatForm));
-
-            const chatInput = document.getElementById('chatInput');
-            chatInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    handleChatSubmit(new Event('submit', { bubbles: true, cancelable: true }), 'SELLER', chatForm);
+            // 2. If it exists, remove it from the array and re-render the bell
+            if (notifIndex > -1) {
+                window.allNotifications.splice(notifIndex, 1);
+                if (typeof renderNotifications === 'function') {
+                    renderNotifications();
                 }
-            });
-        }
-    });
-</script>
-
-<script>
-    // Auto-scroll to reviews section after a review deletion
-    (function() {
-        const params = new URLSearchParams(window.location.search);
-        if (params.get('scrollTo') === 'reviews') {
-            const reviewsSection = document.getElementById('reviews-section');
-            if (reviewsSection) {
-                reviewsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
-            // Clean the URL so refreshing doesn't re-scroll
-            const cleanUrl = window.location.pathname;
-            history.replaceState(null, '', cleanUrl);
+
+            // 3. Send the "mark as read" request to the server in the background
+            fetch('markInquiryRead', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'threadId=' + encodeURIComponent(threadId)
+            }).catch(err => console.error("Failed to mark as read on server:", err));
         }
-    })();
-</script>
 
-<!-- Hidden rendered messages per thread (safe HTML escaping) -->
-<div style="display:none;">
-    <c:forEach var="t" items="${sellerThreads}">
-        <div id="thread-msgs-${t.id}">
-            <c:forEach var="m" items="${t.messages}">
-                <c:choose>
-                    <c:when test="${m.senderRole == 'SELLER'}">
-                        <div class="bubble bubble-right">
-                            <div class="bubble-meta">
-                                <strong><c:out value="${m.senderName}"/></strong>
-                                · <c:out value="${m.timestamp}"/>
-                            </div>
-                            <div style="white-space: pre-wrap;"><c:out value="${m.content}"/></div>
-                        </div>
-                    </c:when>
-                    <c:otherwise>
-                        <div class="bubble bubble-left">
-                            <div class="bubble-meta">
-                                <strong><c:out value="${m.senderName}"/></strong>
-                                · <c:out value="${m.timestamp}"/>
-                            </div>
-                            <div style="white-space: pre-wrap;"><c:out value="${m.content}"/></div>
-                        </div>
-                    </c:otherwise>
-                </c:choose>
-            </c:forEach>
-        </div>
-    </c:forEach>
-</div>
 
-<!-- Page Transition Animation System -->
-<script src="page-transitions.js"></script>
+        function closeChat() {
+            document.getElementById('chatOverlay').classList.remove('open');
+            document.getElementById('chatInput').value = '';
+        }
+
+        function closeChatIfOutside(event) {
+            if (event.target && event.target.id === 'chatOverlay') closeChat();
+        }
+
+        // Auto-open from notification bell routing & attach form listener
+        document.addEventListener("DOMContentLoaded", () => {
+            const params = new URLSearchParams(window.location.search);
+            const threadId = params.get('threadId');
+            if (threadId) {
+                setTimeout(() => openChat(threadId), 150);
+            }
+
+            const chatForm = document.getElementById('chatForm');
+            if (chatForm) {
+                chatForm.addEventListener('submit', (e) => handleChatSubmit(e, 'SELLER', chatForm));
+
+                const chatInput = document.getElementById('chatInput');
+                chatInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleChatSubmit(new Event('submit', { bubbles: true, cancelable: true }), 'SELLER', chatForm);
+                    }
+                });
+            }
+        });
+    </script>
+
+    <script>
+        // Auto-scroll to reviews section after a review deletion
+        (function() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('scrollTo') === 'reviews') {
+                const reviewsSection = document.getElementById('reviews-section');
+                if (reviewsSection) {
+                    reviewsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                // Clean the URL so refreshing doesn't re-scroll
+                const cleanUrl = window.location.pathname;
+                history.replaceState(null, '', cleanUrl);
+            }
+        })();
+    </script>
+
+    <!-- Hidden rendered messages per thread (safe HTML escaping) -->
+    <div style="display:none;">
+        <c:forEach var="t" items="${sellerThreads}">
+            <div id="thread-msgs-${t.id}">
+                <c:forEach var="m" items="${t.messages}">
+                    <c:choose>
+                        <c:when test="${m.senderRole == 'SELLER'}">
+                            <div class="bubble bubble-right">
+                                <div class="bubble-meta">
+                                    <strong><c:out value="${m.senderName}"/></strong>
+                                    · <c:out value="${m.timestamp}"/>
+                                </div>
+                                <div style="white-space: pre-wrap;"><c:out value="${m.content}"/></div>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="bubble bubble-left">
+                                <div class="bubble-meta">
+                                    <strong><c:out value="${m.senderName}"/></strong>
+                                    · <c:out value="${m.timestamp}"/>
+                                </div>
+                                <div style="white-space: pre-wrap;"><c:out value="${m.content}"/></div>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
+                </c:forEach>
+            </div>
+        </c:forEach>
+    </div>
+
+    <!-- Page Transition Animation System -->
+    <script src="page-transitions.js"></script>
 
 </body>
 </html>

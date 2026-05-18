@@ -447,13 +447,20 @@ function applyFilters() {
     if(typeof window.properties === 'undefined') return;
 
     let filtered = (window.properties || []).filter(p => {
-        // STATUS (Sold / Available / All) filter
+        // STATUS (Sold / Booked / Available / All) filter
         let matchSoldStatus = true;
         if (currentFilters.soldStatus !== 'all') {
             const s = p.status ? p.status.trim().toLowerCase() : '';
+            const isBookedRental = s === 'sold' && window.propertyBookingEndDates && window.propertyBookingEndDates[String(p.id)];
+
             if (currentFilters.soldStatus === 'sold') {
-                matchSoldStatus = s === 'sold';
+                // Permanently sold (NOT booked)
+                matchSoldStatus = s === 'sold' && !isBookedRental;
+            } else if (currentFilters.soldStatus === 'booked') {
+                // Booked rentals (sold status with active booking)
+                matchSoldStatus = isBookedRental;
             } else if (currentFilters.soldStatus === 'available') {
+                // Available (not sold at all)
                 matchSoldStatus = s !== 'sold';
             }
         }
@@ -515,20 +522,50 @@ function renderListings() {
         const safeStatus   = p.status ? p.status.toLowerCase() : 'sale';
         const isSold       = safeStatus === 'sold';
         const isRent       = !isSold && safeStatus.includes('rent');
+        const isBookedRental = isSold && window.propertyBookingEndDates && window.propertyBookingEndDates[String(p.id)];
         const realSeller   = (p.seller && p.seller !== "null" && p.seller.trim() !== "") ? p.seller : "Verified Seller";
         const agent        = getAgentForSeller(realSeller);
         const typeLabel    = p.type ? p.type.charAt(0).toUpperCase() + p.type.slice(1) : 'Property';
-        const statusTag    = isSold ? 'Sold' : (isRent ? 'For Rent' : 'For Sale');
-        const tagClass     = isSold ? 'tag-sold' : (isRent ? 'tag-rent' : 'tag-sale');
+        const statusTag    = isBookedRental ? 'Booked' : (isSold ? 'Sold' : (isRent ? 'For Rent' : 'For Sale'));
+        const tagClass     = isBookedRental ? 'tag-booked' : (isSold ? 'tag-sold' : (isRent ? 'tag-rent' : 'tag-sale'));
         const rentSuffix   = isRent ? '<span style="font-size:0.58em;font-weight:400;color:var(--ink4)">/day</span>' : '';
+
+        // Build overlay HTML based on sold/booked status
+        let overlayHTML = '';
+        if (isSold) {
+            if (isBookedRental) {
+                overlayHTML = `<div class="sold-img-overlay booked-overlay"><div class="sold-title">BOOKED</div><div class="sold-message">This property has been booked until <strong style="color:#fff;font-size:1.1rem;">${window.propertyBookingEndDates[String(p.id)]}</strong></div></div>`;
+            } else {
+                overlayHTML = '<div class="sold-img-overlay"><div class="sold-title">SOLD</div><div class="sold-message">This property has been sold and is no longer available</div></div>';
+            }
+        }
+
+        // Build tape/badge HTML
+        let tapeHTML = '';
+        if (isBookedRental) {
+            tapeHTML = '<span class="sold-tape" style="background:rgba(16,185,129,0.15);color:#10b981;border-bottom:2px solid #10b981;">✅ Booked</span>';
+        } else if (isSold) {
+            tapeHTML = '<span class="sold-tape"> Sold</span>';
+        }
+
+        // Build list tape HTML
+        let listTapeHTML = '';
+        if (isBookedRental) {
+            listTapeHTML = '<span class="plc-sold-tape" style="background:rgba(16,185,129,0.15);color:#10b981;border-bottom:2px solid #10b981;">✅ Booked</span>';
+        } else if (isSold) {
+            listTapeHTML = '<span class="plc-sold-tape"> Sold</span>';
+        }
+
+        // Build tag style for booked rental
+        const bookedTagStyle = isBookedRental ? ' style="background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.3);"' : '';
 
         if (currentViewMode === 'list') {
             // ── LIST ROW ──
             return `<div class="prop-card prop-card--list${isSold ? ' prop-card--sold' : ''}" onclick="openDetail('${p.id}')">
                 <div class="plc-img">
                     <img src="${p.image}" alt="${p.title}">
-                    <span class="prop-tag ${tagClass} plc-tag">${statusTag}</span>
-                    ${isSold ? '<div class="sold-img-overlay"><div class="sold-title">SOLD</div><div class="sold-message">This property has been sold and is no longer available</div></div>' : ''}
+                    <span class="prop-tag ${tagClass} plc-tag"${bookedTagStyle}>${statusTag}</span>
+                    ${overlayHTML}
                 </div>
                 <div class="plc-body">
                     <div class="plc-type">🏠 ${typeLabel}</div>
@@ -541,7 +578,7 @@ function renderListings() {
                     </div>
                 </div>
                 <div class="plc-right">
-                    ${isSold ? '<span class="plc-sold-tape">🔴 Sold</span>' : ''}
+                    ${listTapeHTML}
                     <div class="plc-price">LKR ${displayPrice}${rentSuffix}</div>
                     <div class="plc-agent">
                         <img src="${agent.img}" alt="${realSeller}">
@@ -556,16 +593,16 @@ function renderListings() {
             <div class="prop-img-wrap">
                 <img src="${p.image}" alt="${p.title}">
                 <div class="prop-tags">
-                    <span class="prop-tag ${tagClass}">${statusTag}</span>
+                    <span class="prop-tag ${tagClass}"${bookedTagStyle}>${statusTag}</span>
                 </div>
                 ${window.currentRole === 'BUYER' && !isSold ? `
                 <button class="heart-btn${window.favPropertyIds && window.favPropertyIds.has(p.id) ? ' heart-btn--saved' : ''}"
                     title="${window.favPropertyIds && window.favPropertyIds.has(p.id) ? 'Remove from Favorites' : 'Save to Favorites'}"
                     onclick="event.stopPropagation(); toggleFavorite(this, '${p.id}')">&#10084;</button>` : ''}
-                ${isSold ? '<div class="sold-img-overlay"><div class="sold-title">SOLD</div><div class="sold-message">This property has been sold and is no longer available</div></div>' : ''}
+                ${overlayHTML}
             </div>
             <div class="prop-body">
-                ${isSold ? '<span class="sold-tape">🔴 Sold</span>' : ''}
+                ${tapeHTML}
                 <div class="prop-price">LKR ${displayPrice} ${rentSuffix}</div>
                 <div class="prop-name">${p.title}</div>
                 <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
@@ -762,16 +799,53 @@ function openDetail(id) {
         const inquiryWrapper = document.getElementById('inquiry-form-wrapper');
         if (soldBanner && inquiryWrapper) {
             if (isSold) {
-                // Show sold banner with seller info; hide inquiry form
+                // Show sold/rented banner; hide inquiry form
                 soldBanner.style.display = 'block';
                 inquiryWrapper.style.display = 'none';
-                // Populate seller info inside the sold banner
+
+                // Check if this property has an active booking end date (confirmed rental)
+                const bookingEndDate = window.propertyBookingEndDates && window.propertyBookingEndDates[String(id)];
+
+                const soldIcon = document.getElementById('sold-icon');
+                const soldTitleText = document.getElementById('sold-title-text');
+                const soldMessage = document.getElementById('sold-message');
                 const soldSellerImg = document.getElementById('sold-seller-img');
                 const soldSellerName = document.getElementById('sold-seller-name');
                 const soldSellerTitle = document.getElementById('sold-seller-title');
-                if (soldSellerImg) soldSellerImg.src = agent.img || '';
-                if (soldSellerName) soldSellerName.innerText = realSeller;
-                if (soldSellerTitle) soldSellerTitle.innerText = agent.title || 'Real Estate Professional';
+
+                if (bookingEndDate) {
+                    // ✅ CONFIRMED RENTAL: Show green "Booked until" message
+                    soldBanner.style.background = 'rgba(13,158,110,0.08)';
+                    soldBanner.style.borderColor = 'rgba(13,158,110,0.3)';
+                    if (soldIcon) soldIcon.innerHTML = '✅';
+                    if (soldTitleText) {
+                        soldTitleText.style.color = '#0d9e6e';
+                        soldTitleText.innerText = 'PROPERTY BOOKED';
+                    }
+                    if (soldMessage) {
+                        soldMessage.style.color = '#0d9e6e';
+                        soldMessage.innerHTML = `This property is currently <strong>booked</strong> and unavailable for new reservations until <strong style="color:#10b981;font-size:1rem;">${bookingEndDate}</strong>. It will become available again after this date. The due date may be extended or early!`;
+                    }
+                    if (soldSellerImg) soldSellerImg.src = agent.img || '';
+                    if (soldSellerName) soldSellerName.innerText = realSeller;
+                    if (soldSellerTitle) soldSellerTitle.innerText = agent.title || 'Real Estate Professional';
+                } else {
+                    // 🔴 PERMANENTLY SOLD: Show red "Sold" message
+                    soldBanner.style.background = 'rgba(224,40,40,0.09)';
+                    soldBanner.style.borderColor = 'rgba(224,40,40,0.35)';
+                    if (soldIcon) soldIcon.innerHTML = '🔴';
+                    if (soldTitleText) {
+                        soldTitleText.style.color = '#c0392b';
+                        soldTitleText.innerText = 'PROPERTY SOLD';
+                    }
+                    if (soldMessage) {
+                        soldMessage.style.color = '#c0392b';
+                        soldMessage.innerHTML = `This property has been <strong>sold</strong> and is <strong>no longer available</strong> for purchase or booking. Contact details have been disabled.`;
+                    }
+                    if (soldSellerImg) soldSellerImg.src = agent.img || '';
+                    if (soldSellerName) soldSellerName.innerText = realSeller;
+                    if (soldSellerTitle) soldSellerTitle.innerText = agent.title || 'Real Estate Professional';
+                }
             } else {
                 // Not sold — hide banner, show inquiry form normally
                 soldBanner.style.display = 'none';

@@ -127,6 +127,11 @@ public class BookPropertyServlet extends HttpServlet {
             out.println(record);
         }
 
+        // ── Do NOT mark as sold when buyer books - only when seller confirms ──
+        // markRentalPropertyAsSold(request, propertyId);  // REMOVED
+        // Property stays "For Rent" until seller clicks "Confirm" in Active Bookings
+        // ─────────────────────────────────────────────────────────────────────
+
         // ENHANCEMENT 2: Create notification for seller about new booking
         createSellerBookingNotification(request, bookingId, propertyTitle, sellerName, loggedUser, buyerName, buyerEmail, buyerPhone, returnDateStr);
 
@@ -159,6 +164,53 @@ public class BookPropertyServlet extends HttpServlet {
 
     private String sanitise(String s) {
         return s == null ? "" : s.replace("|", "-");
+    }
+
+    /**
+     * If the booked property is "For Rent", set its status to "Sold"
+     * so no other buyer can book it during the rental period.
+     */
+    private void markRentalPropertyAsSold(HttpServletRequest request, String propertyId) {
+        try {
+            String propPath = getServletContext().getRealPath("/WEB-INF/properties.txt");
+            File   propFile = new File(propPath);
+            if (!propFile.exists()) return;
+
+            java.util.List<String> lines = new java.util.ArrayList<>();
+            boolean updated = false;
+
+            try (java.io.BufferedReader br = new java.io.BufferedReader(
+                    new java.io.InputStreamReader(
+                            java.nio.file.Files.newInputStream(propFile.toPath()), StandardCharsets.UTF_8))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] d = line.split(",", -1);
+                    // d[0]=id, d[5]=status — only update "For Rent" properties
+                    if (d.length >= 6 && d[0].trim().equals(propertyId)
+                            && "for rent".equalsIgnoreCase(d[5].trim())) {
+                        d[5] = "Sold";
+                        lines.add(String.join(",", d));
+                        updated = true;
+                    } else {
+                        lines.add(line);
+                    }
+                }
+            }
+
+            if (updated) {
+                try (PrintWriter pw = new PrintWriter(
+                        new OutputStreamWriter(
+                                java.nio.file.Files.newOutputStream(propFile.toPath(),
+                                        java.nio.file.StandardOpenOption.WRITE,
+                                        java.nio.file.StandardOpenOption.TRUNCATE_EXISTING),
+                                StandardCharsets.UTF_8))) {
+                    for (String l : lines) pw.println(l);
+                }
+                System.out.println("🔒 Rental property [" + propertyId + "] marked as Sold (booking in progress).");
+            }
+        } catch (Exception e) {
+            System.err.println("Error marking rental property as Sold: " + e.getMessage());
+        }
     }
 
     // ENHANCEMENT 2: Create booking notification for seller
