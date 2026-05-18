@@ -1,8 +1,12 @@
 =========================================================
   NESTIQ — PROPERTY AVAILABILITY REPORT
+  Seller  : Tharwa Broo
+  Date    : 2026-05-17
+  Total Listed   : 2
+  Available      : 2
+  Reserved       : 0
   Seller  : Dinesh
   Date    : 2026-05-18
-=========================================================
   Total Listed   : 6
   Available      : 5
   Reserved       : 1
