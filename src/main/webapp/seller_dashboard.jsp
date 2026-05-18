@@ -555,7 +555,7 @@
     <!-- end .profile-section -->
 
     <!-- ── STATS + INQUIRIES ROW ─────────────────────────────────────── -->
-    <div class="stats-inquiries-row" style="display: grid; grid-template-columns: 1fr 400px; gap: 20px; margin-bottom: 24px;">
+    <div class="stats-inquiries-row" style="grid-template-columns: 1fr 400px; gap: 20px; margin-bottom: 24px;">
 
         <!-- Left: Stat Cards -->
         <div class="stats-grid" style="margin-bottom: 0;">
@@ -605,7 +605,7 @@
         </div>
 
         <!-- Right: Buyer Inquiries Card -->
-        <div class="card" style="margin-bottom: 0; padding: 20px;">
+        <div class="card" style="margin-bottom: 0; margin-top: 20px; padding: 20px;">
             <h3 class="card-title" style="font-size: 1.1rem; margin-bottom: 16px; padding-bottom: 12px;">📩 Buyer Inquiries</h3>
 
             <div style="display: flex; flex-direction: column; gap: 12px;">

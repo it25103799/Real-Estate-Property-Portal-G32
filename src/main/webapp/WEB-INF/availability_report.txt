@@ -1,10 +1,10 @@
 =========================================================
   NESTIQ — PROPERTY AVAILABILITY REPORT
-  Seller  : Kavindi
+  Seller  : Tharwa Broo
   Date    : 2026-05-17
 =========================================================
-  Total Listed   : 3
-  Available      : 3
+  Total Listed   : 2
+  Available      : 2
   Reserved       : 0
 
 ----- ACTIVE RESERVATIONS (0) -----
