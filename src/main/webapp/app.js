@@ -824,7 +824,7 @@ function openDetail(id) {
                     }
                     if (soldMessage) {
                         soldMessage.style.color = '#0d9e6e';
-                        soldMessage.innerHTML = `This property is currently <strong>booked</strong> and unavailable for new reservations until <strong style="color:#10b981;font-size:1rem;">${bookingEndDate}</strong>. It will become available again after this date.`;
+                        soldMessage.innerHTML = `This property is currently <strong>booked</strong> and unavailable for new reservations until <strong style="color:#10b981;font-size:1rem;">${bookingEndDate}</strong>. It will become available again after this date. The due date may be extended or early!`;
                     }
                     if (soldSellerImg) soldSellerImg.src = agent.img || '';
                     if (soldSellerName) soldSellerName.innerText = realSeller;

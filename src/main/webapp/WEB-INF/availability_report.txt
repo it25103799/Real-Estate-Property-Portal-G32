@@ -8,7 +8,7 @@
   Reserved       : 1
 
 ----- ACTIVE RESERVATIONS (1) -----
-  [CONFIRMED] Anuradhapura River side | Buyer: Dinindu | Return: 2026-05-21
+  [CONFIRMED] Anuradhapura River side | Buyer: Dinindu | Return: 2026-05-19
 
 ----- COMPLETED TRANSACTIONS (3) -----
   Kiribathgoda new building | Buyer: Sadun Priya | Booked: 2026-05-04 | Returned: 2026-05-06
