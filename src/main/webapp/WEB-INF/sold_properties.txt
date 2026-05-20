@@ -7,3 +7,11 @@
 2026-05-13 16:14:11|ba4ccf7e|Awissawella Pro State|7000000.0|Rathnapura|assets/images/property-types/apartment.jpg
 2026-05-14 14:36:41|ca8d1b41|Galle resort|75000|Galle|assets/images/property-types/villa.jpg
 2026-05-16 14:32:56|5b26becd|Trinco City Center |7000000000|Trincomale|assets/images/property-types/apartment.jpg
+2026-05-17 00:00:01|PROP_1772770669697|Colombo Beach Villa|600000.0|Colombo|assets/images/property-types/villa.jpg
+2026-05-17 00:00:02|PROP_1772773352306|Kaduwela Beach view|5000|Kaduwela|assets/images/property-types/house.jpg
+2026-05-17 00:00:03|1f48f435|Kurunegala New Building|4000|Kurunegala|assets/images/property-types/apartment.jpg
+2026-05-17 00:00:04|2a2b0008|Kiribathgoda new building|1700000|Kiribathgoda|assets/images/property-types/apartment.jpg
+2026-05-17 00:00:05|0a22dc7a|Hegalla beach Villa|95000.0|Galle|assets/images/property-types/villa.jpg
+2026-05-17 00:00:06|3ea4a9d6|Kengalla Mount view|1000000|Kandy|assets/images/property-types/house.jpg
+2026-05-17 00:00:07|cfbc6b3c|Nittambuwa Smart Home|20000000.0|Gampaha|assets/images/property-types/apartment.jpg
+2026-05-18 02:38:07|04ef6ca1|Wadduwa Trophy |8500000.0|Wadduwa|assets/images/property-types/house.jpg

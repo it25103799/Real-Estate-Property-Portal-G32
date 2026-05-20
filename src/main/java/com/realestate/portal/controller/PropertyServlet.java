@@ -116,6 +116,46 @@ public class PropertyServlet extends HttpServlet {
         request.setAttribute("allReviews", reviewList);
         request.setAttribute("cities", cities); // Pass the set of cities to the JSP
 
+        // 2.3 LOAD ACTIVE BOOKING END DATES (for "Booked until" display to buyers)
+        java.util.Map<String, String> propertyBookingEndDates = new java.util.HashMap<>();
+        String bookingsPath = getServletContext().getRealPath("/WEB-INF/bookings.txt");
+        File bookingsFile = new File(bookingsPath);
+        if (bookingsFile.exists()) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(bookingsFile), "UTF-8"))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    if (line.trim().isEmpty() || line.trim().startsWith("#")) continue;
+                    String[] d = line.split("\\|", -1);
+                    if (d.length >= 11) {
+                        String status = d[10].trim();
+                        // Only show "Booked until" for non-COMPLETED bookings
+                        if (!"COMPLETED".equalsIgnoreCase(status) && !"CANCELLED".equalsIgnoreCase(status)) {
+                            String propId = d[1].trim();
+                            String returnDate = d[9].trim();
+                            propertyBookingEndDates.put(propId, returnDate);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("Error reading bookings for end dates: " + e.getMessage());
+            }
+        }
+        request.setAttribute("propertyBookingEndDates", propertyBookingEndDates);
+
+        // 2.4 OVERLAY: Temporarily mark rented properties as "Sold" for display purposes
+        // Properties with active bookings should show as Sold to buyers/unsigned users
+        // This is a display-only change; the actual property status remains unchanged
+        java.util.Map<String, String> displayStatusMap = new java.util.HashMap<>();
+        for (Property p : propertyList) {
+            String displayStatus = p.getStatus();
+            // If property is For Rent and has an active booking, show as Sold
+            if ("For Rent".equals(p.getStatus()) && propertyBookingEndDates.containsKey(p.getId())) {
+                displayStatus = "Sold";
+            }
+            displayStatusMap.put(p.getId(), displayStatus);
+        }
+        request.setAttribute("displayStatusMap", displayStatusMap);
+
         // 2.5 LOAD RECENTLY SOLD PROPERTIES (for "JUST SOLD" floating card)
         List<Map<String, String>> recentlySold = new ArrayList<>();
         String soldPath = getServletContext().getRealPath("/WEB-INF/sold_properties.txt");
