@@ -375,6 +375,8 @@ public class SellerDashboardServlet extends HttpServlet {
 
         // Calculate total earnings from sold properties
         double totalEarnings = 0.0;
+        double totalPropertyFees = 0.0;
+        double totalPenaltyFees = 0.0;
 
         // Method 1: From properties with "Sold" status in properties.txt (permanently sold)
         for (Property p : myProperties) {
@@ -401,6 +403,35 @@ public class SellerDashboardServlet extends HttpServlet {
             } catch (Exception ignored) {}
         }
         totalEarnings += rentalEarnings;
+
+        // Method 3: Load payment records from payments.txt to get fee breakdowns
+        String paymentsPath = getServletContext().getRealPath("/WEB-INF/payments.txt");
+        File paymentsFile = new File(paymentsPath);
+        if (paymentsFile.exists()) {
+            try (BufferedReader payBr = new BufferedReader(
+                    new InputStreamReader(Files.newInputStream(Paths.get(paymentsFile.getAbsolutePath())),
+                            StandardCharsets.UTF_8))) {
+                String payLine;
+                while ((payLine = payBr.readLine()) != null) {
+                    if (payLine.trim().isEmpty() || payLine.trim().startsWith("#")) continue;
+                    String[] payData = payLine.split("\\|", -1);
+                    // Format: paymentId|bookingId|propertyId|sellerId|rentalFee|penaltyFee|totalAmount|paymentStatus|paymentDate|bookingReturnDate
+                    if (payData.length >= 8 && loggedUser.equals(payData[3].trim())) {
+                        try {
+                            double rentalFee = Double.parseDouble(payData[4].trim());
+                            double penaltyFee = Double.parseDouble(payData[5].trim());
+                            totalPropertyFees += rentalFee;
+                            totalPenaltyFees += penaltyFee;
+                        } catch (NumberFormatException ignored) {}
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("Error reading payments: " + e.getMessage());
+            }
+        }
+
+        // Add penalty fees to total earnings
+        totalEarnings += totalPenaltyFees;
 
         // ── Write availability report to disk ─────────────────────────────────
         String reportPath = getServletContext().getRealPath("/WEB-INF/availability_report.txt");
@@ -446,6 +477,8 @@ public class SellerDashboardServlet extends HttpServlet {
         request.setAttribute("completedBookings",        completedBookings);
         request.setAttribute("totalEarnings",            totalEarnings);
         request.setAttribute("rentalEarnings",           rentalEarnings);
+        request.setAttribute("totalPropertyFees",        totalPropertyFees);
+        request.setAttribute("totalPenaltyFees",         totalPenaltyFees);
         request.setAttribute("propertyBookingEndDates",  propertyBookingEndDates);
         // ─────────────────────────────────────────────────────────────────────────
 

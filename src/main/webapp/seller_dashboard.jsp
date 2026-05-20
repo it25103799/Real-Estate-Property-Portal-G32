@@ -582,6 +582,14 @@
                     <div class="stat-value">LKR <fmt:formatNumber value="${not empty totalEarnings ? totalEarnings : 0}" pattern="#,##0"/></div>
                     <div class="stat-label">Total Earnings</div>
                 </div>
+
+                <!-- Total Penalty Fees Card -->
+                <div class="stat-card" style="--card-accent:#ef4444;">
+                    <div class="stat-icon" style="background:rgba(239,68,68,0.10);">⚠️</div>
+                    <div class="stat-value">LKR <fmt:formatNumber value="${not empty totalPenaltyFees ? totalPenaltyFees : 0}" pattern="#,##0"/></div>
+                    <div class="stat-label">Total Penalty Fees</div>
+                </div>
+
                 <div class="stat-card" style="--card-accent:#8b5cf6;">
                     <div class="stat-icon" style="background:rgba(139,92,246,0.10);">👁️</div>
                     <div class="stat-value">${not empty analyticsViews ? analyticsViews : 0}</div>

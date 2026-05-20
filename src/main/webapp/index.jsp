@@ -89,25 +89,25 @@
         /* ── PREMIUM DARK MODE OVERRIDES ── */
         [data-theme="dark"] {
             /* Deep Space Background */
-            --bg:        #0a0e1a;
-            --bg2:       #111827;
-            --bg3:       #1f2937;
+            --bg:        #1a1a2e;
+            --bg2:       #2a2a4a;
+            --bg3:       #3a3a6a;
 
             /* Light Text on Dark */
-            --ink:       #f9fafb;
-            --ink2:      #e5e7eb;
-            --ink3:      #9ca3af;
-            --ink4:      #6b7280;
+            --ink:       #f0f0ff;
+            --ink2:      #d0d0f0;
+            --ink3:      #a0a0d0;
+            --ink4:      #7070a0;
 
             /* Subtle Borders */
-            --line:      #1f2937;
-            --line2:     #374151;
+            --line:      #3a3a6a;
+            --line2:     #4a4a8a;
 
-            /* Premium Accent Colors - Vibrant Blue */
-            --accent:    #3b82f6;
-            --accent2:   #2563eb;
-            --accent-l:  rgba(59, 130, 246, 0.15);
-            --accent-glow: rgba(59, 130, 246, 0.25);
+            /* Premium Accent Colors - Vibrant Purple */
+            --accent:    #9d8eee;
+            --accent2:   #8b7cdc;
+            --accent-l:  rgba(157, 142, 238, 0.15);
+            --accent-glow: rgba(157, 142, 238, 0.25);
 
             /* Success Green - Bright Emerald */
             --green:     #10b981;
@@ -137,20 +137,25 @@
 
         /* Fix stubborn hardcoded white backgrounds */
         [data-theme="dark"] .navbar {
-            background: rgba(10, 14, 26, 0.95);
+            background: rgba(26, 26, 46, 0.95);
             border-bottom: 1px solid var(--line);
             box-shadow: 0 1px 0 rgba(255,255,255,0.05);
         }
         [data-theme="dark"] .navbar.scrolled {
-            background: rgba(10, 14, 26, 0.98);
+            background: rgba(26, 26, 46, 0.98);
             box-shadow: var(--shadow-lg), 0 0 0 1px var(--accent-glow);
         }
 
-        [data-theme="dark"] .hero-card-float,
-        [data-theme="dark"] .auth-social-btn,
-        [data-theme="dark"] .testi-card:hover {
+        [data-theme="dark"] .hero-card-float {
             background: linear-gradient(135deg, rgba(17,24,39,0.98) 0%, rgba(31,41,55,0.98) 100%);
             border: 1.5px solid rgba(59,130,246,0.2);
+            box-shadow: var(--shadow-xl), 0 0 0 1px rgba(59, 130, 246, 0.25);
+        }
+
+        [data-theme="dark"] .auth-social-btn,
+        [data-theme="dark"] .testi-card:hover {
+            background: linear-gradient(135deg, rgba(42, 42, 74, 0.98) 0%, rgba(58, 58, 106, 0.98) 100%);
+            border: 1.5px solid rgba(157, 142, 238, 0.2);
             box-shadow: var(--shadow-xl), 0 0 0 1px var(--accent-glow);
         }
 
@@ -271,11 +276,16 @@
             display: inline-flex; align-items: center; gap: 8px;
             font-size: .75rem; font-weight: 600; letter-spacing: 2px;
             text-transform: uppercase; color: var(--accent);
-            background: linear-gradient(135deg, var(--accent-l) 0%, rgba(37,99,235,0.08) 100%);
+            background: linear-gradient(135deg, var(--accent-l) 0%, rgba(157, 142, 238, 0.08) 100%);
             padding: 6px 14px; border-radius: 99px;
             margin-bottom: 28px; width: fit-content;
             border: 1px solid var(--accent-glow);
             box-shadow: 0 2px 8px var(--accent-glow);
+            transition: all var(--t);
+        }
+        .hero-eyebrow:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 16px var(--accent-glow);
         }
         .hero-title {
             font-family: var(--font-serif);
@@ -407,10 +417,7 @@
             font-size: .7rem;
             letter-spacing: 1.5px;
         }
-        [data-theme="dark"] .hcf-3 .hcf-label {
-            color: rgba(255,255,255,.7);
-        }
-        .hcf-3 .hcf-badge {
+        [data-theme="dark"] .hcf-3 .hcf-badge {
             background: rgba(224,40,40,.2);
             border: 1px solid rgba(224,40,40,.4);
             color: #ff6b6b;
@@ -538,7 +545,7 @@
         .filter-btn:hover { color: var(--ink); background: var(--bg3); }
         .filter-btn.active {
             color: var(--accent); background: var(--accent-l);
-            border-color: rgba(26,86,219,.2);
+            border-color: rgba(157, 142, 238, 0.2);
         }
         .filter-right { margin-left: auto; display: flex; gap: 8px; }
         .sort-select {
@@ -903,7 +910,7 @@
             border-radius: var(--r); padding: 12px 14px;
             font-size: .9rem; color: var(--ink); transition: all var(--t);
         }
-        .auth-input:focus { border-color: var(--accent); background: white; box-shadow: 0 0 0 3px rgba(26,86,219,.1); }
+        .auth-input:focus { border-color: var(--accent); background: white; box-shadow: 0 0 0 3px rgba(157, 142, 238, 0.1); }
         .auth-input::placeholder { color: var(--ink4); }
 
         /* ── PASSWORD EYE TOGGLE ── */
@@ -934,8 +941,8 @@
         .pw-eye:active { transform: translateY(-50%) scale(0.98); }
         .pw-eye:focus-visible {
             outline: none;
-            box-shadow: 0 0 0 3px rgba(26,86,219,.18);
-            border-color: rgba(26,86,219,.35);
+            box-shadow: 0 0 0 3px rgba(157, 142, 238, 0.18);
+            border-color: rgba(157, 142, 238, 0.35);
             background: var(--accent-l);
             color: var(--accent);
         }
@@ -956,7 +963,7 @@
             padding: 13px; border-radius: var(--r); font-size: .9rem; font-weight: 600;
             border: none; margin-top: 8px; cursor: pointer; transition: all var(--t);
         }
-        .auth-submit:hover { background: var(--accent2); box-shadow: 0 4px 14px rgba(26,86,219,.35); }
+        .auth-submit:hover { background: var(--accent2); box-shadow: 0 4px 14px rgba(157, 142, 238, 0.35); }
         .auth-switch { text-align: center; margin-top: 20px; font-size: .85rem; color: var(--ink3); }
         .auth-switch a { color: var(--accent); font-weight: 600; cursor: pointer; }
         .auth-role-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 20px; }
@@ -1016,14 +1023,14 @@
             padding: 5px 12px; border-radius: 99px; cursor: pointer; transition: all var(--t);
         }
         .filter-chip:hover { background: var(--bg3); }
-        .filter-chip.active { color: var(--accent); background: var(--accent-l); border-color: rgba(26,86,219,.25); }
+        .filter-chip.active { color: var(--accent); background: var(--accent-l); border-color: rgba(157, 142, 238, 0.25); }
         .filter-beds { display: flex; gap: 6px; }
         .bed-btn {
             width: 40px; height: 36px; border-radius: var(--r);
             background: var(--bg2); border: 1.5px solid transparent;
             font-size: .82rem; font-weight: 600; color: var(--ink3); cursor: pointer; transition: all var(--t);
         }
-        .bed-btn.active { background: var(--accent-l); color: var(--accent); border-color: rgba(26,86,219,.25); }
+        .bed-btn.active { background: var(--accent-l); color: var(--accent); border-color: rgba(157, 142, 238, 0.25); }
         .apply-filter-btn {
             width: 100%; background: var(--accent); color: white;
             padding: 11px; border-radius: var(--r); font-size: .875rem; font-weight: 600;
@@ -1046,7 +1053,7 @@
             display: flex; align-items: center; justify-content: center;
             color: var(--ink3); cursor: pointer; transition: all var(--t);
         }
-        .view-btn.active { background: var(--accent-l); color: var(--accent); border-color: rgba(26,86,219,.25); }
+        .view-btn.active { background: var(--accent-l); color: var(--accent); border-color: rgba(157, 142, 238, 0.25); }
 
         /* ── LIST VIEW LAYOUT ── */
         .prop-grid--list {
@@ -1125,7 +1132,7 @@
         .prop-card--compact:hover .pcc-img img { transform: scale(1.08); }
         .pcc-tag { position: absolute; top: 6px; left: 6px; font-size: .65rem !important; padding: 2px 7px !important; }
         .pcc-body { flex: 1; padding: 10px 14px; display: flex; flex-direction: column; justify-content: center; gap: 3px; min-width: 0; }
-        .pcc-title { font-size: .88rem; font-weight: 600; color: var(--ink2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .pcc-title { font-size: .88rem; font-weight: 600; color: var(--ink2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; }
         .pcc-loc { font-size: .72rem; color: var(--ink4); }
         .pcc-specs { display: flex; gap: 8px; font-size: .72rem; color: var(--ink3); margin-top: 2px; }
         .pcc-price { font-size: 1rem; font-weight: 700; color: var(--accent); padding: 10px 16px; border-left: 1px solid var(--line); flex-shrink: 0; white-space: nowrap; display: flex; align-items: center; }
@@ -1180,7 +1187,7 @@
             border: 1.5px solid var(--line); padding: 16px 20px;
             animation: cardIn .35s ease both; transition: all var(--t);
         }
-        .prop-card--minimal:hover { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,86,219,.08); }
+        .prop-card--minimal:hover { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(157, 142, 238, 0.08); }
         .pcn-thumb { width: 80px; height: 70px; border-radius: 8px; overflow: hidden; flex-shrink: 0; }
         .pcn-thumb img { width: 100%; height: 100%; object-fit: cover; }
         .pcn-body { flex: 1; min-width: 0; }
@@ -1225,7 +1232,7 @@
             right: -20%;
             width: 800px;
             height: 800px;
-            background: radial-gradient(circle, rgba(37,99,235,0.08) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(157, 142, 238, 0.08) 0%, transparent 70%);
             border-radius: 50%;
             pointer-events: none;
         }
@@ -1239,17 +1246,17 @@
         }
         .why-card:hover {
             background: rgba(255,255,255,.08);
-            border-color: rgba(59,130,246,0.3);
+            border-color: rgba(157, 142, 238, 0.3);
             box-shadow: 0 8px 32px rgba(0,0,0,0.3), 0 0 0 1px var(--accent-glow);
             transform: translateY(-4px);
         }
         .why-icon {
             width: 48px; height: 48px; border-radius: var(--r);
-            background: linear-gradient(135deg, rgba(59,130,246,0.3) 0%, rgba(37,99,235,0.2) 100%);
+            background: linear-gradient(135deg, rgba(157, 142, 238, 0.3) 0%, rgba(139, 124, 220, 0.2) 100%);
             display: flex; align-items: center; justify-content: center;
             font-size: 1.4rem; margin-bottom: 20px;
-            box-shadow: 0 4px 12px rgba(59,130,246,0.2);
-            border: 1px solid rgba(59,130,246,0.3);
+            box-shadow: 0 4px 12px rgba(157, 142, 238, 0.2);
+            border: 1px solid rgba(157, 142, 238, 0.3);
         }
         .why-title { font-size: 1.1rem; font-weight: 600; color: white; margin-bottom: 10px; }
         .why-desc { font-size: .875rem; color: rgba(255,255,255,.5); line-height: 1.7; }
@@ -1563,19 +1570,19 @@
 
         /* ── Listings layout background ── */
         [data-theme="dark"] #page-listings {
-            background: radial-gradient(ellipse at 30% 0%, rgba(79,142,255,.07) 0%, transparent 60%),
+            background: radial-gradient(ellipse at 30% 0%, rgba(157, 142, 238, 0.07) 0%, transparent 60%),
             radial-gradient(ellipse at 80% 80%, rgba(45,212,168,.05) 0%, transparent 55%),
             var(--bg);
         }
 
         /* ── Sidebar: frosted glass panel ── */
         [data-theme="dark"] .listings-sidebar {
-            background: linear-gradient(180deg, rgba(15,18,37,.97) 0%, rgba(10,13,26,.97) 100%);
+            background: linear-gradient(180deg, rgba(26, 26, 46, 0.97) 0%, rgba(26, 26, 46, 0.97) 100%);
             border-right: 1px solid transparent;
             box-shadow:
                     4px 0 32px rgba(0,0,0,.55),
-                    inset -1px 0 0 rgba(79,142,255,.12),
-                    1px 0 0 rgba(79,142,255,.06);
+                    inset -1px 0 0 rgba(157, 142, 238, 0.12),
+                    1px 0 0 rgba(157, 142, 238, 0.06);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
         }
@@ -1584,7 +1591,7 @@
         [data-theme="dark"] .listings-sidebar::-webkit-scrollbar { width: 4px; }
         [data-theme="dark"] .listings-sidebar::-webkit-scrollbar-track { background: transparent; }
         [data-theme="dark"] .listings-sidebar::-webkit-scrollbar-thumb {
-            background: rgba(79,142,255,.25);
+            background: rgba(157, 142, 238, 0.25);
             border-radius: 99px;
         }
 
@@ -1593,24 +1600,24 @@
             color: rgba(160,180,255,.65);
             font-weight: 700;
             letter-spacing: 1.4px;
-            text-shadow: 0 0 12px rgba(79,142,255,.2);
+            text-shadow: 0 0 12px rgba(157, 142, 238, 0.2);
         }
 
         /* ── Price range dropdown ── */
         [data-theme="dark"] .price-range-select {
-            background: linear-gradient(135deg, rgba(15,18,40,.95) 0%, rgba(12,15,32,.95) 100%);
-            border-color: rgba(79,142,255,.18);
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.95) 0%, rgba(26, 26, 46, 0.95) 100%);
+            border-color: rgba(157, 142, 238, 0.18);
             color: var(--ink2);
             box-shadow: 0 2px 12px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
             transition: all .22s ease;
         }
         [data-theme="dark"] .price-range-select:hover {
-            border-color: rgba(79,142,255,.35);
+            border-color: rgba(157, 142, 238, 0.35);
         }
         [data-theme="dark"] .price-range-select:focus {
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(79,142,255,.22), 0 2px 12px rgba(0,0,0,.35);
-            background: rgba(15,18,40,1);
+            box-shadow: 0 0 0 3px rgba(157, 142, 238, 0.22), 0 2px 12px rgba(0,0,0,.35);
+            background: rgba(26, 26, 46, 1);
         }
         [data-theme="dark"] .price-range-select option {
             background: #0d1225;
@@ -1619,64 +1626,64 @@
 
         /* ── Filter chips ── */
         [data-theme="dark"] .filter-chip {
-            background: rgba(20,24,52,.8);
-            border-color: rgba(79,142,255,.12);
+            background: rgba(42, 42, 74, 0.8);
+            border-color: rgba(157, 142, 238, 0.12);
             color: rgba(200,212,255,.65);
             transition: all .2s ease;
         }
         [data-theme="dark"] .filter-chip:hover {
-            background: rgba(30,36,72,.9);
-            border-color: rgba(79,142,255,.28);
+            background: rgba(58, 58, 106, 0.9);
+            border-color: rgba(157, 142, 238, 0.28);
             color: rgba(220,230,255,.9);
             box-shadow: 0 2px 10px rgba(0,0,0,.3);
         }
         [data-theme="dark"] .filter-chip.active {
-            background: rgba(79,142,255,.18);
-            border-color: rgba(79,142,255,.55);
+            background: rgba(157, 142, 238, 0.18);
+            border-color: rgba(157, 142, 238, 0.55);
             color: #a8c8ff;
             box-shadow:
-                    0 0 12px rgba(79,142,255,.25),
+                    0 0 12px rgba(157, 142, 238, 0.25),
                     0 2px 8px rgba(0,0,0,.3),
                     inset 0 1px 0 rgba(255,255,255,.06);
-            text-shadow: 0 0 8px rgba(79,142,255,.5);
+            text-shadow: 0 0 8px rgba(157, 142, 238, 0.5);
         }
 
         /* ── Bedroom buttons ── */
         [data-theme="dark"] .bed-btn {
-            background: rgba(20,24,52,.8);
-            border-color: rgba(79,142,255,.12);
+            background: rgba(42, 42, 74, 0.8);
+            border-color: rgba(157, 142, 238, 0.12);
             color: rgba(200,212,255,.6);
             transition: all .2s ease;
         }
         [data-theme="dark"] .bed-btn:hover {
-            background: rgba(30,36,72,.9);
-            border-color: rgba(79,142,255,.28);
+            background: rgba(58, 58, 106, 0.9);
+            border-color: rgba(157, 142, 238, 0.28);
             color: rgba(220,230,255,.9);
             box-shadow: 0 2px 10px rgba(0,0,0,.3);
         }
         [data-theme="dark"] .bed-btn.active {
-            background: rgba(79,142,255,.18);
-            border-color: rgba(79,142,255,.55);
+            background: rgba(157, 142, 238, 0.18);
+            border-color: rgba(157, 142, 238, 0.55);
             color: #a8c8ff;
             box-shadow:
-                    0 0 12px rgba(79,142,255,.25),
+                    0 0 12px rgba(157, 142, 238, 0.25),
                     0 2px 8px rgba(0,0,0,.3),
                     inset 0 1px 0 rgba(255,255,255,.06);
         }
 
         /* ── Apply filter button ── */
         [data-theme="dark"] .apply-filter-btn {
-            background: linear-gradient(135deg, #4f8eff 0%, #2e6be0 100%);
+            background: linear-gradient(135deg, #9d8eee 0%, #8b7cdc 100%);
             box-shadow:
-                    0 4px 16px rgba(79,142,255,.4),
+                    0 4px 16px rgba(157, 142, 238, 0.4),
                     0 1px 0 rgba(255,255,255,.08) inset;
             color: #fff;
             letter-spacing: .3px;
         }
         [data-theme="dark"] .apply-filter-btn:hover {
-            background: linear-gradient(135deg, #6aa0ff 0%, #4f8eff 100%);
+            background: linear-gradient(135deg, #a89aff 0%, #9d8eee 100%);
             box-shadow:
-                    0 8px 24px rgba(79,142,255,.55),
+                    0 8px 24px rgba(157, 142, 238, 0.55),
                     0 1px 0 rgba(255,255,255,.1) inset;
             transform: translateY(-2px);
         }
@@ -1685,13 +1692,13 @@
         /* ── Clear / reset button ── */
         [data-theme="dark"] .clear-filter-btn {
             background: transparent;
-            border-color: rgba(79,142,255,.14);
+            border-color: rgba(157, 142, 238, 0.14);
             color: rgba(160,180,255,.55);
         }
         [data-theme="dark"] .clear-filter-btn:hover {
-            border-color: rgba(79,142,255,.35);
+            border-color: rgba(157, 142, 238, 0.35);
             color: rgba(200,220,255,.85);
-            background: rgba(79,142,255,.06);
+            background: rgba(157, 142, 238, 0.06);
         }
 
         /* ── Main area background ── */
@@ -1701,33 +1708,33 @@
 
         /* ── Top bar: sort select ── */
         [data-theme="dark"] .sort-select {
-            background: linear-gradient(135deg, rgba(15,18,40,.95) 0%, rgba(12,15,32,.95) 100%);
-            border-color: rgba(79,142,255,.18);
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.95) 0%, rgba(26, 26, 46, 0.95) 100%);
+            border-color: rgba(157, 142, 238, 0.18);
             color: var(--ink2);
             box-shadow: 0 2px 12px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
         }
-        [data-theme="dark"] .sort-select:hover { border-color: rgba(79,142,255,.35); }
+        [data-theme="dark"] .sort-select:hover { border-color: rgba(157, 142, 238, 0.35); }
         [data-theme="dark"] .sort-select:focus {
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(79,142,255,.2);
+            box-shadow: 0 0 0 3px rgba(157, 142, 238, 0.2);
         }
 
         /* ── View toggle buttons ── */
         [data-theme="dark"] .view-btn {
-            background: rgba(20,24,52,.8);
-            border-color: rgba(79,142,255,.12);
+            background: rgba(42, 42, 74, 0.8);
+            border-color: rgba(157, 142, 238, 0.12);
             color: rgba(160,180,255,.6);
         }
         [data-theme="dark"] .view-btn:hover {
-            background: rgba(30,36,72,.9);
-            border-color: rgba(79,142,255,.3);
+            background: rgba(58, 58, 106, 0.9);
+            border-color: rgba(157, 142, 238, 0.3);
             color: rgba(200,220,255,.9);
         }
         [data-theme="dark"] .view-btn.active {
-            background: rgba(79,142,255,.18);
-            border-color: rgba(79,142,255,.5);
+            background: rgba(157, 142, 238, 0.18);
+            border-color: rgba(157, 142, 238, 0.5);
             color: #a8c8ff;
-            box-shadow: 0 0 10px rgba(79,142,255,.22);
+            box-shadow: 0 0 10px rgba(157, 142, 238, 0.22);
         }
 
         /* ── Listings count ── */
@@ -1741,16 +1748,16 @@
 
         /* ── Load more button ── */
         [data-theme="dark"] .load-more-btn {
-            border-color: rgba(79,142,255,.2);
+            border-color: rgba(157, 142, 238, 0.2);
             color: rgba(160,180,255,.65);
-            background: rgba(15,18,40,.5);
+            background: rgba(26, 26, 46, 0.5);
             backdrop-filter: blur(8px);
         }
         [data-theme="dark"] .load-more-btn:hover {
-            border-color: rgba(79,142,255,.55);
+            border-color: rgba(157, 142, 238, 0.55);
             color: #a8c8ff;
-            background: rgba(79,142,255,.1);
-            box-shadow: 0 0 16px rgba(79,142,255,.2), 0 4px 12px rgba(0,0,0,.3);
+            background: rgba(157, 142, 238, 0.1);
+            box-shadow: 0 0 16px rgba(157, 142, 238, 0.2), 0 4px 12px rgba(0,0,0,.3);
             transform: translateY(-1px);
         }
 
@@ -1763,8 +1770,8 @@
         [data-theme="dark"] .prop-card--magazine,
         [data-theme="dark"] .prop-card--minimal,
         [data-theme="dark"] .prop-card--polaroid {
-            background: linear-gradient(145deg, rgba(14,18,40,.97) 0%, rgba(10,13,28,.97) 100%);
-            border-color: rgba(79,142,255,.1);
+            background: linear-gradient(145deg, rgba(26, 26, 46, 0.97) 0%, rgba(26, 26, 46, 0.97) 100%);
+            border-color: rgba(157, 142, 238, 0.1);
             box-shadow:
                     0 4px 20px rgba(0,0,0,.5),
                     0 1px 0 rgba(255,255,255,.03),
@@ -1777,29 +1784,29 @@
         [data-theme="dark"] .prop-card--compact:hover,
         [data-theme="dark"] .prop-card--magazine:hover,
         [data-theme="dark"] .prop-card--polaroid:hover {
-            border-color: rgba(79,142,255,.3);
+            border-color: rgba(157, 142, 238, 0.3);
             box-shadow:
                     0 20px 60px rgba(0,0,0,.65),
-                    0 0 0 1px rgba(79,142,255,.2),
-                    0 0 30px rgba(79,142,255,.12),
+                    0 0 0 1px rgba(157, 142, 238, 0.2),
+                    0 0 30px rgba(157, 142, 238, 0.12),
                     inset 0 1px 0 rgba(255,255,255,.05);
         }
 
         /* Minimal card special hover (accent border) */
         [data-theme="dark"] .prop-card--minimal:hover {
-            border-color: rgba(79,142,255,.55);
+            border-color: rgba(157, 142, 238, 0.55);
             box-shadow:
-                    0 0 0 3px rgba(79,142,255,.18),
-                    0 0 20px rgba(79,142,255,.15),
+                    0 0 0 3px rgba(157, 142, 238, 0.18),
+                    0 0 20px rgba(157, 142, 238, 0.15),
                     0 8px 24px rgba(0,0,0,.45);
         }
 
         /* List card specifics */
         [data-theme="dark"] .plc-right {
-            border-left-color: rgba(79,142,255,.1);
+            border-left-color: rgba(157, 142, 238, 0.1);
         }
         [data-theme="dark"] .plc-type {
-            background: rgba(79,142,255,.15);
+            background: rgba(157, 142, 238, 0.15);
             color: #7ab4ff;
         }
 
@@ -1808,23 +1815,23 @@
             background: rgba(8,10,22,.8);
             backdrop-filter: blur(12px);
             color: rgba(220,230,255,.9);
-            border: 1px solid rgba(79,142,255,.18);
+            border: 1px solid rgba(157, 142, 238, 0.18);
         }
         [data-theme="dark"] .pcm-footer {
-            border-top-color: rgba(79,142,255,.1);
+            border-top-color: rgba(157, 142, 238, 0.1);
         }
         [data-theme="dark"] .pcm-category { color: #7ab4ff; }
 
         /* Minimal tag pills */
         [data-theme="dark"] .pcn-tag {
-            background: rgba(20,24,52,.9);
+            background: rgba(42, 42, 74, 0.9);
             color: rgba(160,180,255,.6);
-            border-color: rgba(79,142,255,.15);
+            border-color: rgba(157, 142, 238, 0.15);
         }
 
         /* Compact card price cell */
         [data-theme="dark"] .pcc-price {
-            border-left-color: rgba(79,142,255,.1);
+            border-left-color: rgba(157, 142, 238, 0.1);
             color: #7ab4ff;
         }
 
@@ -1832,7 +1839,7 @@
         [data-theme="dark"] .prop-save {
             background: rgba(8,10,22,.65);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(79,142,255,.15);
+            border: 1px solid rgba(157, 142, 238, 0.15);
             color: rgba(200,215,255,.6);
         }
         [data-theme="dark"] .prop-save:hover,
@@ -1845,7 +1852,7 @@
         [data-theme="dark"] .heart-btn {
             background: rgba(8,10,22,.6);
             backdrop-filter: blur(8px);
-            border: 1px solid rgba(79,142,255,.15);
+            border: 1px solid rgba(157, 142, 238, 0.15);
             color: rgba(200,215,255,.5);
             box-shadow: 0 2px 10px rgba(0,0,0,.4);
         }
@@ -1862,9 +1869,9 @@
             box-shadow: 0 2px 10px rgba(45,212,168,.35);
         }
         [data-theme="dark"] .tag-rent {
-            background: rgba(79,142,255,.92);
+            background: rgba(157, 142, 238, 0.92);
             color: #fff;
-            box-shadow: 0 2px 10px rgba(79,142,255,.35);
+            box-shadow: 0 2px 10px rgba(157, 142, 238, 0.35);
         }
         [data-theme="dark"] .tag-sold {
             background: rgba(248,80,80,.92);
@@ -1930,7 +1937,7 @@
                             <a href="buyerDashboard" style="display: flex; align-items: center; gap: 10px; padding: 5px 15px 5px 8px; border: 1.5px solid var(--line); border-radius: 30px; text-decoration: none; transition: 0.3s; cursor: pointer;">
                                 <div style="background: var(--bg2); border-radius: 50%; padding: 4px; font-size: 1.1rem; display: flex; align-items: center; justify-content: center;">👤</div>
                                 <span style="font-weight: 600; color: var(--ink); font-size: 0.95rem;">${sessionScope.loggedUser}</span>
-                                <span style="background: rgba(26, 86, 219, 0.1); color: var(--accent); padding: 3px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase;">BUYER</span>
+                                <span style="background: rgba(157, 142, 238, 0.1); color: var(--accent); padding: 3px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase;">BUYER</span>
                             </a>
                         </c:otherwise>
                     </c:choose>

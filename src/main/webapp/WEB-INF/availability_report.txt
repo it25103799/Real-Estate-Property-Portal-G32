@@ -1,21 +1,19 @@
 =========================================================
   NESTIQ — PROPERTY AVAILABILITY REPORT
-  Seller  : Tharwa Broo
-  Date    : 2026-05-17
-  Total Listed   : 2
-  Available      : 2
-  Reserved       : 0
-  Seller  : Dinesh
-  Date    : 2026-05-18
-  Total Listed   : 6
-  Available      : 5
+  Seller  : De Silva
+  Date    : 2026-05-20
+=========================================================
+  Total Listed   : 12
+  Available      : 11
   Reserved       : 1
 
 ----- ACTIVE RESERVATIONS (1) -----
-  [CONFIRMED] Anuradhapura River side | Buyer: Dinindu | Return: 2026-05-19
+  [CONFIRMED] Kawisigamuwa Cool Yard | Buyer: Bhashitha Navod | Return: 2026-05-21
 
------ COMPLETED TRANSACTIONS (3) -----
-  Kiribathgoda new building | Buyer: Sadun Priya | Booked: 2026-05-04 | Returned: 2026-05-06
-  Hegalla beach Villa | Buyer: Bhashi Navod | Booked: 2026-05-06 | Returned: 2026-05-07
-  Ambewela Farm View | Buyer: Dinindu | Booked: 2026-05-18 | Returned: 2026-05-21
+----- COMPLETED TRANSACTIONS (5) -----
+  Kaduwela Beach view | Buyer: Bhashi Navod | Booked: 2026-05-05 | Returned: 2026-05-07
+  Kaduwela Beach view | Buyer: Ralph Will | Booked: 2026-05-05 | Returned: 2026-05-08
+  Kawisigamuwa Cool Yard | Buyer: john william | Booked: 2026-05-18 | Returned: 2026-05-19
+  Rantambe New Billet | Buyer: john william | Booked: 2026-05-18 | Returned: 2026-05-19
+  Kurunegala Mount's Top | Buyer: Bhashitha Navod | Booked: 2026-05-18 | Returned: 2026-05-20
 =========================================================

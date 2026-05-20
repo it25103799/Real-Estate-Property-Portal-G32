@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @WebServlet("/completeBooking")
 public class CompleteBookingServlet extends HttpServlet {
@@ -125,13 +126,17 @@ public class CompleteBookingServlet extends HttpServlet {
                 restorePropertyToForRent(completedPropId);
             }
 
-            // Calculate and log earnings
-            if (completedPropId != null) {
-                appendEarningsToReport(request,
-                        bookingId, completedPropId, completedPropTitle,
-                        loggedUser, completedBuyerName,
-                        completedStartDate, completedEndDate, dailyRate);
-            }
+            // Calculate and log earnings + create payment record
+             if (completedPropId != null) {
+                 appendEarningsToReport(request,
+                         bookingId, completedPropId, completedPropTitle,
+                         loggedUser, completedBuyerName,
+                         completedStartDate, completedEndDate, dailyRate);
+
+                 // Create payment record with rental fee + penalty fee
+                 createPaymentRecord(request, bookingId, completedPropId, loggedUser,
+                         completedStartDate, completedEndDate, dailyRate);
+             }
         }
 
         response.sendRedirect("sellerDashboard?completed=success");
@@ -220,8 +225,65 @@ public class CompleteBookingServlet extends HttpServlet {
                 rw.println();
             }
             System.out.println("Earnings recorded: LKR " + String.format("%.2f", totalEarned) + " for booking " + bookingId);
-        } catch (Exception e) {
-            System.err.println("CompleteBookingServlet: error writing earnings report: " + e.getMessage());
-        }
-    }
-}
+         } catch (Exception e) {
+             System.err.println("CompleteBookingServlet: error writing earnings report: " + e.getMessage());
+         }
+     }
+
+     /** Creates a payment record with rental fee + penalty fee breakdown. */
+     private void createPaymentRecord(HttpServletRequest request,
+                                     String bookingId, String propertyId, String sellerId,
+                                     String startDateStr, String endDateStr,
+                                     double dailyRate) {
+         try {
+             LocalDate start        = LocalDate.parse(startDateStr, DTF);
+             LocalDate end          = LocalDate.parse(endDateStr,   DTF);
+             LocalDate today        = LocalDate.now();
+             LocalDate effectiveEnd = today.isAfter(end) ? today : end;
+
+             // Calculate rental fee (base: days × daily rate)
+             long daysRented  = ChronoUnit.DAYS.between(start, effectiveEnd);
+             if (daysRented <= 0) daysRented = 1;
+             double rentalFee = daysRented * dailyRate;
+
+             // Calculate penalty fee (only if overdue)
+             long overduedays = today.isAfter(end) ? ChronoUnit.DAYS.between(end, today) : 0;
+             double penaltyFee = overduedays > 0 ? overduedays * dailyRate : 0.0;
+
+             // Total amount = rental fee + penalty fee
+             double totalAmount = rentalFee + penaltyFee;
+
+             // Generate unique payment ID
+             String paymentId = "PAY-" + System.currentTimeMillis() + "-" + UUID.randomUUID().toString().substring(0, 8);
+
+             // Create payment record
+             String paymentLine = String.join("|",
+                     paymentId,
+                     bookingId,
+                     propertyId,
+                     sellerId,
+                     String.format("%.2f", rentalFee),
+                     String.format("%.2f", penaltyFee),
+                     String.format("%.2f", totalAmount),
+                     "PAID",
+                     today.format(DTF),
+                     endDateStr
+             );
+
+             // Append to payments.txt
+             String paymentsPath = getServletContext().getRealPath("/WEB-INF/payments.txt");
+             try (PrintWriter pw = new PrintWriter(
+                     new OutputStreamWriter(
+                             new FileOutputStream(paymentsPath, true),
+                             StandardCharsets.UTF_8))) {
+                 pw.println(paymentLine);
+             }
+
+             System.out.println("✅ Payment record created: " + paymentId +
+                     " | Rental: LKR " + String.format("%.2f", rentalFee) +
+                     " | Penalty: LKR " + String.format("%.2f", penaltyFee));
+         } catch (Exception e) {
+             System.err.println("CompleteBookingServlet: error creating payment record: " + e.getMessage());
+         }
+     }
+ }

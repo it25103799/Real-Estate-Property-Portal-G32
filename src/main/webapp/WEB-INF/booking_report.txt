@@ -331,3 +331,81 @@
   TOTAL EARNED  : LKR 28500.00
   Property Status → Restored to 'For Rent' (Available)
 
+=========================================================
+  NEW BOOKING — 2026-05-18
+=========================================================
+  Booking ID    : BK_1779112367023
+  Property      : Kurunegala Mount's Top  [8c209711]
+  Seller        : De Silva
+  Buyer Account : Bhashi Navod
+  Buyer Name    : Bhashitha Navod
+  Buyer Email   : bhashithanavod500@gmail.com
+  Buyer Phone   : 0786451658
+  Booked On     : 2026-05-18
+  Return Date   : 2026-05-20
+  Status        : RESERVED
+  Penalty Rate  : $85000.00 / overdue day (= daily rental fee)
+
+=========================================================
+  BOOKING COMPLETED — 2026-05-18
+=========================================================
+  Booking ID    : BK_1779112367023
+  Property      : Kurunegala Mount's Top  [8c209711]
+  Seller        : De Silva
+  Buyer Name    : Bhashitha Navod
+  Rental Start  : 2026-05-18
+  Return Date   : 2026-05-20
+  Completed On  : 2026-05-18
+  Days Rented   : 2 day(s)
+  Daily Rate    : LKR 85000.00
+  ─────────────────────────────────────────────────────
+  TOTAL EARNED  : LKR 170000.00
+  Property Status → Restored to 'For Rent' (Available)
+
+=========================================================
+  BOOKING COMPLETED — 2026-05-20
+=========================================================
+  Booking ID    : BK_1779052406109
+  Property      : Anuradhapura River side  [8bb3ceaa]
+  Seller        : Dinesh
+  Buyer Name    : Dinindu
+  Rental Start  : 2026-05-18
+  Return Date   : 2026-05-19
+  Completed On  : 2026-05-20
+  Days Rented   : 2 day(s)
+  Daily Rate    : LKR 7500.00
+  Overdue Days  : 1 (included in total)
+  ─────────────────────────────────────────────────────
+  TOTAL EARNED  : LKR 15000.00
+  Property Status → Restored to 'For Rent' (Available)
+
+=========================================================
+  NEW BOOKING — 2026-05-20
+=========================================================
+  Booking ID    : BK_1779262635770
+  Property      : Ambewela Farm View  [4103559b]
+  Seller        : Dinesh
+  Buyer Account : Dlshara TDW
+  Buyer Name    : Dlshara TDW
+  Buyer Email   : dilsara@gmail.com
+  Buyer Phone   : 0763650344
+  Booked On     : 2026-05-20
+  Return Date   : 2026-05-21
+  Status        : RESERVED
+  Penalty Rate  : $10500.00 / overdue day (= daily rental fee)
+
+=========================================================
+  NEW BOOKING — 2026-05-20
+=========================================================
+  Booking ID    : BK_1779266504485
+  Property      : Kawisigamuwa Cool Yard  [9f4e6bca]
+  Seller        : De Silva
+  Buyer Account : Bhashi Navod
+  Buyer Name    : Bhashitha Navod
+  Buyer Email   : bhashithanavod500@gmail.com
+  Buyer Phone   : 0786451658
+  Booked On     : 2026-05-20
+  Return Date   : 2026-05-21
+  Status        : RESERVED
+  Penalty Rate  : $75000.00 / overdue day (= daily rental fee)
+
