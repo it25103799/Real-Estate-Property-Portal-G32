@@ -32,7 +32,7 @@
             gap: 16px;
             margin-bottom: 28px;
         }
-        
+
         .stat-card {
             background: var(--bg);
             border: 1px solid var(--line);
@@ -510,16 +510,17 @@
                     </div>
                     <div class="notif-footer" style="padding:12px; text-align:center; font-size:0.8rem; color:var(--accent); background:var(--bg2); border-top:1px solid var(--line);">Nestiq Secure Messaging</div>
                 </div>
-
-                <button class="btn" onclick="window.location.href='sellerAnalytics'" style="background: rgba(26,86,219,0.1); color: var(--accent); border-color: rgba(26,86,219,0.3);">📊 Analytics</button>
-                <button class="btn" onclick="window.location.href='properties'" style="background: var(--line); color: var(--ink);">🏠 Go to Homepage</button>
-                <div class="account-tab"><button id="openBtn" ><i class="fa-regular fa-circle-user fa-2xl"></i></button></div>
-                <form action="logout" method="post" style="display:inline;">
-                    <button type="submit" class="btn" style="background: #e02828;">Logout</button>
-
-                </form>
-
             </div>
+
+            <button class="btn" onclick="window.location.href='sellerAnalytics'" style="background: rgba(26,86,219,0.1); color: var(--accent); border-color: rgba(26,86,219,0.3);">📊 Analytics</button>
+            <button class="btn" onclick="window.location.href='properties'" style="background: var(--line); color: var(--ink);">🏠 Go to Homepage</button>
+            <div class="account-tab"><button id="openBtn" ><i class="fa-regular fa-circle-user fa-2xl"></i></button></div>
+            <form action="logout" method="post" style="display:inline;">
+                <button type="submit" class="btn" style="background: #e02828;">Logout</button>
+
+            </form>
+
+        </div>
 
     </div>
 
@@ -529,17 +530,17 @@
     <div class="seller-top-row">
 
 
-    <!-- ── STATS + INQUIRIES ROW ─────────────────────────────────────── -->
-    <div class="stats-inquiries-row" style="grid-template-columns: 1fr 400px; gap: 20px; margin-bottom: 24px; width: 100%">
+        <!-- ── STATS + INQUIRIES ROW ─────────────────────────────────────── -->
+        <div class="stats-inquiries-row" style="grid-template-columns: 1fr 400px; gap: 20px; margin-bottom: 24px; width: 100%">
 
-        <!-- Left: Stat Cards -->
-        <div class="stats-grid" style="margin-bottom: 0;">
-            <div class="stat-card">
-                <div class="stat-icon blue">🏠</div>
-                <div class="stat-value">${not empty myProperties ? myProperties.size() : 0}</div>
-                <div class="stat-label">Total Properties</div>
+            <!-- Left: Stat Cards -->
+            <div class="stats-grid" style="margin-bottom: 0;">
+                <div class="stat-card">
+                    <div class="stat-icon blue">🏠</div>
+                    <div class="stat-value">${not empty myProperties ? myProperties.size() : 0}</div>
+                    <div class="stat-label">Total Properties</div>
 
-            </div>
+                </div>
 
                 <div class="stat-card amber">
                     <div class="stat-icon amber">📋</div>
@@ -581,7 +582,7 @@
             </div>
 
             <!-- Right: Buyer Inquiries Card -->
-            <div class="card" style="margin-bottom: 0; padding: 20px;">
+            <div class="card" style="margin-bottom: 0; margin-top: 20px; padding: 20px;">
                 <h3 class="card-title" style="font-size: 1.1rem; margin-bottom: 16px; padding-bottom: 12px;">📩 Buyer Inquiries</h3>
 
                 <div style="display: flex; flex-direction: column; gap: 12px;">
@@ -592,7 +593,7 @@
                         </c:forEach>
                     </select>
 
-                <button class="btn" type="button" onclick="openInquiryFromSelect()" style="width: 30%; margin: auto">Open Inquiry</button>
+                    <button class="btn" type="button" onclick="openInquiryFromSelect()" style="width: 30%; margin: auto">Open Inquiry</button>
 
                     <div style="margin-top: 8px; color: var(--ink); opacity: 0.7; font-size: 0.82rem; line-height: 1.5;">
                         <c:choose>
@@ -611,38 +612,37 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!--Profile-section -->
-        <div id="myModal" style="display:none; position:fixed; z-index:1; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.4);">
-            <div style="background-color:#111827; margin: 120px auto; padding:40px; width:fit-content; border-radius:10px; box-shadow: 8px 8px 25px black;
+            <!--Profile-section -->
+            <div id="myModal" style="display:none; position:fixed; z-index:1; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.4);">
+                <div style="background-color:#111827; margin: 120px auto; padding:40px; width:fit-content; border-radius:10px; box-shadow: 8px 8px 25px black;
 ">
-                <span id="closeBtn" style="cursor:pointer; float:right;"><i class="fa-solid fa-xmark"></i></span>
-                <p> </p><br>
-                <div class="profile-section">
-                    <div class="profile-header">
-                        <h3>Personal Information</h3>
-                        <button type="button" id="superEditBtn" class="edit-btn" onclick="toggleEditMode()">Edit</button>
-                    </div>
-
-                    <form action="UpdateProfileServlet" method="POST" id="profileForm">
-                        <input type="hidden" name="oldEmail" value="<%= session.getAttribute("loggedEmail") %>">
-
-                        <div class="form-group">
-                            <label style="color: var(--ink); opacity: 0.6; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;">NAME</label>
-                            <input type="text" name="newName" value="<%= session.getAttribute("loggedUser") %>" readonly class="readonly-input">
+                    <span id="closeBtn" style="cursor:pointer; float:right;"><i class="fa-solid fa-xmark"></i></span>
+                    <p> </p><br>
+                    <div class="profile-section">
+                        <div class="profile-header">
+                            <h3>Personal Information</h3>
+                            <button type="button" id="superEditBtn" class="edit-btn" onclick="toggleEditMode()">Edit</button>
                         </div>
 
-                        <div class="form-group" style="margin-top: 15px;">
-                            <label style="color: var(--ink); opacity: 0.6; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;">EMAIL</label>
-                            <input type="email" name="newEmail" value="<%= session.getAttribute("loggedEmail") %>" readonly class="readonly-input">
-                        </div>
+                        <form action="UpdateProfileServlet" method="POST" id="profileForm">
+                            <input type="hidden" name="oldEmail" value="<%= session.getAttribute("loggedEmail") %>">
 
-                        <div class="form-group" style="position: relative; margin-top: 15px;">
-                            <label style="color: var(--ink); opacity: 0.6; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;">PASSWORD</label>
-                            <input type="password" id="pwdInput" name="newPassword" value="<%= session.getAttribute("loggedPassword") %>" readonly class="readonly-input" style="padding-right: 35px; width: 100%; box-sizing: border-box;">
+                            <div class="form-group">
+                                <label style="color: var(--ink); opacity: 0.6; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;">NAME</label>
+                                <input type="text" name="newName" value="<%= session.getAttribute("loggedUser") %>" readonly class="readonly-input">
+                            </div>
 
-                            <span onclick="togglePassword()" style="position: absolute; right: 10px; top: 32px; cursor: pointer; color: #a0aabf; transition: 0.2s;">
+                            <div class="form-group" style="margin-top: 15px;">
+                                <label style="color: var(--ink); opacity: 0.6; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;">EMAIL</label>
+                                <input type="email" name="newEmail" value="<%= session.getAttribute("loggedEmail") %>" readonly class="readonly-input">
+                            </div>
+
+                            <div class="form-group" style="position: relative; margin-top: 15px;">
+                                <label style="color: var(--ink); opacity: 0.6; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;">PASSWORD</label>
+                                <input type="password" id="pwdInput" name="newPassword" value="<%= session.getAttribute("loggedPassword") %>" readonly class="readonly-input" style="padding-right: 35px; width: 100%; box-sizing: border-box;">
+
+                                <span onclick="togglePassword()" style="position: absolute; right: 10px; top: 32px; cursor: pointer; color: #a0aabf; transition: 0.2s;">
                     <svg id="eyeOpen" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                         <circle cx="12" cy="12" r="3"></circle>
@@ -652,59 +652,59 @@
                         <line x1="1" y1="1" x2="23" y2="23"></line>
                     </svg>
                 </span>
-                        </div>
-                        <button type="submit" id="saveProfileBtn" class="save-btn" style="display: none;">Save Changes</button>
-                    </form>
-
-                    <c:if test="${param.profile == 'success'}">
-                        <div style="background: rgba(13,158,110,0.1); border: 1px solid #0d9e6e; color: #0d9e6e; padding: 12px 16px; border-radius: 8px; margin-top: 15px; font-weight: 600; text-align: center;">
-                            ✅ Profile credentials updated successfully!
-                        </div>
-                    </c:if>
-                    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--line); text-align: center;">
-                        <form action="DeleteAccountServlet" method="POST" style="margin: 0;" onsubmit="return confirm('⚠️ WARNING: Are you absolutely sure you want to permanently delete your account? This action cannot be undone and you will lose all saved properties.');">
-                            <input type="hidden" name="userEmail" value="<%= session.getAttribute("loggedEmail") %>">
-                            <button type="submit" style="background: transparent; color: var(--red); border: 2px solid red; width: 250px; height: 30px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer;">
-                                Delete My Account
-                            </button>
+                            </div>
+                            <button type="submit" id="saveProfileBtn" class="save-btn" style="display: none;">Save Changes</button>
                         </form>
+
+                        <c:if test="${param.profile == 'success'}">
+                            <div style="background: rgba(13,158,110,0.1); border: 1px solid #0d9e6e; color: #0d9e6e; padding: 12px 16px; border-radius: 8px; margin-top: 15px; font-weight: 600; text-align: center;">
+                                ✅ Profile credentials updated successfully!
+                            </div>
+                        </c:if>
+                        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--line); text-align: center;">
+                            <form action="DeleteAccountServlet" method="POST" style="margin: 0;" onsubmit="return confirm('⚠️ WARNING: Are you absolutely sure you want to permanently delete your account? This action cannot be undone and you will lose all saved properties.');">
+                                <input type="hidden" name="userEmail" value="<%= session.getAttribute("loggedEmail") %>">
+                                <button type="submit" style="background: transparent; color: var(--red); border: 2px solid red; width: 250px; height: 30px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer;">
+                                    Delete My Account
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <!-- end .profile-section -->
+
         </div>
+        <!-- ─────────────────────────────────────────────────────────────── -->
 
-        <!-- end .profile-section -->
+        <!-- Clearfix for flex row -->
+        <div style="clear: both; width: 100%;"></div>
 
-    </div>
-    <!-- ─────────────────────────────────────────────────────────────── -->
+        <div class="card">
+            <h3 class="card-title">List a New Property</h3>
+            <p style="color: #0d9e6e; font-weight: bold;">${successMessage}</p>
+            <form action="addProperty" method="post" class="form-grid">
+                <div class="form-group"><label>Property Title</label><input type="text" name="title" required></div>
+                <div class="form-group"><label id="add-price-label">Price (LKR)</label><input type="number" name="price" required></div>
+                <div class="form-group"><label>Location / City</label><input type="text" name="location" required></div>
+                <div class="form-group"><label>Type</label>
+                    <select name="type"><option>Apartment</option><option>House</option><option>Villa</option></select>
+                </div>
+                <div class="form-group"><label>Bed Rooms</label><input type="number" name="bedrooms" min="0" required></div>
+                <div class="form-group"><label>Bath Tubs</label><input type="number" name="bathrooms" min="0" required></div>
+                <div class="form-group"><label>Status</label>
+                    <select name="status" id="add-status-select" onchange="updatePriceLabel('add')" required>
+                        <option value=""selected>Choose a Ststus</option>
+                        <option>For Sale</option>
+                        <option>For Rent</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Description</label><textarea name="description" rows="6" style="resize: none;"></textarea></div>
 
-    <!-- Clearfix for flex row -->
-    <div style="clear: both; width: 100%;"></div>
-
-    <div class="card">
-        <h3 class="card-title">List a New Property</h3>
-        <p style="color: #0d9e6e; font-weight: bold;">${successMessage}</p>
-        <form action="addProperty" method="post" class="form-grid">
-            <div class="form-group"><label>Property Title</label><input type="text" name="title" required></div>
-            <div class="form-group"><label id="add-price-label">Price (LKR)</label><input type="number" name="price" required></div>
-            <div class="form-group"><label>Location / City</label><input type="text" name="location" required></div>
-            <div class="form-group"><label>Type</label>
-                <select name="type"><option>Apartment</option><option>House</option><option>Villa</option></select>
-            </div>
-            <div class="form-group"><label>Bed Rooms</label><input type="number" name="bedrooms" min="0" required></div>
-            <div class="form-group"><label>Bath Tubs</label><input type="number" name="bathrooms" min="0" required></div>
-            <div class="form-group"><label>Status</label>
-                <select name="status" id="add-status-select" onchange="updatePriceLabel('add')" required>
-                    <option value=""selected>Choose a Ststus</option>
-                    <option>For Sale</option>
-                    <option>For Rent</option>
-                </select>
-            </div>
-            <div class="form-group"><label>Description</label><textarea name="description" rows="6" style="resize: none;"></textarea></div>
-
-            <button type="submit" class="btn" style="width: 30%; margin: 20px auto"><i class="fa-solid fa-plus"></i> Add Property</button>
-        </form>
-    </div>
+                <button type="submit" class="btn" style="width: 30%; margin: 20px auto"><i class="fa-solid fa-plus"></i> Add Property</button>
+            </form>
+        </div>
 
         <div class="card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 2px solid var(--line);">
@@ -737,12 +737,7 @@
                                     <td>
                                         <div style="font-weight: 600; color: var(--ink);">${p.title}</div>
                                         <c:if test="${p.status == 'Sold'}">
-                                            <c:if test="${not empty propertyBookingEndDates[p.id]}">
-                                                <div style="font-size: 0.75rem; color: #0d9e6e; margin-top: 2px;">✓ Sold Property</div>
-                                            </c:if>
-                                            <c:if test="${empty propertyBookingEndDates[p.id]}">
-                                                <div style="font-size: 0.75rem; color: #0d9e6e; margin-top: 2px;">✓ Sold Property</div>
-                                            </c:if>
+                                            <div style="font-size: 0.75rem; color: #0d9e6e; margin-top: 2px;">✓ Sold Property</div>
                                         </c:if>
                                     </td>
                                     <td>
@@ -773,11 +768,6 @@
                                     </td>
                                     <td>
                                         <c:choose>
-                                            <c:when test="${p.status == 'Sold' and not empty propertyBookingEndDates[p.id]}">
-                                            <span class="badge-sold" style="font-size: 0.82rem; padding: 6px 14px; display: inline-flex; align-items: center; gap: 4px; background:rgba(13,158,110,0.12); color:#0d9e6e; border:1px solid rgba(13,158,110,0.3);">
-                                                ✅ RENTED
-                                            </span>
-                                            </c:when>
                                             <c:when test="${p.status == 'Sold'}">
                                             <span class="badge-sold" style="font-size: 0.82rem; padding: 6px 14px; display: inline-flex; align-items: center; gap: 4px;">
                                                 ✅ SOLD
@@ -793,23 +783,17 @@
                                     <td>
                                         <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
                                             <c:choose>
-                                                <c:when test="${p.status != 'Sold' and p.status != 'For Rent'}">
+                                                <c:when test="${p.status != 'Sold'}">
                                                     <button class="btn-edit" onclick="openEditModal('${p.id}', '${p.title}', '${p.price}', '${p.location}', '${p.type}', '${p.status}', '${p.bedrooms}', '${p.bathrooms}', '${p.description}')"
-                                                            style="padding: 6px 10px; font-size: 0.75rem;" title="Edit property details">
+                                                            style="padding: 6px 10px; font-size: 0.75rem; width: 80px;" title="Edit property details" >
                                                         ✏️ Edit
                                                     </button>
                                                     <form action="markAsSold" method="post" style="margin: 0;" onsubmit="return confirm('Mark &quot;${p.title}&quot; as Sold? This will update the property status to Sold and move it to the Completed Transactions section.');">
                                                         <input type="hidden" name="propertyId" value="${p.id}">
-                                                        <button type="submit" class="btn-edit" style="color: #0d9e6e; border-color: #0d9e6e; padding: 6px 10px; font-size: 0.75rem;" title="Mark this property as sold">
+                                                        <button type="submit" class="btn-edit" style="width: 80px; color: #0d9e6e; border-color: #0d9e6e; padding: 6px 10px; font-size: 0.75rem;" title="Mark this property as sold">
                                                             🏷️ Sold
                                                         </button>
                                                     </form>
-                                                </c:when>
-                                                <c:when test="${p.status == 'For Rent'}">
-                                                    <button class="btn-edit" onclick="openEditModal('${p.id}', '${p.title}', '${p.price}', '${p.location}', '${p.type}', '${p.status}', '${p.bedrooms}', '${p.bathrooms}', '${p.description}')"
-                                                            style="padding: 6px 10px; font-size: 0.75rem;" title="Edit property details">
-                                                        ✏️ Edit
-                                                    </button>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <span style="opacity: 0.4; font-size: 0.82rem; padding: 6px 10px;">—</span>
@@ -818,7 +802,7 @@
 
                                             <form action="deleteProperty" method="post" style="margin: 0;" onsubmit="return confirm('Are you absolutely sure you want to delete this property? This cannot be undone!');">
                                                 <input type="hidden" name="propertyId" value="${p.id}">
-                                                <button type="submit" class="btn-edit" style="color: var(--red); border-color: var(--red); padding: 6px 10px; font-size: 0.75rem;" title="Delete this property permanently">
+                                                <button type="submit" class="btn-edit" style="color: var(--red); border-color: var(--red); padding: 6px 10px; font-size: 0.75rem; width: 80px;" title="Delete this property permanently">
                                                     🗑️ Delete
                                                 </button>
                                             </form>
@@ -848,17 +832,6 @@
                 <h3 class="card-title" style="margin:0;"> Active Bookings</h3>
                 <span style="font-size:0.85rem; opacity:0.65;">${reservedCount} property(s) currently reserved</span>
             </div>
-
-            <c:if test="${param.confirmed == 'success'}">
-                <div style="background:rgba(26,86,219,0.08);border:1px solid rgba(26,86,219,0.3);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:0.9rem;color:#1a56db;font-weight:600;">
-                    ✅ Booking confirmed! The property is now marked as <strong>Sold</strong> for the rental period.
-                </div>
-            </c:if>
-            <c:if test="${param.completed == 'success'}">
-                <div style="background:rgba(13,158,110,0.08);border:1px solid rgba(13,158,110,0.3);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:0.9rem;color:#0d9e6e;font-weight:600;">
-                    🏁 Booking completed! The property has been restored to <strong>Available (For Rent)</strong> and rental earnings have been recorded.
-                </div>
-            </c:if>
             <div class="table-responsive">
                 <table>
                     <thead>
@@ -896,127 +869,42 @@
                                     <td>${bk.returnDate}</td>
                                     <td>
                                         <c:choose>
-                                            <c:when test="${p.status != 'Sold'}">
-                                                <button class="btn-edit" onclick="openEditModal('${p.id}', '${p.title}', '${p.price}', '${p.location}', '${p.type}', '${p.status}', '${p.bedrooms}', '${p.bathrooms}', '${p.description}')"
-                                                        style="padding: 6px 10px; font-size: 0.75rem; width: 80px;" title="Edit property details" >
-                                                    ✏️ Edit
-                                                </button>
-                                                <form action="markAsSold" method="post" style="margin: 0;" onsubmit="return confirm('Mark &quot;${p.title}&quot; as Sold? This will update the property status to Sold and move it to the Completed Transactions section.');">
-                                                    <input type="hidden" name="propertyId" value="${p.id}">
-                                                    <button type="submit" class="btn-edit" style="width: 80px; color: #0d9e6e; border-color: #0d9e6e; padding: 6px 10px; font-size: 0.75rem;" title="Mark this property as sold">
-                                                        🏷️ Sold
-                                                    </button>
-                                                </form>
+                                            <c:when test="${bk.status == 'OVERDUE'}">
+                                                <span class="status-badge" style="background:rgba(224,40,40,0.12);color:#e02828;">&#9888; Overdue</span>
                                             </c:when>
                                             <c:otherwise>
                                                 <span class="status-badge" style="background:rgba(26,86,219,0.1);color:var(--accent);">Reserved</span>
                                             </c:otherwise>
                                         </c:choose>
-
-                                        <form action="deleteProperty" method="post" style="margin: 0;" onsubmit="return confirm('Are you absolutely sure you want to delete this property? This cannot be undone!');">
-                                            <input type="hidden" name="propertyId" value="${p.id}">
-                                            <button type="submit" class="btn-edit" style="color: var(--red); border-color: var(--red); padding: 6px 10px; font-size: 0.75rem; width: 80px;" title="Delete this property permanently">
-                                                🗑️ Delete
-                                            </button>
-                                        </form>
-                                    </div>
-                                 </td>
-                            </tr>
-                        </c:forEach>
-                    </c:when>
-                    <c:otherwise>
-                        <tr>
-                            <td colspan="9" style="text-align:center; padding: 40px 20px;">
-                                <div style="font-size: 3rem; margin-bottom: 12px;">🏠</div>
-                                <div style="font-weight: 600; margin-bottom: 6px; color: var(--ink);">No Properties Listed Yet</div>
-                                <div style="opacity: 0.7; font-size: 0.9rem;">Start by adding your first property above!</div>
-                            </td>
-                        </tr>
-                    </c:otherwise>
-                </c:choose>
-            </tbody>
-        </table>
-        </div>
-    </div>
-
-    <!-- ── ACTIVE BOOKINGS ──────────────────────────────────────────────── -->
-    <div class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h3 class="card-title" style="margin:0;"> Active Bookings</h3>
-            <span style="font-size:0.85rem; opacity:0.65;">${reservedCount} property(s) currently reserved</span>
-        </div>
-        <div class="table-responsive">
-        <table>
-            <thead>
-                <tr>
-                    <th>Booking ID</th>
-                    <th>Property</th>
-                    <th>Buyer</th>
-                    <th>Contact</th>
-                    <th>Booked On</th>
-                    <th>Return Date</th>
-                    <th>Status</th>
-                    <th>Penalty</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:choose>
-                    <c:when test="${not empty activeBookings}">
-                        <c:forEach var="bk" items="${activeBookings}">
-                            <tr>
-                                <td style="font-size:0.8rem; opacity:0.7;">${bk.bookingId}</td>
-                                <td>
-                                    <div style="font-weight:600;">${bk.propertyTitle}</div>
-                                    <div style="font-size:0.78rem; opacity:0.6;">ID: ${bk.propertyId}</div>
-                                </td>
-                                <td>
-                                    <div style="font-weight:500;">${bk.buyerName}</div>
-                                    <div style="font-size:0.78rem; opacity:0.65;">${bk.buyerUsername}</div>
-                                </td>
-                                <td>
-                                    <div style="font-size:0.85rem;">${bk.buyerEmail}</div>
-                                    <div style="font-size:0.85rem; opacity:0.7;">${bk.buyerPhone}</div>
-                                </td>
-                                <td>${bk.bookingDate}</td>
-                                <td>${bk.returnDate}</td>
-                                <td>
-                                    <c:choose>
-                                        <c:when test="${bk.status == 'OVERDUE'}">
-                                            <span class="status-badge" style="background:rgba(224,40,40,0.12);color:#e02828;">&#9888; Overdue</span>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <span class="status-badge" style="background:rgba(26,86,219,0.1);color:var(--accent);">Reserved</span>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </td>
-                                <td>
-                                    <c:choose>
-                                        <c:when test="${bk.penaltyFee != '0.00'}">
-                                            <div style="color:#e02828; font-weight:700;">LKR <fmt:formatNumber value="${bk.penaltyFee}" pattern="#,##0.00" /></div>
-                                            <c:if test="${not empty bk.daysOverdue}">
-                                                <div style="font-size:0.72rem;color:#e02828;margin-top:2px;">${bk.daysOverdue} × LKR <fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" />/day</div>
-                                            </c:if>
-                                                <%-- Show COMPLETE button for CONFIRMED or OVERDUE bookings --%>
-                                            <c:if test="${bk.status == 'CONFIRMED' or bk.status == 'OVERDUE'}">
-                                                <form action="completeBooking" method="post" style="margin:0;"
-                                                      onsubmit="return confirm('Mark this booking as completed? The property will be restored to Available and rental earnings will be calculated.');">
+                                    </td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${bk.penaltyFee != '0.00'}">
+                                                <div style="color:#e02828; font-weight:700;">LKR <fmt:formatNumber value="${bk.penaltyFee}" pattern="#,##0.00" /></div>
+                                                <c:if test="${not empty bk.daysOverdue}">
+                                                    <div style="font-size:0.72rem;color:#e02828;margin-top:2px;">${bk.daysOverdue} × LKR <fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" />/day</div>
+                                                </c:if>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <div style="opacity:0.4;">&#8212;</div>
+                                                <c:if test="${not empty bk.dailyRate}">
+                                                    <div style="font-size:0.72rem;opacity:0.55;margin-top:2px;">Rate: LKR <fmt:formatNumber value="${bk.dailyRate}" pattern="#,##0.00" />/day</div>
+                                                </c:if>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${bk.status != 'COMPLETED'}">
+                                                <form action="completeBooking" method="post" style="margin:0;" onsubmit="return confirm('Mark this booking as completed?');">
                                                     <input type="hidden" name="bookingId" value="${bk.bookingId}">
-                                                    <button type="submit" class="btn"
-                                                            style="padding:7px 14px; font-size:0.82rem; background:#0d9e6e; display:flex; align-items:center; gap:5px;">
-                                                        🏁 Complete
-                                                    </button>
+                                                    <button type="submit" class="btn" style="padding:7px 14px; font-size:0.82rem; background:#0d9e6e;">Complete</button>
                                                 </form>
-                                            </c:if>
-                                                <%-- If still RESERVED (not yet confirmed), show greyed Complete --%>
-                                            <c:if test="${bk.status == 'RESERVED'}">
-                                                <button type="button" class="btn"
-                                                        style="padding:7px 14px; font-size:0.82rem; background:#9ca3af; cursor:not-allowed; opacity:0.55;"
-                                                        title="Confirm the booking first before completing it" disabled>
-                                                    🏁 Complete
-                                                </button>
-                                            </c:if>
-                                        </div>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span style="opacity:0.4; font-size:0.85rem;">—</span>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -1058,6 +946,7 @@
                         <th>Booked On</th>
                         <th>Returned On</th>
                         <th>Booking Status</th>
+                        <th>Property Status</th>
                         <th style="width:100px;">Action</th>
                     </tr>
                     </thead>
@@ -1079,6 +968,19 @@
                                     <td>${bk.returnDate}</td>
                                     <td><span class="status-badge" style="background:rgba(13,158,110,0.1);color:#0d9e6e;">Completed</span></td>
                                     <td>
+                                        <c:choose>
+                                            <c:when test="${bk.propertyStatus == 'Sold'}">
+                                                <span class="badge-sold">✅ Sold</span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <form action="markAsSold" method="post" style="margin:0;" onsubmit="return confirm('Mark &quot;${bk.propertyTitle}&quot; as Sold? This will update the property status to Sold and display it in red color on the Browse tab.');">
+                                                    <input type="hidden" name="propertyId" value="${bk.propertyId}">
+                                                    <button type="submit" class="btn-edit" style="color: #0d9e6e; border-color: #0d9e6e; font-size: 0.78rem; padding: 6px 10px;">🏷️ Mark as Sold</button>
+                                                </form>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td>
                                         <form action="deleteCompletedBooking" method="post" style="margin:0;" onsubmit="return confirm('Are you sure you want to delete this completed transaction? This action cannot be undone.');">
                                             <input type="hidden" name="bookingId" value="${bk.bookingId}">
                                             <button type="submit" class="btn-edit" style="color: #ef4444; border-color: #ef4444; font-size: 0.78rem; padding: 6px 10px;" title="Delete this completed transaction">
@@ -1090,7 +992,7 @@
                             </c:forEach>
                         </c:when>
                         <c:otherwise>
-                            <tr><td colspan="8" style="text-align:center; padding:36px; opacity:0.6;">No completed transactions yet.</td></tr>
+                            <tr><td colspan="9" style="text-align:center; padding:36px; opacity:0.6;">No completed transactions yet.</td></tr>
                         </c:otherwise>
                     </c:choose>
                     </tbody>
@@ -1205,91 +1107,93 @@
             </c:choose>
         </div>
 
-<div class="modal-overlay" id="editModal">
-    <div class="modal-box">
-<%--        <span class="close-btn" onclick="closeEditModal()">×</span>--%>
-        <h3 class="card-title">Update Property</h3>
-        <form action="updateProperty" method="post" style="display: flex; flex-direction: column; gap: 16px;">
-            <input type="hidden" name="propertyId" id="edit-id">
-
-            <div class="form-group"><label>Title</label><input type="text" name="title" id="edit-title" required></div>
-            <div class="form-group"><label id="edit-price-label">Price (LKR)</label><input type="number" name="price" id="edit-price" required></div>
-            <div class="form-group"><label>Location</label><input type="text" name="location" id="edit-location" required></div>
-            <div class="form-grid">
-                <div class="form-group"><label>Type</label>
-                    <select name="type" id="edit-type"><option>Apartment</option><option>House</option><option>Villa</option></select>
-                </div>
-                <div class="form-group"><label>Bed Rooms</label><input type="number" name="bedrooms" id="edit-bedrooms" min="0" required></div>
-                <div class="form-group"><label>Bath Tubs</label><input type="number" name="bathrooms" id="edit-bathrooms" min="0" required></div>
-                <div class="form-group"><label>Status</label>
-                    <select name="status" id="edit-status-select" onchange="updatePriceLabel('edit')" required>
-                        <option value="" selected>Choose a Ststus</option>
-                        <option>For Sale</option>
-                        <option>For Rent</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group"><label>Description</label><textarea name="description" id="edit-description" rows="6" style="resize: none;"></textarea></div>
-            <button type="submit" class="btn">💾 Save Changes</button>
-            <button type="Reset" class="btn"> Reset</button>
-            <button onclick="closeEditModal()" class="btn">Close</button>
-        </form>
     </div>
-</div>
 
-<script src="app.js"></script>
+    <div class="modal-overlay" id="editModal">
+        <div class="modal-box">
+            <%--        <span class="close-btn" onclick="closeEditModal()">×</span>--%>
+            <h3 class="card-title">Update Property</h3>
+            <form action="updateProperty" method="post" style="display: flex; flex-direction: column; gap: 16px;">
+                <input type="hidden" name="propertyId" id="edit-id">
 
-<script>
-    // Bulletproof direct function - customized for superEditBtn and emoji-free text!
-    //open profile section in popups
-    const modal = document.getElementById("myModal");
-    const btn = document.getElementById("openBtn");
-    const span = document.getElementById("closeBtn");
+                <div class="form-group"><label>Title</label><input type="text" name="title" id="edit-title" required></div>
+                <div class="form-group"><label id="edit-price-label">Price (LKR)</label><input type="number" name="price" id="edit-price" required></div>
+                <div class="form-group"><label>Location</label><input type="text" name="location" id="edit-location" required></div>
+                <div class="form-grid">
+                    <div class="form-group"><label>Type</label>
+                        <select name="type" id="edit-type"><option>Apartment</option><option>House</option><option>Villa</option></select>
+                    </div>
+                    <div class="form-group"><label>Bed Rooms</label><input type="number" name="bedrooms" id="edit-bedrooms" min="0" required></div>
+                    <div class="form-group"><label>Bath Tubs</label><input type="number" name="bathrooms" id="edit-bathrooms" min="0" required></div>
+                    <div class="form-group"><label>Status</label>
+                        <select name="status" id="edit-status-select" onchange="updatePriceLabel('edit')" required>
+                            <option value="" selected>Choose a Ststus</option>
+                            <option>For Sale</option>
+                            <option>For Rent</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group"><label>Description</label><textarea name="description" id="edit-description" rows="6" style="resize: none;"></textarea></div>
+                <button type="submit" class="btn">💾 Save Changes</button>
+                <button type="Reset" class="btn"> Reset</button>
+                <button onclick="closeEditModal()" class="btn">Close</button>
+            </form>
+        </div>
+    </div>
 
-    // Open modal on click
-    btn.onclick = function () {
-        modal.style.display = "block";
-    }
+    <script src="app.js"></script>
 
-    // Close modal when clicking (x)
-    span.onclick = function () {
-        modal.style.display = "none";
-    }
-    // Close open profile section in popups
-    function toggleEditMode() {
-        const btn = document.getElementById('superEditBtn'); // Ensure ID matches!
-        const inputs = document.querySelectorAll('#profileForm input[type="text"], #profileForm input[type="email"], #profileForm input[type="password"]');
-        const saveBtn = document.getElementById('saveProfileBtn');
+    <script>
+        // Bulletproof direct function - customized for superEditBtn and emoji-free text!
+        //open profile section in popups
+        const modal = document.getElementById("myModal");
+        const btn = document.getElementById("openBtn");
+        const span = document.getElementById("closeBtn");
 
-        // Check if the save button is currently visible
-        const isEditing = saveBtn.style.display === 'block';
-
-        if (!isEditing) {
-            // Switch TO Edit Mode
-            inputs.forEach(input => {
-                input.removeAttribute('readonly');
-                input.classList.remove('readonly-input');
-                input.classList.add('editable-input');
-            });
-            saveBtn.style.display = 'block';
-            btn.innerHTML = 'Cancel'; // Emoji-free text!
-            btn.style.backgroundColor = '#ef4444'; // Make button red
-        } else {
-            // Switch BACK to Read-Only Mode
-            inputs.forEach(input => {
-                input.setAttribute('readonly', true);
-                input.classList.remove('editable-input');
-                input.classList.add('readonly-input');
-            });
-            saveBtn.style.display = 'none';
-            btn.innerHTML = 'Edit'; // Emoji-free text!
-            btn.style.backgroundColor = '#3b82f6'; // Make button blue
-
-            // Revert changes if they click cancel without saving
-            document.getElementById('profileForm').reset();
+        // Open modal on click
+        btn.onclick = function () {
+            modal.style.display = "block";
         }
-    }
-    // Show/Hide Password Toggle
+
+        // Close modal when clicking (x)
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+        // Close open profile section in popups
+        function toggleEditMode() {
+            const btn = document.getElementById('superEditBtn'); // Ensure ID matches!
+            const inputs = document.querySelectorAll('#profileForm input[type="text"], #profileForm input[type="email"], #profileForm input[type="password"]');
+            const saveBtn = document.getElementById('saveProfileBtn');
+
+            // Check if the save button is currently visible
+            const isEditing = saveBtn.style.display === 'block';
+
+            if (!isEditing) {
+                // Switch TO Edit Mode
+                inputs.forEach(input => {
+                    input.removeAttribute('readonly');
+                    input.classList.remove('readonly-input');
+                    input.classList.add('editable-input');
+                });
+                saveBtn.style.display = 'block';
+                btn.innerHTML = 'Cancel'; // Emoji-free text!
+                btn.style.backgroundColor = '#ef4444'; // Make button red
+            } else {
+                // Switch BACK to Read-Only Mode
+                inputs.forEach(input => {
+                    input.setAttribute('readonly', true);
+                    input.classList.remove('editable-input');
+                    input.classList.add('readonly-input');
+                });
+                saveBtn.style.display = 'none';
+                btn.innerHTML = 'Edit'; // Emoji-free text!
+                btn.style.backgroundColor = '#3b82f6'; // Make button blue
+
+                // Revert changes if they click cancel without saving
+                document.getElementById('profileForm').reset();
+            }
+        }
+        // Show/Hide Password Toggle
         function togglePassword() {
             const pwdInput = document.getElementById('pwdInput');
             const eyeOpen = document.getElementById('eyeOpen');
@@ -1570,6 +1474,6 @@
 
     <!-- Page Transition Animation System -->
     <script src="page-transitions.js"></script>
-
+</div>
 </body>
 </html>
