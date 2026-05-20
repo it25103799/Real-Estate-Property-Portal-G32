@@ -733,7 +733,7 @@
                             <td>${p.type}</td>
                             <td>${p.bedrooms}</td>
                             <td>${p.bathrooms}</td>
-                            <td style="display: flex; gap: 10px; align-items: center;">
+                            <td style="white-space: nowrap;">
                                 <button class="btn" style="padding: 8px 15px; font-size: 0.85rem;" onclick="window.location.href='properties?viewId=${p.id}'">View</button>
 
                                     <%-- ── REPLACE BUTTON + DROPDOWN ── --%>
@@ -776,11 +776,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                    <%-- ── END REPLACE ── --%>
+                                    <%-- ─ END REPLACE ── --%>
 
-                                <form action="removeFavorite" method="post" style="margin: 0;">
+                                <form action="removeFavorite" method="post" style="margin: 0; display: inline-block;">
                                     <input type="hidden" name="propertyId" value="${p.id}">
-                                    <button type="submit" class="btn-action" style="padding: 8px 12px; font-size: 0.85rem; height: 100%;" onsubmit="return confirm('Remove this property from your saved list?');">❌ Remove</button>
+                                    <button type="submit" class="btn-action" style="padding: 8px 12px; font-size: 0.85rem; height: 100%;" onsubmit="return confirm('Remove this property from your saved list?');"> Remove</button>
                                 </form>
                             </td>
                         </tr>
