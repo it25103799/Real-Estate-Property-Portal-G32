@@ -1,23 +1,13 @@
 =========================================================
   NESTIQ — PROPERTY AVAILABILITY REPORT
-  Total Listed   : 1
-  Available      : 1
-  Seller  : Tharwa Broo
-  Date    : 2026-05-17
-  Total Listed   : 2
-  Available      : 2
+  Seller  : Tharusha dilsara
+  Date    : 2026-05-20
+=========================================================
+  Total Listed   : 0
+  Available      : 0
   Reserved       : 0
-  Seller  : Dinesh
-  Date    : 2026-05-18
-  Total Listed   : 6
-  Available      : 5
-  Reserved       : 1
 
------ ACTIVE RESERVATIONS (1) -----
-  [CONFIRMED] Anuradhapura River side | Buyer: Dinindu | Return: 2026-05-19
+----- ACTIVE RESERVATIONS (0) -----
 
------ COMPLETED TRANSACTIONS (3) -----
-  Kiribathgoda new building | Buyer: Sadun Priya | Booked: 2026-05-04 | Returned: 2026-05-06
-  Hegalla beach Villa | Buyer: Bhashi Navod | Booked: 2026-05-06 | Returned: 2026-05-07
-  Ambewela Farm View | Buyer: Dinindu | Booked: 2026-05-18 | Returned: 2026-05-21
+----- COMPLETED TRANSACTIONS (0) -----
 =========================================================
