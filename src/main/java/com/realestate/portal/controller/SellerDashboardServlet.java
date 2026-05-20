@@ -88,6 +88,9 @@ public class SellerDashboardServlet extends HttpServlet {
             }
         }
 
+        // Sort properties: newest first (reverse order)
+        java.util.Collections.reverse(myProperties);
+
         // --- PROPERTY REVIEWS (only for this seller's listings) ---
         Set<String> myPropIds = new HashSet<>();
         for (Property p : myProperties) myPropIds.add(p.getId());

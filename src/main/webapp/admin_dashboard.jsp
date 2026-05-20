@@ -1015,7 +1015,7 @@
                             <div class="summary-lbl">Avg. Active Property Price</div>
                         </div>
                         <div class="summary-item">
-                            <div class="summary-num" style="color:var(--green);">${totalSellers > 0 ? totalBuyers / totalSellers : totalBuyers} : 1</div>
+                            <div class="summary-num" style="color:var(--green);"><fmt:formatNumber value="${totalSellers > 0 ? totalBuyers / totalSellers : totalBuyers}" pattern="#,##0.0"/> : 1</div>
                             <div class="summary-lbl">Buyer-to-Seller Ratio</div>
                         </div>
                         <div class="summary-item">

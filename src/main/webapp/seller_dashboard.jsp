@@ -752,9 +752,18 @@
                                             </span>
                                             </c:when>
                                             <c:otherwise>
-                                            <span style="display: inline-block; background: rgba(26,86,219,0.10); color: var(--accent); border: 1px solid rgba(26,86,219,0.35); padding: 6px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; white-space: nowrap;">
-                                                🏷️ ${p.status}
-                                            </span>
+                                            <c:choose>
+                                                <c:when test="${p.status == 'For Rent'}">
+                                                    <span style="display: inline-block; background: rgba(13,158,110,0.10); color: #0d9e6e; border: 1px solid rgba(13,158,110,0.35); padding: 6px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; white-space: nowrap;">
+                                                        🏷️ ${p.status}
+                                                    </span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <span style="display: inline-block; background: rgba(26,86,219,0.10); color: var(--accent); border: 1px solid rgba(26,86,219,0.35); padding: 6px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; white-space: nowrap;">
+                                                        🏷️ ${p.status}
+                                                    </span>
+                                                </c:otherwise>
+                                            </c:choose>
                                             </c:otherwise>
                                         </c:choose>
                                     </td>

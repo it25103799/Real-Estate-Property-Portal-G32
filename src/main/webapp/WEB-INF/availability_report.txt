@@ -3,8 +3,8 @@
   Seller  : De Silva
   Date    : 2026-05-20
 =========================================================
-  Total Listed   : 12
-  Available      : 11
+  Total Listed   : 13
+  Available      : 12
   Reserved       : 1
 
 ----- ACTIVE RESERVATIONS (1) -----
