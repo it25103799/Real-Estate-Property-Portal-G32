@@ -1,7 +1,7 @@
 =========================================================
   NESTIQ — PROPERTY AVAILABILITY REPORT
   Seller  : De Silva
-  Date    : 2026-05-20
+  Date    : 2026-05-21
 =========================================================
   Total Listed   : 13
   Available      : 12

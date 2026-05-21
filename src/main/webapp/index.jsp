@@ -211,8 +211,89 @@
             letter-spacing: -0.5px;
             color: var(--ink);
             display: flex; align-items: center; gap: 8px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
         }
-        .nav-logo .dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; display: inline-block; }
+        .nav-logo::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(157, 142, 238, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+            z-index: -1;
+        }
+        .nav-logo:hover {
+            transform: scale(1.05);
+            text-shadow: 0 0 20px rgba(157, 142, 238, 0.4);
+        }
+        .nav-logo:hover::before {
+            width: 120px;
+            height: 120px;
+        }
+        .nav-logo:active {
+            transform: scale(0.98);
+        }
+        [data-theme="dark"] .nav-logo:hover {
+            text-shadow: 0 0 25px rgba(157, 142, 238, 0.6), 0 0 40px rgba(157, 142, 238, 0.3);
+        }
+        
+        /* Animated gradient text for NESTIQ */
+        .nav-logo-text {
+            background: linear-gradient(135deg, var(--ink) 0%, var(--accent) 50%, var(--ink) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 3s ease-in-out infinite;
+            transition: all 0.4s ease;
+        }
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% center; }
+            50% { background-position: 100% center; }
+        }
+        .nav-logo:hover .nav-logo-text {
+            animation-duration: 1.5s;
+            filter: brightness(1.1);
+        }
+        
+        /* Premium dot with pulse animation */
+        .nav-logo .dot { 
+            width: 8px; 
+            height: 8px; 
+            background: var(--accent); 
+            border-radius: 50%; 
+            display: inline-block;
+            position: relative;
+            box-shadow: 0 0 0 0 rgba(157, 142, 238, 0.7);
+            animation: pulse-dot 2s ease-in-out infinite;
+            transition: all 0.3s ease;
+        }
+        @keyframes pulse-dot {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(157, 142, 238, 0.7);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 0 0 8px rgba(157, 142, 238, 0);
+                transform: scale(1.2);
+            }
+        }
+        .nav-logo:hover .dot {
+            animation-duration: 0.8s;
+            box-shadow: 0 0 15px rgba(157, 142, 238, 0.8), 0 0 30px rgba(157, 142, 238, 0.4);
+            transform: scale(1.3);
+            background: linear-gradient(135deg, var(--accent) 0%, #fff 100%);
+        }
+        [data-theme="dark"] .nav-logo:hover .dot {
+            box-shadow: 0 0 20px rgba(157, 142, 238, 1), 0 0 40px rgba(157, 142, 238, 0.6);
+        }
         .nav-links {
             display: flex; align-items: center; gap: 8px;
             list-style: none;
@@ -255,6 +336,154 @@
             box-shadow: 0 6px 20px var(--accent-glow), 0 0 0 1px rgba(255,255,255,0.1) inset;
         }
         .btn-primary:active { transform: translateY(0); }
+
+        /* ── PREMIUM BADGES FOR NAV USER BUTTON ── */
+        .buyer-badge-premium {
+            background: linear-gradient(135deg, rgba(157, 142, 238, 0.15) 0%, rgba(130, 120, 238, 0.12) 100%);
+            color: var(--accent);
+            padding: 4px 10px;
+            border-radius: 14px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            border: 1.5px solid rgba(157, 142, 238, 0.25);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(157, 142, 238, 0.1);
+            display: inline-block;
+        }
+        .buyer-badge-premium::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(157, 142, 238, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.5s ease, height 0.5s ease;
+            z-index: 0;
+        }
+        .buyer-badge-premium:hover {
+            background: linear-gradient(135deg, rgba(157, 142, 238, 0.25) 0%, rgba(130, 120, 238, 0.22) 100%);
+            color: #fff;
+            border-color: rgba(157, 142, 238, 0.6);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 4px 16px rgba(157, 142, 238, 0.3), 0 0 0 1px rgba(255,255,255,0.1) inset;
+            text-shadow: 0 0 8px rgba(157, 142, 238, 0.5);
+        }
+        .buyer-badge-premium:hover::before {
+            width: 100px;
+            height: 100px;
+        }
+        .buyer-badge-premium:active {
+            transform: translateY(0) scale(0.98);
+        }
+        [data-theme="dark"] .buyer-badge-premium {
+            background: linear-gradient(135deg, rgba(157, 142, 238, 0.18) 0%, rgba(130, 120, 238, 0.15) 100%);
+            border-color: rgba(157, 142, 238, 0.3);
+            box-shadow: 0 2px 12px rgba(157, 142, 238, 0.15);
+        }
+        [data-theme="dark"] .buyer-badge-premium:hover {
+            background: linear-gradient(135deg, rgba(157, 142, 238, 0.35) 0%, rgba(130, 120, 238, 0.32) 100%);
+            border-color: rgba(157, 142, 238, 0.7);
+            box-shadow: 0 6px 20px rgba(157, 142, 238, 0.4), 0 0 25px rgba(157, 142, 238, 0.25);
+            text-shadow: 0 0 12px rgba(157, 142, 238, 0.7);
+        }
+
+        .seller-badge-premium {
+            background: linear-gradient(135deg, rgba(13, 158, 110, 0.15) 0%, rgba(10, 138, 95, 0.12) 100%);
+            color: #0d9e6e;
+            padding: 4px 10px;
+            border-radius: 14px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            border: 1.5px solid rgba(13, 158, 110, 0.25);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(13, 158, 110, 0.1);
+            display: inline-block;
+        }
+        .seller-badge-premium::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(13, 158, 110, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.5s ease, height 0.5s ease;
+            z-index: 0;
+        }
+        .seller-badge-premium:hover {
+            background: linear-gradient(135deg, rgba(13, 158, 110, 0.25) 0%, rgba(10, 138, 95, 0.22) 100%);
+            color: #fff;
+            border-color: rgba(13, 158, 110, 0.6);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 4px 16px rgba(13, 158, 110, 0.3), 0 0 0 1px rgba(255,255,255,0.1) inset;
+            text-shadow: 0 0 8px rgba(13, 158, 110, 0.5);
+        }
+        .seller-badge-premium:hover::before {
+            width: 100px;
+            height: 100px;
+        }
+        .seller-badge-premium:active {
+            transform: translateY(0) scale(0.98);
+        }
+        [data-theme="dark"] .seller-badge-premium {
+            background: linear-gradient(135deg, rgba(13, 158, 110, 0.18) 0%, rgba(10, 138, 95, 0.15) 100%);
+            border-color: rgba(13, 158, 110, 0.3);
+            box-shadow: 0 2px 12px rgba(13, 158, 110, 0.15);
+        }
+        [data-theme="dark"] .seller-badge-premium:hover {
+            background: linear-gradient(135deg, rgba(13, 158, 110, 0.35) 0%, rgba(10, 138, 95, 0.32) 100%);
+            border-color: rgba(13, 158, 110, 0.7);
+            box-shadow: 0 6px 20px rgba(13, 158, 110, 0.4), 0 0 25px rgba(13, 158, 110, 0.25);
+            text-shadow: 0 0 12px rgba(13, 158, 110, 0.7);
+        }
+
+        .nav-user-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 5px 15px 5px 8px;
+            border: 1.5px solid var(--line);
+            border-radius: 30px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .nav-user-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        .nav-user-btn:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 16px rgba(157, 142, 238, 0.15);
+            transform: translateY(-1px);
+        }
+        .nav-user-btn:hover::before {
+            left: 100%;
+        }
+        [data-theme="dark"] .nav-user-btn:hover {
+            box-shadow: 0 4px 16px rgba(157, 142, 238, 0.25);
+        }
 
         /* ── HERO ── */
         .hero {
@@ -1884,7 +2113,7 @@
 
 <nav class="navbar" id="navbar">
     <div class="nav-logo" onclick="showPage('home')" style="cursor:pointer">
-        <span class="dot"></span>NESTIQ
+        <span class="dot"></span><span class="nav-logo-text">NESTIQ</span>
     </div>
     <ul class="nav-links">
         <li><a href="#" onclick="showPage('home')" id="nav-home" class="active">Home</a></li>
@@ -1925,19 +2154,19 @@
                     <c:choose>
                         <%-- 1. IF SELLER IS LOGGED IN --%>
                         <c:when test="${sessionScope.loggedRole == 'SELLER'}">
-                            <a href="sellerDashboard" style="display: flex; align-items: center; gap: 10px; padding: 5px 15px 5px 8px; border: 1.5px solid var(--line); border-radius: 30px; text-decoration: none; transition: 0.3s; cursor: pointer;">
+                            <a href="sellerDashboard" class="nav-user-btn">
                                 <div style="background: var(--bg2); border-radius: 50%; padding: 4px; font-size: 1.1rem; display: flex; align-items: center; justify-content: center;">💼</div>
                                 <span style="font-weight: 600; color: var(--ink); font-size: 0.95rem;">${sessionScope.loggedUser}</span>
-                                <span style="background: rgba(13, 158, 110, 0.1); color: #0d9e6e; padding: 3px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase;">SELLER</span>
+                                <span class="seller-badge-premium">SELLER</span>
                             </a>
                         </c:when>
 
                         <%-- 2. DEFAULT: BUYER IS LOGGED IN --%>
                         <c:otherwise>
-                            <a href="buyerDashboard" style="display: flex; align-items: center; gap: 10px; padding: 5px 15px 5px 8px; border: 1.5px solid var(--line); border-radius: 30px; text-decoration: none; transition: 0.3s; cursor: pointer;">
+                            <a href="buyerDashboard" class="nav-user-btn">
                                 <div style="background: var(--bg2); border-radius: 50%; padding: 4px; font-size: 1.1rem; display: flex; align-items: center; justify-content: center;">👤</div>
                                 <span style="font-weight: 600; color: var(--ink); font-size: 0.95rem;">${sessionScope.loggedUser}</span>
-                                <span style="background: rgba(157, 142, 238, 0.1); color: var(--accent); padding: 3px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase;">BUYER</span>
+                                <span class="buyer-badge-premium">BUYER</span>
                             </a>
                         </c:otherwise>
                     </c:choose>
